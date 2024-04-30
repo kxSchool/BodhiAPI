@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.modules.shenkang.mapper.WanDaPushDao">
+    <insert id="insertIntoWanDaAPIDetails" keyColumn="id" useGeneratedKeys="true" keyProperty="id"
+            parameterType="com.example.modules.shenkang.pojo.WanDaAPIReq_2">
+        insert into shenkang_wanda_api_req(requestDetails,webAPI,creatime,pathId,`state`,`req_updateDateTime`,responseDetails,logstate)
+        values(HEX(AES_ENCRYPT(#{requestDetails}, 'salt')),#{webAPI},#{creatime},#{pathId},#{state},#{req_updateDateTime},#{responseDetails},#{logstate})
+    </insert>
+
+    <insert id="insertIntoWandaApiReqIDetails" keyColumn="id" useGeneratedKeys="true" keyProperty="id"
+            parameterType="com.example.modules.shenkang.pojo.WandaApiReq">
+        insert into shenkang_wanda_api_req(requestDetails,webAPI,creatime,pathId,`state`,`req_updateDateTime`,responseDetails,logstate)
+        values(HEX(AES_ENCRYPT(#{requestdetails}, 'salt')),#{webapi},#{creatime},#{pathid},#{state},#{reqUpdatedatetime},#{responsedetails},#{logstate})
+    </insert>
+
+    <update id="updateWanDaAPIDetails">
+        update shenkang_wanda_api_req
+        <set>
+            <if test="responseDetails != null and responseDetails != ''">
+                `responseDetails`=#{responseDetails},
+            </if>
+            <if test="logstate != null and logstate != ''">
+                `logstate`=#{logstate},
+            </if>
+        </set>
+        where id=#{id}
+    </update>
+</mapper>

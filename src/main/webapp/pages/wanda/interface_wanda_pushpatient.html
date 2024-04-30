@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+
+    <title>H+ 后台主题UI框架 - Bootstrap3 Markdown编辑器</title>
+    <meta name="keywords" content="H+后台主题,后台bootstrap框架,会员中心主题,后台HTML,响应式后台">
+    <meta name="description" content="H+是一个完全响应式，基于Bootstrap3最新版本开发的扁平化主题，她采用了主流的左右两栏式布局，使用了Html5+CSS3等现代技术">
+
+    <link rel="shortcut icon" href="favicon.ico">
+    <link href="../../static/css/bootstrap.min.css?v=3.3.5" rel="stylesheet">
+    <link href="../../static/css/font-awesome.min.css?v=4.4.0" rel="stylesheet">
+    <link href="../../static/css/animate.css" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="../../static/css/plugins/markdown/bootstrap-markdown.min.css" />
+    <link href="../../static/css/style.css?v=4.0.0" rel="stylesheet"><base target="_blank">
+    <script src="../../static/js/content.min.js"></script>
+    <script src="../../static/js/commonrequest.js"></script>
+</head>
+
+<body class="gray-bg">
+    <div class="wrapper wrapper-content">
+        <div class="row">
+            <div class="col-lg-5">
+                <div class="ibox float-e-margins">
+                    <div class="ibox-title">
+                        <h5>患者信息系统查询</h5>
+                        <div class="ibox-tools">
+                            <a class="collapse-link">
+                                <i class="fa fa-chevron-up"></i>
+                            </a>
+                            <a class="dropdown-toggle" data-toggle="dropdown" href="interface_wanda_pushfile2.html.html#">
+                                <i class="fa fa-wrench"></i>
+                            </a>
+                        </div>
+                    </div>
+
+                    <div class="ibox-content">
+                        <form role="form" class="form-horizontal m-t"  id="inputForm" target="_self">
+                            <div class="clearfix"></div>
+                            <div class="form-group ">
+                                <label class="col-sm-3 control-label">病理号：</label>
+                                <div class="col-sm-4">
+                                    <input type="text" id="pathNo" value="" name="pathNo" class="form-control" required=""  placeholder="样式:12-0001">
+                                    <span class="help-block m-b-none"></span>
+                                </div>
+                                <input type="hidden" name="pathHidden" value="" id="pathHidden"/>
+                            </div>
+                            <div class="hr-line-dashed"></div>
+                            <div class="form-group">
+                                <div class="col-sm-4 col-sm-offset-3">
+                                    <button class="btn btn-primary" id="submitSearch" >查询</button>
+                                    <button class="btn btn-white" id="clear1" >清空</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+                <div class="ibox float-e-margins">
+                    <div class="ibox-title">
+                        <h5>患者信息推送json</h5>
+                        <div class="ibox-tools">
+                            <a class="collapse-link">
+                                <i class="fa fa-chevron-up"></i>
+                            </a>
+                            <a class="dropdown-toggle" data-toggle="dropdown" href="form_editors.html#">
+                                <i class="fa fa-wrench"></i>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="ibox-content">
+                        <pre id="toastrOptions" contenteditable="" name="content" data-provide="markdown" rows="25">
+{
+    "patient_id":"P20-3795",
+    "patient_master_id":"",
+    "name":"测试",
+    "name_spell":"",
+    "mother_name":"",
+    "sex":"1",
+    "birth_date":"2010-09-10",
+    "birth_place":"",
+    "nation":"",
+    "citizenship":"",
+    "marital_status":"",
+    "health_card_no":"",
+    "contact_phone_no":"12345678965",
+    "email":"",
+    "address_province":"",
+    "address_city":"",
+    "address_district":"",
+    "address_street":"",
+    "address_road":"",
+    "address_detail":"",
+    "postalcode":"",
+    "occupation":"",
+    "work_unit":"",
+    "language":"",
+    "insurance_type":"9",
+    "insurance_id":"112233",
+    "organization_id":"42507230900",
+    "createTime":"2020-12-16 17:15:13",
+    "pathNo":"P20-3942",
+    "YLY1":"",
+    "YLY2":"",
+    "IdentityType":"1",
+    "IdentityID":"3209211990000000"
+}
+                        </pre>
+                        <div class="clearfix"></div>
+                        <br>
+                        <div class="form-group ">
+                            <div class="col-sm-12 col-sm-offset-4">
+                                <button class="btn btn-primary" id="submit1">提交</button>
+                                <button class="btn btn-white" id="reset" type="submit">重置</button>
+                            </div>
+                        </div>
+                        <br>
+                    </div>
+                </div>
+                <div class="ibox-content">
+                    <div class="ibox float-e-margins">
+                        <div class="ibox-title">
+                            <h5>接口返回信息</h5>
+                            <div class="ibox-tools">
+                                <a class="collapse-link">
+                                    <i class="fa fa-chevron-up"></i>
+                                </a>
+                                <a class="dropdown-toggle" data-toggle="dropdown" href="form_editors.html#">
+                                    <i class="fa fa-wrench"></i>
+                                </a>
+                            </div>
+                        </div>
+                        <div class="ibox-content">
+                            <div class="clearfix"></div>
+                            <div class="row m-t-lg">
+                                <div class="col-lg-12">
+                                    <pre id="toastrOptions1" class="p-m"></pre>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-6">
+                <div class="ibox-content">
+                    <div class="ibox float-e-margins">
+                        <div class="ibox-title">
+                            <h5>接口请求信息</h5>
+                            <div class="ibox-tools">
+                                <a class="collapse-link">
+                                    <i class="fa fa-chevron-up"></i>
+                                </a>
+                                <a class="dropdown-toggle" data-toggle="dropdown" href="form_editors.html#">
+                                    <i class="fa fa-wrench"></i>
+                                </a>
+                            </div>
+                        </div>
+                        <div class="ibox-content">
+                            <div class="form-group ">
+                                <div class="col-sm-12 col-sm-offset-4">
+                                    <button class="btn btn-white" id="clear2" type="submit">清空</button>
+                                </div>
+                            </div>
+                            <div class="clearfix"></div>
+                            <div class="row m-t-lg">
+                                <div class="col-lg-12">
+                                    <pre id="toastrOptions2" class="p-m"></pre>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-6">
+                <div class="ibox-content">
+                    <div class="ibox float-e-margins">
+                        <div class="ibox-title">
+                            <h5>接口请求信息解密</h5>
+                            <div class="ibox-tools">
+                                <a class="collapse-link">
+                                    <i class="fa fa-chevron-up"></i>
+                                </a>
+                                <a class="dropdown-toggle" data-toggle="dropdown" href="form_editors.html#">
+                                    <i class="fa fa-wrench"></i>
+                                </a>
+                            </div>
+                        </div>
+                        <div class="ibox-content">
+                            <div class="form-group ">
+                                <div class="col-sm-12 col-sm-offset-4">
+                                    <button class="btn btn-white" id="clear3" type="submit">清空</button>
+                                </div>
+                            </div>
+                            <div class="clearfix"></div>
+                            <div class="row m-t-lg">
+                                <div class="col-lg-12">
+                                    <pre id="toastrOptions3" class="p-m"></pre>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="../../static/js/jquery.min.js?v=2.1.4"></script>
+    <script src="../../static/js/bootstrap.min.js?v=3.3.5"></script>
+    <script src="../../static/js/content.js?v=1.0.0"></script>
+    <script type="text/javascript" src="../../static/js/plugins/markdown/markdown.js"></script>
+    <script type="text/javascript" src="../../static/js/plugins/markdown/to-markdown.js"></script>
+    <script type="text/javascript" src="../../static/js/plugins/markdown/bootstrap-markdown.js"></script>
+    <script type="text/javascript" src="../../static/js/plugins/markdown/bootstrap-markdown.zh.js"></script>
+    <script src="../../static/js/jquery-ui-1.10.4.min.js"></script>
+    <script src="../../static/js/plugins/beautifyhtml/beautifyhtml.js"></script>
+    <script src="../../static/js/plugins/validate/jquery.validate.min.js"></script>
+    <script src="../../static/js/plugins/validate/messages_zh.min.js"></script>
+    <script src="../../static/js/demo/form-validate-demo.js"></script>
+    <script type="text/javascript">
+        $("#inputForm").validate(
+            {
+                rules:{pathNo:"required"},
+                submitHandler: function () {
+                    var pathNo = $("#pathNo").val();
+                    if(pathNo==""||pathNo.length==0){
+                        return false;
+                    }else{
+                        var params={"pathNo":pathNo};
+                        //根据病理号查询患者信息，以json样例显示
+                        $.ajax({
+                            type: "POST",
+                            url: '/langjiaInterface/getPatientInfoByPathNo',
+                            data: JSON.stringify(params),
+                            dataType:'json',
+                            beforeSend: function (XMLHttpRequest) {
+                                XMLHttpRequest.setRequestHeader("Authorization", handleLocalStorage('get', 'Authorization'));
+                            },
+                            success: function(data){
+                               if(data.code==200){
+                                   var details=data.data;
+                                   details = JSON.stringify(details, null, 2);//将字符串转换成json对象
+                                   document.getElementById('toastrOptions').innerText= details;
+                               }else{
+                                   alert("查询数据失败！"+data.msg);
+                               }
+                            },
+                            error:function(){
+                                alert("查询数据失败！");
+                            }
+                        });
+                    }
+                }
+            });
+
+        $(function(){
+            $("#submit1").click(function(){
+                document.getElementById('toastrOptions2').innerText="";
+                var toastrOptions =document.getElementById("toastrOptions").innerHTML;
+                var toastrOptions=toastrOptions.replace(/(<br[^>]*>)/g,'')
+                $.ajax({
+                    type: "POST",
+                    url: '/langjiaInterface/pushPatient',
+                    data: {"toastrOptions":toastrOptions},
+                    dataType:'json',
+                    beforeSend: function (XMLHttpRequest) {
+                        XMLHttpRequest.setRequestHeader("Authorization", handleLocalStorage('get', 'Authorization'));
+                    },
+                    success: function(data){
+                        var reqpatient=data.patient;
+                        reqpatient = JSON.stringify(reqpatient, null, 2);//将字符串转换成json对象
+                        document.getElementById('toastrOptions2').innerText= reqpatient;
+
+                        var rsppatient=data.rsppatient;
+                        rsppatient = JSON.stringify(rsppatient, null, 2);//将字符串转换成json对象
+                        document.getElementById('toastrOptions1').innerText= rsppatient;
+
+                        var descpatient=data.descpatient;
+                        rsppatient = JSON.stringify(descpatient, null, 2);//将字符串转换成json对象
+                        document.getElementById('toastrOptions3').innerText= rsppatient;
+                    },
+                    error:function(){
+                        alert("推送失败！");
+                    }
+                });
+            });
+            $('#clear1').click(function () {
+                $('#pathNo').val("");
+            });
+            $('#clear2').click(function(){
+                $('#toastrOptions2').html("");
+            });
+            $('#clear3').click(function(){
+                $('#toastrOptions3').html("");
+            });
+
+            $('#reset').click(function(){
+                $('#toastrOptions').html("{\n" +
+                    "    \"patient_id\":\"P20-3795\",\n" +
+                    "    \"patient_master_id\":\"\",\n" +
+                    "    \"name\":\"测试\",\n" +
+                    "    \"name_spell\":\"\",\n" +
+                    "    \"mother_name\":\"\",\n" +
+                    "    \"sex\":\"1\",\n" +
+                    "    \"birth_date\":\"2010-09-10\",\n" +
+                    "    \"birth_place\":\"\",\n" +
+                    "    \"nation\":\"\",\n" +
+                    "    \"citizenship\":\"\",\n" +
+                    "    \"marital_status\":\"\",\n" +
+                    "    \"health_card_no\":\"\",\n" +
+                    "    \"contact_phone_no\":\"12345678965\",\n" +
+                    "    \"email\":\"\",\n" +
+                    "    \"address_province\":\"\",\n" +
+                    "    \"address_city\":\"\",\n" +
+                    "    \"address_district\":\"\",\n" +
+                    "    \"address_street\":\"\",\n" +
+                    "    \"address_road\":\"\",\n" +
+                    "    \"address_detail\":\"\",\n" +
+                    "    \"postalcode\":\"\",\n" +
+                    "    \"occupation\":\"\",\n" +
+                    "    \"work_unit\":\"\",\n" +
+                    "    \"language\":\"\",\n" +
+                    "    \"insurance_type\":\"9\",\n" +
+                    "    \"insurance_id\":\"112233\",\n" +
+                    "    \"organization_id\":\"42507230900\",\n" +
+                    "    \"createTime\":\"2020-12-16 17:15:13\",\n" +
+                    "    \"pathNo\":\"P20-3942\",\n" +
+                    "    \"YLY1\":\"\",\n" +
+                    "    \"YLY2\":\"\",\n" +
+                    "    \"IdentityType\":\"1\",\n" +
+                    "    \"IdentityID\":\"3209211990000000\"\n" +
+                    "}");
+                $('#toastrOptions2').html("");
+                $('#toastrOptions1').html("");
+                $('#toastrOptions3').html("");
+            });
+
+        });
+
+    </script>
+</body>
+
+</html>

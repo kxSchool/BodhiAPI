@@ -1,0 +1,504 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <meta charset="utf-8">
+    <title>用户列表</title>
+    <link href="../../static/css/plugins/switchery/switchery.css" rel="stylesheet">
+    <script src="../../static/js/jquery.min.js?v=2.1.4"></script>
+    <script src="../../static/js/bootstrap.min.js?v=3.3.5"></script>
+    <link href="../../static/css/bootstrap.min.css?v=3.3.6" rel="stylesheet">
+    <link href="../../static/css/plugins/bootstrap-switch/bootstrap-switch.css" rel="stylesheet">
+
+    <script src="../../static/js/bootstrap-table.js"></script>
+    <script src="../../static/js/plugins/bootstrap-switch/bootstrap-switch.js"></script>
+    <link href="../../static/css/bootstrap-table.css?v=1.18.1" rel="stylesheet">
+    <link href="../../static/css/animate.css" rel="stylesheet">
+    <link href="../../static/css/style.css?v=4.1.0" rel="stylesheet">
+    <script src="../../static/js/bootstrap-table-zh-CN.js"></script>
+    <link href="../../static/css/font-awesome.min.css?v=4.4.0" rel="stylesheet">
+    <link href="../../static/css/plugins/chosen/chosen.css" rel="stylesheet">
+    <!-- bootstrap-select -->
+    <link href="../../static/css/plugins/bootstrap-select2/select2.css" rel="stylesheet">
+    <link href="../../static/css/plugins/bootstrap-select/bootstrap-select.css" rel="stylesheet">
+
+    <base target="_blank">
+    <!-- Switchery -->
+    <script src="../../static/js/plugins/switchery/switchery.js"></script>
+    <script src="../../static/js/jquery-ui-1.10.4.min.js"></script>
+    <script src="../../static/js/plugins/beautifyhtml/beautifyhtml.js"></script>
+    <script src="../../static/js/plugins/validate/jquery.validate.min.js"></script>
+    <script src="../../static/js/plugins/validate/messages_zh.min.js"></script>
+    <script src="../../static/js/plugins/footable/footable.all.min.js"></script>
+    <script src="../../static/js/plugins/sweetalert/sweetalert.min.js"></script>
+    <!-- toastr -->
+    <link href="../../static/css/plugins/toastr/toastr.min.css" rel="stylesheet">
+    <script src="../../static/js/plugins/toastr/toastr.min.js"></script>
+    <!-- form -->
+    <script src="../../static/js/demo/form-validate-demo.js"></script>
+    <!-- Chosen -->
+    <script src="../../static/js/plugins/chosen/chosen.jquery.js"></script>
+    <!-- bootstrap-select -->
+    <script src="../../static/js/plugins/bootstrap-select/bootstrap-select.min.js"></script>
+    <script src="../../static/js/plugins/bootstrap-select/i18n/defaults-zh_CN.min.js"></script>
+    <script src="../../static/js/plugins/bootstrap-select2/select2.min.js"></script>
+    <script src="../../static/js/plugins/bootstrap-select2/i18n/zh-CN.js"></script>
+
+
+</head>
+<style>
+    .select2-drop {
+        z-index: 10050 !important;
+    }
+
+    .select2-search-choice-close {
+        margin-top: 0 !important;
+        right: 2px !important;
+        min-height: 10px;
+    }
+
+    .select2-search-choice-close:before {
+        color: black !important;
+    }
+
+    /*防止select2不会自动失去焦点*/
+    .select2-container {
+        z-index: 16000 !important;
+    }
+
+    .select2-drop-mask {
+        z-index: 15990 !important;
+    }
+
+    .select2-drop-active {
+        z-index: 15995 !important;
+    }
+</style>
+<body class="gray-bg">
+<div class="wrapper wrapper-content animated fadeInRight">
+    <!--    <div class="row">-->
+    <div class="ibox float-e-margins">
+        <div class="ibox float-e-margins">
+            <div class="ibox-title">
+                <h5>用户列表</h5>
+                <div class="ibox-tools">
+                    <a class="collapse-link">
+                        <i class="fa fa-chevron-up"></i>
+                    </a>
+                    <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                        <i class="fa fa-wrench"></i>
+                    </a>
+                    <ul class="dropdown-menu dropdown-user">
+                        <li><a href="#">选项1</a>
+                        </li>
+                        <li><a href="#">选项2</a>
+                        </li>
+                    </ul>
+                    <a class="close-link">
+                        <i class="fa fa-times"></i>
+                    </a>
+                </div>
+            </div>
+            <div class="ibox-content">
+                <div class="col-sm-2 col-md-offset-4 col-lg-offset-4col-xl-offset-4">
+                    <input type="text" id="pathNo" value="" class="form-control" name="searchText"
+                           placeholder="搜索">
+                    <label id="keyword" hidden></label>
+                </div>
+                <div class="col-sm-2 col-sm-offset-1">
+                    <button class="btn btn-primary" id="eventquery">查询</button>
+                    <button class="btn btn-white" id="clearLog">清空</button>
+                </div>
+                <div class="row row-lg">
+                    <div class="col-sm-12">
+                        <div class="example-wrap">
+                            <div class="example">
+                                <button class="btn btn-primary" id="add_frist_menu" style="float: right;margin: 10px;">
+                                    添加用户
+                                </button>
+                                <table id="tb_userList"></table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--    </div>-->
+</div>
+<input type="text" id="userforRoleId" style="display: none"/>
+<input type="text" id="UserId" style="display: none"/>
+
+
+<div class="modal inmodal fade" id="model_updateUserInfo" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button class="close" type="button" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">修改</h4>
+            </div>
+            <div class="modal-body">
+                <form class="form-horizontal m-t" id="from_modifyAccount" onsubmit="return false;">
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label">帐号：</label>
+                        <div class="col-sm-8">
+                            <input id="username" name="username" class="form-control" type="text" readonly="readonly">
+                            <!--                            <span class="help-block m-b-none"><i class="fa fa-info-circle"></i> 这里写点提示的内容</span>-->
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label">姓名：</label>
+                        <div class="col-sm-8">
+                            <input id="nickName" name="nickName" class="form-control" type="text" aria-required="true"
+                                   aria-invalid="false" class="valid">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label">密码：</label>
+                        <div class="col-sm-8">
+                            <input id="password" name="password" class="form-control" type="password">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label">确认密码：</label>
+                        <div class="col-sm-8">
+                            <input id="confirm_password" name="confirm_password" class="form-control" type="password">
+                            <span class="help-block m-b-none"><i class="fa fa-info-circle"></i> 请再次输入您的密码</span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label">E-mail：</label>
+                        <div class="col-sm-8">
+                            <input id="email" name="email" class="form-control" type="email">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-sm-8 col-sm-offset-3">
+                            <div class="checkbox">
+                                <label>
+                                    <input type="checkbox" class="checkbox" id="status" name="status" value="0"
+                                           οnclick="this.value=(this.value==0)?1:0"> 是否启用
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-sm-8 col-sm-offset-3">
+                            <button class="btn btn-primary" type="submit" id="submit" onclick="accountEdite()">提交
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="modal inmodal fade" id="model_selectRole" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-sm">
+
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span
+                        class="sr-only">Close</span></button>
+                <h5 class="modal-title">权限配置</h5>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <select id="roleList" class="form-control roleList" multiple="multiple" data-live-search="false"
+                            style="width: 100%">
+                    </select>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-white" data-dismiss="modal">关闭</button>
+                <button id="roleButton" type="button" class="btn btn-primary" onclick="changeRole()">保存</button>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+<!-- 引入自定义ajax -->
+<script src="../../static/js/commonrequest.js"></script>
+<script>
+    var roleList;
+
+
+    $(function () {
+        getRoleList();
+
+
+        toastr.options = {
+            "closeButton": false, //是否显示关闭按钮
+            "debug": false, //是否使用debug模式
+            "positionClass": "toast-top-center",//弹出窗的位置
+            "showDuration": "300",//显示的动画时间
+            "hideDuration": "1000",//消失的动画时间
+            "timeOut": "5000", //展现时间
+            "extendedTimeOut": "1000",//加长展示时间
+            "showEasing": "swing",//显示时的动画缓冲方式
+            "hideEasing": "linear",//消失时的动画缓冲方式
+            "showMethod": "fadeIn",//显示时的动画方式
+            "hideMethod": "fadeOut" //消失时的动画方式
+        };
+
+
+        //1.初始化Table
+        var oTable = new TableInit();
+        oTable.Init();
+
+        $("#eventquery").click(function () {
+            $('#tb_userList').bootstrapTable(('refresh')); // 很重要的一步，刷新url！
+        });
+        $("#clearLog").click(function () {
+            $('#pathNo').val(''); // 很重要的一步，刷新url！
+        });
+
+        //请求获取角色列表
+    });
+
+    function getRoleList() {
+        ajaxGet('/role/listAll', '', function (data) {
+            if (data.code == 200) {
+                roleList = data.data
+            }
+        })
+    }
+
+    function accountEdite() {
+        var userId = $("#UserId").val();
+        var url = "/admin/update";
+        username = $("#username").val()
+        password = $("#password").val()
+        email = $("#email").val()
+        nickName = $("#nickName").val()
+        status = $("#status").val()
+        var parames = {
+            id: parseInt(userId),
+            username: username,
+            password: password,
+            email: email,
+            nickName: nickName,
+            status: parseInt(status)
+        }
+        ajaxPostWithToken(url, JSON.stringify(parames), function (data) {
+            if (data.code == 200) {
+                $("#model_updateUserInfo").modal('hide');
+                toastr.success("修改用户信息成功")
+            }
+        });
+    }
+
+    window.operateEvents = {
+        'click #choseRole': function (e, value, row, index) {
+            $(".roleList").select2({
+                dropdownParent: $("#model_selectRole"),
+                tags: true,
+                noneSelectedText: '请选择'   //默认显示内容
+                // maximumSelectionLength: 3  //最多能够选择的个数
+            });
+
+            //查询用户角色
+            ajaxGet('/admin/role/' + value, '', function (data) {
+                    if (data.code == 200) {
+                        myrole = data.data
+                        var typeListHtml = '';
+                        $.each(roleList, function (idx, item) {
+                            typeListHtml += '<option value = ' + item.id + '>' + item.name + '</option>'
+                        });
+                        $('.roleList').html(typeListHtml).select2();
+                        var idList = []
+                        for (let i = 0; i < myrole.length; i++) {
+                            var netdata = roleList[i];
+                            idList.push(netdata.id)
+                        }
+                        $(".roleList").val(idList).select2();
+                    }
+                }
+            )
+            //初始化刷新数据
+            $(window).on('load', function () {
+                $('.roleList').selectpicker('val', '');
+                $('.roleList').selectpicker('refresh');
+            });
+            $("#userforRoleId").val(value);
+            $("#model_selectRole").modal('show');
+        },
+        'click #updateUserInfo': function (e, value, row, index) {
+                $("#UserId").val(value);
+                $("#username").val(row.username);
+                $("#model_updateUserInfo").modal('show');
+
+            }
+        ,
+        'click #delete': function (e, value, row, index) {
+
+            }
+    };
+
+    /**
+     * 操作列
+     * @param value 传入的数据
+     * @param row 当前行
+     * @param index 当前列数
+     * @returns {string} 返回渲染数据
+     */
+    function operationForCheck(value, row, index) {
+        if (row.status == 1) {
+            return "<input value='" + row.id + "' type='checkbox' id='project_status_switch_on' name='mycheck' checked />";
+        } else if (row.status == 0) {
+            return "<input value='" + row.id + "' type='checkbox' id='project_status_switch_off' name='mycheck' check />";
+        }
+    }
+
+    function operationTable(value, row, index) {
+        return "<button class='btn btn-info' id='choseRole'> 配置权限 </button>" +
+            "&nbsp;&nbsp;" +
+            "<button class='btn btn-warning' id='updateUserInfo'> 修改 </button>" +
+            "&nbsp;&nbsp;" +
+            "<button class='btn btn-danger' id='delete'> 删除 </button>";
+    }
+
+    var TableInit = function () {
+        var oTableInit = new Object();
+        //初始化Table
+        oTableInit.Init = function () {
+            $('#tb_userList').bootstrapTable({
+                url: '/admin/list',         //请求后台的URL（*）
+                method: 'get',                      //请求方式（*）
+                toolbar: '#toolbar',                //工具按钮用哪个容器
+                striped: true,                      //是否显示行间隔色
+                cache: false,                       //是否使用缓存，默认为true，所以一般情况下需要设置一下这个属性（*）
+                pagination: true,                   //是否显示分页（*）
+                sortable: false,                     //是否启用排序
+                sortOrder: "asc",                   //排序方式
+                queryParams: oTableInit.queryParams,//传递参数（*）
+                sidePagination: "server",           //分页方式：client客户端分页，server服务端分页（*）
+                pageNumber: 1,                       //初始化加载第一页，默认第一页
+                pageSize: 10,                       //每页的记录行数（*）
+                pageList: [10, 25, 50, 100],        //可供选择的每页的行数（*）
+                //search: true,                       //是否显示表格搜索，此搜索是客户端搜索，不会进服务端，所以，个人感觉意义不大
+                strictSearch: true,
+                showColumns: true,                  //是否显示所有的列
+                showRefresh: true,                    //是否显示刷新按钮
+                minimumCountColumns: 2,             //最少允许的列数
+                //clickToSelect: false,                //是否启用点击选中行
+                height: 500,                        //行高，如果没有设置height属性，表格自动根据记录条数觉得表格高度
+                uniqueId: "ID",                     //每一行的唯一标识，一般为主键列
+                showToggle: true,                    //是否显示详细视图和列表视图的切换按钮
+                cardView: false,                    //是否显示详细视图
+                detailView: false,                   //是否显示父子表
+                ajaxOptions: {
+                    headers: {"Authorization": handleLocalStorage('get', 'Authorization')}
+                },
+                responseHandler: function (res) {
+                    return {
+                        "total": res.data.total,
+                        "rows": res.data.list,
+                    }
+                },
+                columns: [
+                    {
+                        title: '编号',//标题
+                        formatter: function (value, row, index) {
+                            var pageSize = $('#tb_userList').bootstrapTable('getOptions').pageSize;
+                            var pageNumber = $('#tb_userList').bootstrapTable('getOptions').pageNumber;
+                            return pageSize * (pageNumber - 1) + index + 1;
+                        }
+                    }, {
+                        field: "username",
+                        title: "账号"
+                    }, {
+                        field: "nickName",
+                        title: "用户名"
+                    }, {
+                        field: 'note',
+                        title: '角色名称',
+
+                    }, {
+                        field: 'email',
+                        title: '邮箱',
+
+                    }, {
+                        field: 'loginTime',
+                        title: '最后登陆时间',
+
+                    }, {
+                        field: 'status',
+                        title: '是否启用',
+                        formatter: operationForCheck
+                    }, {
+                        field: 'id',
+                        title: '操作',
+                        align: 'center',
+                        valign: 'middle',
+                        events: operateEvents,
+                        formatter: operationTable
+                    }
+                ],
+                onLoadSuccess: function(){
+                    initSwitch();
+                },
+            });
+        }
+        function initSwitch(){
+            $(name='mycheck').bootstrapSwitch({
+                onText : "启用",      // 设置ON文本
+                offText : "禁用",    // 设置OFF文本
+                onColor : "success",// 设置ON文本颜色(info/success/warning/danger/primary)
+                offColor : "warning",  // 设置OFF文本颜色 (info/success/warning/danger/primary)
+                size : "small",    // 设置控件大小,从小到大  (mini/small/normal/large)
+                // // 当开关状态改变时触发
+                onSwitchChange : function(event, state) {
+                    if (state == true) {
+                        alert("ON");
+                    } else {
+                        alert("OFF");
+                    }
+                }
+            })
+        }
+        //得到查询的参数
+        oTableInit.queryParams = function (params) {
+            var temp = {   //这里的键的名字和控制器的变量名必须一直，这边改动，控制器也需要改成一样的
+                pageSize: params.limit,   //页面大小
+                pageNum: params.offset,  //页码
+                keyword: $('#pathNo').val()
+            };
+            return temp;
+        };
+        return oTableInit;
+    };
+
+    //配置权限按钮
+    function changeRole() {
+        var ls = $(".roleList").val();
+        var userId = $("#userforRoleId").val();
+        var list = []
+        $.each(ls, function (idx, item) {
+            list.push(item)
+        });
+        var parame = JSON.stringify({
+            'adminId': Number(userId),
+            'roleIds': list
+        })
+        ajaxPostWithToken('/admin/role/update', parame, function (data) {
+            $("#model_selectRole").modal('hide');
+            toastr.success("修改权限成功")
+        })
+    }
+    //
+    // $('#project_status_switch').bootstrapSwitch("onSwitchChange",function(event,state){
+    //     var val='';
+    //     var text='';
+    //     if(state==true){
+    //         val=1;
+    //         text='开启';
+    //     }else{
+    //         val=0;
+    //         text='关闭';
+    //     }
+    // })
+</script>
+</html>

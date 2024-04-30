@@ -1,0 +1,536 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <meta charset="utf-8">
+    <title>BootStrap Table使用</title>
+
+    <link href="../../static/css/bootstrap.min.css" rel="stylesheet">
+    <link href="../../static/css/bootstrap-table.css?v=1.18.1" rel="stylesheet">
+    <link href="../../static/css/font-awesome.min.css?v=4.4.0" rel="stylesheet">
+    <link href="../../static/css/animate.css" rel="stylesheet">
+    <link href="../../static/css/style.css?v=4.0.0" rel="stylesheet"><base target="_blank">
+    <link href="../../static/css/plugins/sweetalert/sweetalert.css" rel="stylesheet">
+    <script src="../../static/js/commonrequest.js"></script>
+    <style>
+        .wrap-logs {
+            width: 400px;
+            white-space: nowrap;
+            text-overflow: ellipsis;
+            overflow: hidden;
+        }
+    </style>
+</head>
+<body>
+<div class="wrapper wrapper-content animated fadeInRight">
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="ibox float-e-margins">
+                <div class="ibox-title">
+                    <h5>文件信息查询推送页面</h5>
+                    <div class="ibox-tools">
+                        <a class="collapse-link">
+                            <i class="fa fa-chevron-up"></i>
+                        </a>
+                        <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                            <i class="fa fa-wrench"></i>
+                        </a>
+                    </div>
+                </div>
+                <div class="ibox-content">
+                    <form role="form" class="form-horizontal m-t" id="searchFileForm" target="_self">
+                        <div class="form-group ">
+                            <label class="col-sm-2 control-label">病理号：</label>
+                            <div class="col-sm-2">
+                                <input type="text" id="pathNo" value="" name="searchText" class="form-control"
+                                       placeholder="">
+                                <span class="help-block m-b-none"></span>
+                                <label id="pathNoTemp" hidden></label>
+                            </div>
+                            <label class="col-sm-1 control-label">推送状态：</label>
+                            <div class="col-sm-3">
+                                <select id="option" class="form-control" name="option">
+                                    <option value="">无</option>
+                                    <option value="yes">已推送</option>
+                                    <option value="no">未推送</option>
+                                </select>
+                            </div>
+                            <label id="pushStateTemp" hidden></label>
+                        </div>
+                        <div class="hr-line-dashed"></div>
+                        <div class="form-group">
+                            <div class="col-sm-4 col-sm-offset-5">
+                                <button class="btn btn-primary" id="search">查询</button>
+                                <button class="btn btn-white" id="clearLog">清空</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="ibox-content">
+                    <div class="fixed-table-toolbar">
+                        <button class="btn btn-primary" id="pushFileButton" onclick="" style="float: right;margin: 10px;">文件推送</button>
+                        <button class="btn btn-primary" id="addFileButton"  style="float: right;margin: 10px;">新增文件</button>
+                    </div>
+                    <table id="tb_patientLogs"></table>
+                </div>
+                <div id="my_dialog" class="modal" style="display: none">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-body">
+                                <div class="row">
+                                    <div class="col-sm-11">
+                                        <h3 class="m-t-none m-b">新增文档</h3>
+                                        <form id="fileForm" role="form" target="_self" enctype="multipart/form-data">
+                                            <div class="form-group">
+                                                <label>病理号：</label>
+                                                <input placeholder="请输入病理号" class="form-control" name="filename" id="pathNo2">
+                                            </div>
+                                            <div class="form-group">
+                                                <label>文件名：</label>
+                                                <input placeholder="请输入文件名" class="form-control" name="filename" id="filename">
+                                            </div>
+                                            <!--                                            <div class="form-group ">-->
+                                            <!--                                                <label>文件父id：</label>-->
+                                            <!--                                                <select id="fileFatherId" class="form-control" name="fileFatherId">-->
+                                            <!--                                                    <option value="0">无</option>-->
+                                            <!--                                                </select>-->
+                                            <!--                                            </div>-->
+                                            <div class="form-group">
+                                                <label>上传文件：</label>
+                                                <input  type="file" placeholder="选择上传文件" class="form-control" id="filepath" name="filepath">
+                                            </div>
+                                            <div class="form-group">
+                                                <label>文件类型：</label>
+                                                <select id="optionFileType" class="form-control" name="optionFileType">
+                                                    <option value="ExamImage" selected>ExamImage</option>
+                                                    <option value="ExamImageROI">ExamImageROI</option>
+                                                </select>
+                                            </div>
+                                            <div class="form-group">
+                                                <label>ObservationUID：</label>
+                                                <input id="observationUID" type="observationUID" placeholder="病理号返回的data值" class="form-control">
+                                            </div>
+                                            <div>
+                                                <button id="close_my_dialog" type="button" class="btn btn-sm btn-default pull-right m-t-n-xs" >关闭</button>
+                                                <button class="btn btn-sm btn-primary pull-right m-t-n-xs" type="submitFile"><strong>确定</strong></button>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div id="children_dialog" class="modal" style="display: none">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-body">
+                                <div class="row">
+                                    <div class="col-sm-11">
+                                        <h3 class="m-t-none m-b">新增子文档</h3>
+                                        <form id="children_fileForm" role="form" target="_self" enctype="multipart/form-data">
+                                            <div class="form-group">
+                                                <label>病理号：</label>
+                                                <input placeholder="请输入病理号" class="form-control" name="children_filename" id="children_pathNo2" readonly="readonly">
+                                            </div>
+                                            <div class="form-group">
+                                                <label>文件名：</label>
+                                                <input placeholder="请输入文件名" class="form-control" name="children_filename" id="children_filename">
+                                            </div>
+                                            <div class="form-group ">
+                                                <label>文件父id：</label>
+                                                <input placeholder="请输入文件父id" class="form-control" name="children_fileFatherId" id="children_fileFatherId" readonly="readonly">
+                                            </div>
+                                            <div class="form-group">
+                                                <label>上传文件：</label>
+                                                <input  type="file" placeholder="选择上传文件" class="form-control" id="children_filepath" name="children_filepath">
+                                            </div>
+                                            <div class="form-group">
+                                                <label>文件类型：</label>
+                                                <select id="children_optionFileType" class="form-control" name="children_optionFileType">
+                                                    <option value="ExamImage">ExamImage</option>
+                                                    <option value="ExamImageROI" selected>ExamImageROI</option>
+                                                </select>
+                                            </div>
+                                            <div class="form-group">
+                                                <label>ObservationUID：</label>
+                                                <input id="children_observationUID" type="observationUID" placeholder="病理号返回的data值" class="form-control">
+                                            </div>
+                                            <div>
+                                                <button id="children_close_my_dialog" type="button" class="btn btn-sm btn-default pull-right m-t-n-xs" >关闭</button>
+                                                <button class="btn btn-sm btn-primary pull-right m-t-n-xs" type="submitFile"><strong>确定</strong></button>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="panel-body" style="padding-bottom:0px;">
+</div>
+</body>
+<script src="../../static/js/jquery.min.js?v=2.1.4"></script>
+<script src="../../static/js/plugins/sweetalert/sweetalert.min.js"></script>
+<script src="../../static/js/bootstrap.min.js?v=3.3.5"></script>
+<script src="../../static/js/bootstrap-table.js"></script>
+<script src="../../static/js/bootstrap-table-zh-CN.js"></script>
+<script src="../../static/js/content.min.js?v=1.0.0"></script>
+<script src="../../static/js/jquery-ui-1.10.4.min.js"></script>
+<script src="../../static/js/plugins/beautifyhtml/beautifyhtml.js"></script>
+<script src="../../static/js/content.min.js?v=1.0.0"></script>
+<script src="../../static/js/plugins/validate/jquery.validate.min.js"></script>
+<script src="../../static/js/plugins/validate/messages_zh.min.js"></script>
+<script src="../../static/js/demo/form-validate-demo.js"></script>
+<script src="../../static/js/plugins/footable/footable.all.min.js"></script>
+<script type="text/javascript" src="../../static/js/plugins/markdown/markdown.js"></script>
+<script type="text/javascript" src="../../static/js/plugins/markdown/to-markdown.js"></script>
+<script type="text/javascript" src="../../static/js/plugins/markdown/bootstrap-markdown.js"></script>
+<script type="text/javascript" src="../../static/js/plugins/markdown/bootstrap-markdown.zh.js"></script>
+<script type="text/javascript">
+    function readInfo(pathNo,slideNo){
+        if(pathNo!=null){
+            $("#pathNo").val(pathNo);
+        }
+    }
+    $('#close_my_dialog').click(function(){$('#my_dialog').dialog("close");});
+    $('#addFileButton').click(function(){$('#my_dialog').dialog({modal:true});});
+    $(function () {
+        //1.初始化Table
+        var oTable = new TableInit();
+        oTable.Init();
+        $("#pushFileButton").click(function(){
+            var list="";
+            $("#tb_patientLogs").find(":checkbox:checked").each(function(){
+                var val = $(this).parents("tr");
+                var td_list = val.find("td:eq(3)");
+                if(td_list.text()!=""){
+                    list=list+","+td_list.text();
+                }
+            });
+            console.log(list);
+            //将文件id发送给后台
+            if(list.length==0){
+                confirm("您没有选中上传文件！");
+            }else{
+                $.ajax({
+                    type: "POST",
+                    url: '/langjiaInterface/pushfile',
+                    data: {"fileIdLists":JSON.stringify(list)},
+                    dataType:'json',
+                    beforeSend: function (XMLHttpRequest) {
+                        XMLHttpRequest.setRequestHeader("Authorization", handleLocalStorage('get', 'Authorization'));
+                        $('#toastrOptions2').html("");
+                        swal("文件推送中，请稍等........","文件推送","warning");
+                    },
+                    success: function(data){
+                        if(data.code==200){
+                            swal("文件推送成功！", "推送成功。", "success");
+                        }else{
+                            swal("文件推送失败！", "文件推送失败:"+data.msg, "failed");
+                        }
+                        $("#tb_patientLogs").bootstrapTable('refresh');
+                    },
+                    error:function(){
+                        swal("上传失败！", "您的文件上传失败。", "failed");
+                    }
+                });
+            }
+        });
+    });
+    $('#children_close_my_dialog').click(function(){
+        $('#children_dialog').dialog("close");}
+    );
+    window.operateEvents = {
+        'click .showDetail': function (e, value, row, index) {
+            var fileId=row.fileId;
+            var pathNo=row.pathNo;
+            var ObservationUID=row.ObservationUID;
+            $('#children_pathNo2').val(pathNo);
+            $('#children_fileFatherId').val(fileId);
+            $('#children_observationUID').val(ObservationUID);
+            $('#children_dialog').dialog({modal:true});
+        }
+    };
+
+    var TableInit = function () {
+        var oTableInit = new Object();
+        //初始化Table
+        oTableInit.Init = function () {
+            $('#tb_patientLogs').bootstrapTable({
+                url: '/langjiaInterface/searchFileInfo',         //请求后台的URL（*）
+                method: 'post',                      //请求方式（*）
+                toolbar: '#toolbar',                //工具按钮用哪个容器
+                striped: true,                      //是否显示行间隔色
+                cache: false,                       //是否使用缓存，默认为true，所以一般情况下需要设置一下这个属性（*）
+                pagination: true,                   //是否显示分页（*）
+                sortable: false,                     //是否启用排序
+                sortOrder: "asc",                   //排序方式
+                queryParams: oTableInit.queryParams,//传递参数（*）
+                sidePagination: "server",           //分页方式：client客户端分页，server服务端分页（*）
+                pageNumber:1,                       //初始化加载第一页，默认第一页
+                pageSize: 10,                       //每页的记录行数（*）
+                pageList: [10, 50, 100,200],        //可供选择的每页的行数（*）
+                //search: true,                       //是否显示表格搜索，此搜索是客户端搜索，不会进服务端，所以，个人感觉意义不大
+                strictSearch: true,
+                showColumns: true,                  //是否显示所有的列
+                showRefresh: true,                  //是否显示刷新按钮
+                minimumCountColumns: 2,             //最少允许的列数
+                //clickToSelect: false,                //是否启用点击选中行
+                height: 500,                        //行高，如果没有设置height属性，表格自动根据记录条数觉得表格高度
+                uniqueId: "ID",                     //每一行的唯一标识，一般为主键列
+                showToggle:true,                    //是否显示详细视图和列表视图的切换按钮
+                cardView: false,                    //是否显示详细视图
+                detailView: false,                   //是否显示父子表
+                ajaxOptions: {
+                    headers: {"Authorization": handleLocalStorage('get', 'Authorization')}
+                },
+                columns: [
+                    {
+                        checkbox: true
+                    }, {
+                        title: '编号',//标题
+                        formatter: function (value, row, index) {
+                            var pageSize=$('#tb_patientLogs').bootstrapTable('getOptions').pageSize;
+                            var pageNumber=$('#tb_patientLogs').bootstrapTable('getOptions').pageNumber;
+                            return pageSize * (pageNumber - 1) + index + 1;
+                        }
+                    },{
+                        field: 'pathNo',
+                        title: '病理号',
+                        align: 'center'
+                    },{
+                        field: 'fileId',
+                        title: '文件id'
+                    },{
+                        field: 'fileFid',
+                        title: '文件父id'
+                    },{
+                        field: 'fileName',
+                        title: '文件名'
+                    },{
+                        field: 'filePath',
+                        title: '文件路径'
+                    },{
+                        field: 'fileType',
+                        title: '文件类型'
+                    },{
+                        field: 'fileUID',
+                        title: 'FileUID'
+                    },{
+                        field: 'ObservationUID',
+                        title: 'ObservationUID'
+                    },{
+                        field: 'filesize',
+                        title: '文件大小'
+                    },{
+                        field: 'pushState',
+                        title: '上传状态',
+                        align: 'center',
+                        valign: 'middle',
+                        formatter: pushStateFormatter
+                    },{
+                        field: 'childrenOperation',
+                        title: '上传子文件',
+                        align: 'center',
+                        valign: 'middle',
+                        events: operateEvents,//给按钮注册事件
+                        formatter: childrenOperationFormatter
+                    }
+                ],
+                responseHandler:function(res){
+                    return{
+                        "total":res.data.total,
+                        "rows":res.data.dataList
+                    }
+                }
+            });
+        };
+        //得到查询的参数
+        oTableInit.queryParams = function (params) {
+            var temp = {   //这里的键的名字和控制器的变量名必须一直，这边改动，控制器也需要改成一样的
+                limit: params.limit,   //页面大小
+                offset: params.offset,  //页码
+                pushStateTemp:trim($('#pushStateTemp').val()),
+                pathNo:trim($('#pathNoTemp').val())
+            };
+            return temp;
+        };
+        return oTableInit;
+    };
+
+
+
+    function addMenuTab(dataUrl, menuName, dataIndex) {
+        return window.parent.addMenuTab(dataUrl, menuName, dataIndex);
+    }
+
+    function pushStateFormatter(value, row, index) {
+        var html;
+        if(row.pushState==1){
+            html='<i class="fa fa-check-square-o text-navy"></i> 已推送';
+        }else if (row.pushState==0){
+            html='<i class="fa fa-square-o text-warning"></i> 未推送';
+        }
+        return [
+            html
+        ].join("")
+    }
+
+    function childrenOperationFormatter(value, row, index) {
+        var html;
+        if(row.fileFid==0){
+            html='<a class="showDetail" type="button">添加</a>';
+        }else{
+            html='<a class="fa">--</a> ';
+        }
+        return [
+            html
+        ].join("")
+    }
+
+    $('#clearLog').click(function () {
+        $("#pathNoTemp").val("");
+        $("#pushStateTemp").val("");
+        $('#option').find('option:contains("无")').prop('selected',true);
+        return false;
+    });
+
+    $("#fileForm").validate(
+        {
+            rules:{fileFatherId:"required",filename:"required",filepath:"required"},
+            submitHandler: function () {
+                swal({
+                    title: "您确定要上传文件吗",
+                    text: "文件上传后不可撤销！",
+                    type: "warning",
+                    showCancelButton: true,
+                    confirmButtonColor: "#1ab394",
+                    confirmButtonText: "上传",
+                    cancelButtonText:"取消",
+                    closeOnConfirm: false,
+                    closeOnCancel: true,
+                }, function () {
+                    var pathNo=$("#pathNo2").val();
+                    if(pathNo!=""&&pathNo.length!=0){
+                        var filename=$("#filename").val();
+                        var filepath=$("#filepath").prop('files');
+                        var optionFileType=$("#optionFileType").val();
+                        var observationUID=$("#observationUID").val();
+                        var data=new FormData();
+                        data.append('pathNo',pathNo);
+                        data.append('fileFatherId','0');
+                        data.append('filename',filename);
+                        data.append('file',filepath[0]);
+                        data.append('optionFileType',optionFileType);
+                        data.append('observationUID',observationUID);
+                        $.ajax({
+                            type: "POST",
+                            url: '/langjiaInterface/upFileByPathNo',
+                            data:data,
+                            cache:false,
+                            processData:false,
+                            contentType:false,
+                            dataType:'json',
+                            beforeSend: function (XMLHttpRequest) {
+                                XMLHttpRequest.setRequestHeader("Authorization", handleLocalStorage('get', 'Authorization'));
+                                $('#toastrOptions2').html("");
+                                swal("正在上传文件，请稍等........","上传文件","warning");
+                            },
+                            success: function(data){
+                                if(data.state=="success"){
+                                    $("#tb_patientLogs").bootstrapTable('refresh');
+                                    swal("上传成功！", "您已经上传了文件。", "success");
+                                    $("#filename").val("");
+                                    $("#optionFileType").val("");
+                                    $("#observationUID").val("");
+                                    $('#my_dialog').dialog("close");
+                                }else{
+                                    var reason=data.reason;
+                                    swal("上传失败！", reason, "failed");
+                                }
+                            },
+                            error:function(){
+                                swal("上传失败！", "您的文件上传失败。", "failed");
+                            }
+                        });
+                    }else{
+                        swal("上传失败！", "无法获取病理号！", "failed");
+                    }
+                });
+            }
+        });
+
+    $("#children_fileForm").validate(
+        {
+            rules:{fileFatherId:"required",filename:"required",filepath:"required"},
+            submitHandler: function () {
+                swal({
+                    title: "您确定要上传文件吗",
+                    text: "文件上传后不可撤销！",
+                    type: "warning",
+                    showCancelButton: true,
+                    confirmButtonColor: "#1ab394",
+                    confirmButtonText: "上传",
+                    cancelButtonText:"取消",
+                    closeOnConfirm: false,
+                    closeOnCancel: true,
+                }, function () {
+                    var pathNo=$("#children_pathNo2").val();
+                    if(pathNo!=""&&pathNo.length!=0){
+                        var filename=$("#children_filename").val();
+                        var filepath=$("#children_filepath").prop('files');
+                        var optionFileType=$("#children_optionFileType").val();
+                        var observationUID=$("#children_observationUID").val();
+                        var fileFatherId=$("#children_fileFatherId").val();
+                        var data=new FormData();
+                        data.append('pathNo',pathNo);
+                        data.append('fileFatherId',fileFatherId);
+                        data.append('filename',filename);
+                        data.append('file',filepath[0]);
+                        data.append('optionFileType',optionFileType);
+                        data.append('observationUID',observationUID);
+                        $.ajax({
+                            type: "POST",
+                            url: '/langjiaInterface/upFileByPathNo',
+                            data:data,
+                            cache:false,
+                            processData:false,
+                            contentType:false,
+                            dataType:'json',
+                            beforeSend: function (XMLHttpRequest) {
+                                XMLHttpRequest.setRequestHeader("Authorization", handleLocalStorage('get', 'Authorization'));
+                                $('#toastrOptions2').html("");
+                                swal("正在上传文件，请稍等........","上传文件","warning");
+                            },
+                            success: function(data){
+                                if(data.state=="success"){
+                                    $("#tb_patientLogs").bootstrapTable('refresh');
+                                    swal("上传成功！", "您已经上传了文件。", "success");
+                                    $("#children_filename").val("");
+                                    $("#children_optionFileType").val("");
+                                    $("#children_observationUID").val("");
+                                    $('#children_dialog').dialog("close");
+                                }else{
+                                    var reason=data.reason;
+                                    swal("上传失败！", reason, "failed");
+                                }
+                            },
+                            error:function(){
+                                swal("上传失败！", "您的文件上传失败。", "failed");
+                            }
+                        });
+                    }else{
+                        swal("上传失败！", "无法获取病理号！", "failed");
+                    }
+                });
+            }
+        });
+
+</script>
+<script src="../../static/js/local_patient.js"></script>
+</html>

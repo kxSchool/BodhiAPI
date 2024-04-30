@@ -1,0 +1,670 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <meta charset="utf-8">
+    <title>资源列表</title>
+    <link href="../../static/css/plugins/switchery/switchery.css" rel="stylesheet">
+
+    <link href="../../static/css/bootstrap.min.css?v=3.3.6" rel="stylesheet">
+    <link href="../../static/css/bootstrap-table.css?v=1.18.1" rel="stylesheet">
+    <link href="../../static/css/animate.css" rel="stylesheet">
+    <link href="../../static/css/style.css?v=4.1.0" rel="stylesheet">
+    <link href="../../static/css/font-awesome.min.css?v=4.4.0" rel="stylesheet">
+    <link href="../../static/css/plugins/chosen/chosen.css" rel="stylesheet">
+    <!-- bootstrap-select -->
+    <link href="../../static/css/plugins/bootstrap-select2/select2.css" rel="stylesheet">
+    <link href="../../static/css/plugins/bootstrap-select/bootstrap-select.css" rel="stylesheet">
+    <link href="../../static/css/plugins/toastr/toastr.min.css" rel="stylesheet">
+    <!-- Sweet Alert -->
+    <link href="../../static/css/plugins/sweetalert/sweetalert.css" rel="stylesheet">    <!-- Sweet alert -->
+
+    <script src="../../static/js/jquery.min.js?v=2.1.4"></script>
+    <script src="../../static/js/bootstrap.min.js?v=3.3.5"></script>
+    <script src="../../static/js/bootstrap-table.js"></script>
+    <script src="../../static/js/plugins/bootstrap-switch/bootstrap-switch.js"></script>
+
+    <script src="../../static/js/bootstrap-table-zh-CN.js"></script>
+
+
+    <base target="_blank">
+    <!-- Switchery -->
+    <script src="../../static/js/plugins/switchery/switchery.js"></script>
+    <script src="../../static/js/jquery-ui-1.10.4.min.js"></script>
+    <script src="../../static/js/plugins/beautifyhtml/beautifyhtml.js"></script>
+    <script src="../../static/js/plugins/validate/jquery.validate.min.js"></script>
+    <script src="../../static/js/plugins/validate/messages_zh.min.js"></script>
+    <script src="../../static/js/plugins/footable/footable.all.min.js"></script>
+    <script src="../../static/js/plugins/sweetalert/sweetalert.min.js"></script>
+    <!-- toastr -->
+    <script src="../../static/js/plugins/toastr/toastr.min.js"></script>
+    <!-- form -->
+    <script src="../../static/js/demo/form-validate-demo.js"></script>
+    <script src="../../static/js/plugins/bootstrap-select2/select2.min.js"></script>
+    <script src="../../static/js/plugins/bootstrap-select2/i18n/zh-CN.js"></script>
+
+    <!-- Sweet alert -->
+    <script src="../../static/js/plugins/sweetalert/sweetalert.min.js"></script>
+
+
+</head>
+<style>
+    .select2-drop {
+        z-index: 10050 !important;
+    }
+
+    .select2-search-choice-close {
+        margin-top: 0 !important;
+        right: 2px !important;
+        min-height: 10px;
+    }
+
+    .select2-search-choice-close:before {
+        color: black !important;
+    }
+
+    /*防止select2不会自动失去焦点*/
+    .select2-container {
+        z-index: 16000 !important;
+    }
+
+    .select2-drop-mask {
+        z-index: 15990 !important;
+    }
+
+    .select2-drop-active {
+        z-index: 15995 !important;
+    }
+</style>
+<body class="gray-bg">
+<div class="wrapper wrapper-content animated fadeInRight">
+    <!--    <div class="row">-->
+    <div class="ibox float-e-margins">
+        <div class="ibox float-e-margins">
+            <div class="ibox-title">
+                <h5>资源列表</h5>
+                <div class="ibox-tools">
+                    <a class="collapse-link">
+                        <i class="fa fa-chevron-up"></i>
+                    </a>
+                    <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                        <i class="fa fa-wrench"></i>
+                    </a>
+                    <ul class="dropdown-menu dropdown-user">
+                        <li><a href="#">选项1</a>
+                        </li>
+                        <li><a href="#">选项2</a>
+                        </li>
+                    </ul>
+                    <a class="close-link">
+                        <i class="fa fa-times"></i>
+                    </a>
+                </div>
+            </div>
+            <div class="ibox-content">
+                <div class="form-horizontal">
+                    <div class="form-group">
+                        <div class="col-sm-1 control-label">资源名称：</div>
+                        <div class="col-sm-2">
+                            <input type="text" id="param1" value="" name="searchText"
+                                   class="form-control"
+                                   placeholder="">
+                        </div>
+                        <div class="col-sm-1 control-label">资源路径：</div>
+                        <div class="col-sm-2">
+                            <input type="text" id="param2" value="" name="searchText"
+                                   class="form-control"
+                                   placeholder="">
+                        </div>
+                        <div class="col-sm-1 control-label">资源分类：</div>
+                        <div class="col-sm-2">
+                            <select id="resourceList" class="form-control" value="0" data-live-search="false"
+                                    style="width: 100%">
+                            </select>
+                        </div>
+                        <div class="col-sm-2">
+                            <button class="btn btn-primary" id="eventquery">查询</button>
+                            <button class="btn btn-white" id="clearLog">清空</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="row row-lg">
+                    <div class="col-sm-12">
+                        <div class="example-wrap">
+                            <div class="example">
+                                <button class="btn btn-primary" id="add_resource" onclick="add_resource()"
+                                        style="float: right;margin: 10px;">
+                                    添加
+                                </button>
+                                <table id="tb_resource"></table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="ibox-title">
+                <h5>资源分类列表</h5>
+                <div class="ibox-tools">
+                    <a class="collapse-link">
+                        <i class="fa fa-chevron-up"></i>
+                    </a>
+                    <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                        <i class="fa fa-wrench"></i>
+                    </a>
+                    <ul class="dropdown-menu dropdown-user">
+                        <li><a href="#">选项1</a>
+                        </li>
+                        <li><a href="#">选项2</a>
+                        </li>
+                    </ul>
+                    <a class="close-link">
+                        <i class="fa fa-times"></i>
+                    </a>
+                </div>
+            </div>
+            <div class="ibox-content">
+                <div class="row row-lg">
+                    <div class="col-sm-12">
+                        <div class="example-wrap">
+                            <div class="example">
+                                <button class="btn btn-primary" id="add_resourceCategory"
+                                        onclick="add_resourceCategory()" style="float: right;margin: 10px;">
+                                    添加
+                                </button>
+                                <table id="tb_resourceCategory"></table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="modal inmodal fade" id="model_S" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button class="close" type="button" data-dismiss="modal">&times;</button>
+                <div id="model_S_name" class="model_name">
+                    <h4 class="modal-title"></h4>
+                </div>
+            </div>
+            <div class="modal-body">
+                <form class="form-horizontal m-t" id="from_S" onsubmit="return false;">
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label">资源名称：</label>
+                        <div class="col-sm-8">
+                            <input id="S_name" name="S_name" class="form-control" type="text">
+                            <!--                            <span class="help-block m-b-none"><i class="fa fa-info-circle"></i> 这里写点提示的内容</span>-->
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label">资源路径：</label>
+                        <div class="col-sm-8">
+                            <input id="S_url" name="S_url" class="form-control" type="text">
+                            <!--                            <span class="help-block m-b-none"><i class="fa fa-info-circle"></i> 这里写点提示的内容</span>-->
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label">资源分类：</label>
+                        <div class="col-sm-8">
+                            <select id="S_resourceList" class="form-control" value="0" data-live-search="false"
+                                    style="width: 100%">
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label">描述：</label>
+                        <div class="col-sm-8">
+                            <input id="S_description" name="SC_description" class="form-control" type="text">
+                            <!--                            <span class="help-block m-b-none"><i class="fa fa-info-circle"></i> 这里写点提示的内容</span>-->
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-sm-8 col-sm-offset-3">
+                            <button class="btn btn-primary" type="submit" id="sourceSubmit" onclick="S_Submit()">提交
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <input id="S_id" type="text" style="display:none">
+</div>
+
+<div class="modal inmodal fade" id="model_SC" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button class="close" type="button" data-dismiss="modal">&times;</button>
+                <div id="model_name" class="model_name">
+                    <h4 class="modal-title"></h4>
+                </div>
+            </div>
+            <div class="modal-body">
+                <form class="form-horizontal m-t" id="from_modifyAccount" onsubmit="return false;">
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label">资源分类名称：</label>
+                        <div class="col-sm-8">
+                            <input id="SC_name" name="SC_name" class="form-control" type="text">
+                            <!--                            <span class="help-block m-b-none"><i class="fa fa-info-circle"></i> 这里写点提示的内容</span>-->
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label">资源分类排序：</label>
+                        <div class="col-sm-8">
+                            <input id="SC_sort" name="SC_sort" class="form-control" type="text">
+                            <!--                            <span class="help-block m-b-none"><i class="fa fa-info-circle"></i> 这里写点提示的内容</span>-->
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-sm-8 col-sm-offset-3">
+                            <button class="btn btn-primary" type="submit" id="submit" onclick="SC_Submit()">提交
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <input id="SC_id" type="text" style="display:none">
+</div>
+</body>
+<!-- 引入自定义ajax -->
+<script src="../../static/js/commonrequest.js"></script>
+<script>
+
+
+    $(function () {
+        toastr.options = {
+            "closeButton": false, //是否显示关闭按钮
+            "debug": false, //是否使用debug模式
+            "positionClass": "toast-top-center",//弹出窗的位置
+            "showDuration": "300",//显示的动画时间
+            "hideDuration": "1000",//消失的动画时间
+            "timeOut": "5000", //展现时间
+            "extendedTimeOut": "1000",//加长展示时间
+            "showEasing": "swing",//显示时的动画缓冲方式
+            "hideEasing": "linear",//消失时的动画缓冲方式
+            "showMethod": "fadeIn",//显示时的动画方式
+            "hideMethod": "fadeOut" //消失时的动画方式
+        };
+
+        sourceCategoryList()
+        //1.初始化Table
+        var oTable = new TableInit();
+        oTable.Init();
+        var oTable2 = new TableInit2();
+        oTable2.Init();
+        //
+        $("#eventquery").click(function () {
+            $('#tb_resource').bootstrapTable('refresh'); // 很重要的一步，刷新url！
+        });
+        $("#clearLog").click(function () {
+            $('#param1').val('');
+            $('#param2').val('');
+            $('#param3').val('');
+        });
+
+        //请求获取角色列表
+    });
+
+    window.operateEvents = {
+        'click #S_update': function (e, value, row, index) {
+            $("#model_S_name .modal-title").html("修改资源");
+            $('#S_name').val(row.name);
+            $('#S_id').val(row.id);
+            $('#S_url').val(row.url);
+            $('#S_description').val(row.description);
+            $('#model_S').modal('show');
+
+        },
+        'click #S_delete': function (e, value, row, index) {
+            swal({
+                title: "您确定要删除这条信息吗",
+                text: "删除后将无法恢复，请谨慎操作！",
+                type: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#DD6B55",
+                confirmButtonText: "删除",
+                closeOnConfirm: false
+            }, function () {
+                var url = '/resource/delete/' + row.id
+                ajaxPostWithToken(url, '', function (data) {
+                    if (data.code == 200) {
+                        $('#tb_resource').bootstrapTable('refresh')
+
+                        swal("删除成功！", "您已经永久删除了这条信息。", "success");
+                    } else {
+                        swal("删除失败！", "您已经永久删除了这条信息。", "error");
+
+                    }
+                })
+            });
+        }
+    }
+
+    function operationTable(value, row, index) {
+        return "<button class='btn-small btn-warning' id='S_update'> 修改 </button>" +
+            "&nbsp;&nbsp;" +
+            "<button class='btn-small btn-danger' id='S_delete'> 删除 </button>";
+    }
+
+    var TableInit = function () {
+        var oTableInit = new Object();
+        //初始化Table
+        oTableInit.Init = function () {
+            $('#tb_resource').bootstrapTable({
+                url: '/resource/list',         //请求后台的URL（*）
+                method: 'get',                      //请求方式（*）
+                striped: true,                      //是否显示行间隔色
+                cache: false,                       //是否使用缓存，默认为true，所以一般情况下需要设置一下这个属性（*）
+                pagination: true,                   //是否显示分页（*）
+                sortable: false,                     //是否启用排序
+                queryParams: oTableInit.queryParams,//传递参数（*）
+                sidePagination: "server",           //分页方式：client客户端分页，server服务端分页（*）
+                pageNumber: 1,                       //初始化加载第一页，默认第一页
+                pageSize: 10,                       //每页的记录行数（*）
+                pageList: [10, 25, 50, 100],        //可供选择的每页的行数（*）
+                //search: true,                       //是否显示表格搜索，此搜索是客户端搜索，不会进服务端，所以，个人感觉意义不大
+                strictSearch: true,
+                showColumns: true,                  //是否显示所有的列
+                showRefresh: true,                    //是否显示刷新按钮
+                minimumCountColumns: 2,             //最少允许的列数
+                //clickToSelect: false,                //是否启用点击选中行
+                height: 500,                        //行高，如果没有设置height属性，表格自动根据记录条数觉得表格高度
+                uniqueId: "ID",                     //每一行的唯一标识，一般为主键列
+                showToggle: true,                    //是否显示详细视图和列表视图的切换按钮
+                cardView: false,                    //是否显示详细视图
+                detailView: false,                   //是否显示父子表
+                ajaxOptions: {
+                    headers: {"Authorization": handleLocalStorage('get', 'Authorization')}
+                },
+                responseHandler: function (res) {
+                    return {
+                        "total": res.data.total,
+                        "rows": res.data.list
+                    }
+                },
+                columns: [
+                    {
+                        title: '编号',//标题
+                        formatter: function (value, row, index) {
+                            var pageSize = $('#tb_resource').bootstrapTable('getOptions').pageSize;
+                            var pageNumber = $('#tb_resource').bootstrapTable('getOptions').pageNumber;
+                            return pageSize * (pageNumber - 1) + index + 1;
+                        }
+
+                    }, {
+                        field: "name",
+                        title: "分类名称"
+                    }, {
+                        field: "url",
+                        title: "URL路径"
+                    }, {
+                        field: "createTime",
+                        title: "添加时间"
+                    }, {
+                        field: "description",
+                        title: "描述"
+                    }, {
+                        field: 'id',
+                        title: '操作',
+                        align: 'center',
+                        valign: 'middle',
+                        events: operateEvents,
+                        formatter: operationTable
+                    }
+                ],
+
+            });
+        }
+        //得到查询的参数
+        oTableInit.queryParams = function (params) {
+            var ls = $("#resourceList").val();
+            if (ls == '0') {
+                var temp = {   //这里的键的名字和控制器的变量名必须一直，这边改动，控制器也需要改成一样的
+                    pageSize: params.limit,   //页面大小
+                    pageNum: params.offset,  //页码val()
+                    nameKeyword: $('#param1').val(),
+                    urlKeyword: $('#param2').val()
+                };
+            } else {
+                var temp = {   //这里的键的名字和控制器的变量名必须一直，这边改动，控制器也需要改成一样的
+                    pageSize: params.limit,   //页面大小
+                    pageNum: params.offset,  //页码val()
+                    nameKeyword: $('#param1').val(),
+                    categoryId: ls,
+                    urlKeyword: $('#param2').val()
+                };
+            }
+
+            return temp;
+        };
+        return oTableInit;
+    }
+
+
+    window.operateEvents2 = {
+        'click #updateUserInfo': function (e, value, row, index) {
+            $("#model_name .modal-title").html("修改资源分类");
+            $('#SC_sort').val(row.sort)
+            $('#SC_name').val(row.name)
+            $('#SC_id').val(row.id)
+            $('#model_SC').modal('show');
+        },
+        'click #delete': function (e, value, row, index) {
+            swal({
+                title: "您确定要删除这条信息吗",
+                text: "删除后将无法恢复，请谨慎操作！",
+                type: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#DD6B55",
+                confirmButtonText: "删除",
+                closeOnConfirm: false
+            }, function () {
+                var url = '/resourceCategory/delete/' + row.id
+                ajaxPostWithToken(url, '', function (data) {
+                    if (data.code == 200) {
+                        sourceCategoryList()
+                        $('#tb_resourceCategory').bootstrapTable('refresh')
+
+                        swal("删除成功！", "您已经永久删除了这条信息。", "success");
+                    } else {
+                        swal("删除失败！", "您已经永久删除了这条信息。", "error");
+
+                    }
+                })
+            });
+        }
+    }
+
+
+    function operationTable2(value, row, index) {
+        return "<button class='btn-small btn-warning' id='updateUserInfo'> 修改 </button>" +
+            "&nbsp;&nbsp;" +
+            "<button class='btn-small btn-danger' id='delete'> 删除 </button>";
+    }
+
+    var TableInit2 = function () {
+        var oTableInit2 = new Object();
+        //初始化Table
+        oTableInit2.Init = function () {
+            $('#tb_resourceCategory').bootstrapTable({
+                url: '/resourceCategory/listAll',         //请求后台的URL（*）
+                method: 'get',                      //请求方式（*）
+                striped: true,                      //是否显示行间隔色
+                cache: false,                       //是否使用缓存，默认为true，所以一般情况下需要设置一下这个属性（*）
+                pagination: true,                   //是否显示分页（*）
+                sortable: false,                     //是否启用排序
+                // queryParams: oTableInit.queryParams,//传递参数（*）
+                //search: true,                       //是否显示表格搜索，此搜索是客户端搜索，不会进服务端，所以，个人感觉意义不大
+                strictSearch: true,
+                showColumns: true,                  //是否显示所有的列
+                showRefresh: true,                    //是否显示刷新按钮
+                minimumCountColumns: 2,             //最少允许的列数
+                //clickToSelect: false,                //是否启用点击选中行
+                height: 500,                        //行高，如果没有设置height属性，表格自动根据记录条数觉得表格高度
+                uniqueId: "ID",                     //每一行的唯一标识，一般为主键列
+                showToggle: true,                    //是否显示详细视图和列表视图的切换按钮
+                cardView: false,                    //是否显示详细视图
+                detailView: false,                   //是否显示父子表
+                ajaxOptions: {
+                    headers: {"Authorization": handleLocalStorage('get', 'Authorization')}
+                },
+                responseHandler: function (res) {
+                    return {
+                        "rows": res.data
+                    }
+                },
+                columns: [
+                    {
+                        title: '编号',//标题
+                        formatter: function (value, row, index) {
+                            var pageSize = $('#tb_resource').bootstrapTable('getOptions').pageSize;
+                            var pageNumber = $('#tb_resource').bootstrapTable('getOptions').pageNumber;
+                            return pageSize * (pageNumber - 1) + index + 1;
+                        }
+
+                    }, {
+                        field: "name",
+                        title: "分类名称"
+                    }, {
+                        field: "createTime",
+                        title: "添加时间"
+                    }, {
+                        field: "sort",
+                        title: "排序"
+                    }, {
+                        field: 'id',
+                        title: '操作',
+                        align: 'center',
+                        valign: 'middle',
+                        events: operateEvents2,
+                        formatter: operationTable2
+                    }
+                ],
+
+            });
+        }
+        return oTableInit2;
+    }
+
+    //初始化资源分类下拉菜单
+    function sourceCategoryList() {
+        ajaxGet('/resourceCategory/listAll', '', function (data) {
+            if (data.code == 200) {
+                $("#resourceList").select2({
+                    tags: true,
+                    noneSelectedText: '请选择'   //默认显示内容
+                });
+                $("#S_resourceList").select2({
+                    tags: true,
+                    noneSelectedText: '请选择'   //默认显示内容
+                });
+                var typeListHtml = '<option value = 0></option>';
+                var typeListHtml2 = '';
+                $.each(data.data, function (idx, item) {
+                    typeListHtml += '<option value = ' + item.id + '>' + item.name + '</option>'
+                    typeListHtml2 += '<option value = ' + item.id + '>' + item.name + '</option>'
+                });
+                $('#resourceList').html(typeListHtml).select2();
+                $('#S_resourceList').html(typeListHtml2).select2();
+            }
+        })
+
+    }
+
+    // 资源分类添加
+    function add_resourceCategory() {
+        $("#model_name .modal-title").html("添加资源分类");
+        $('#model_SC').modal('show');
+        $('#SC_sort').val(0)
+    }
+
+    function SC_Submit() {
+        var value = $("#model_name .modal-title").html();
+        var SC_name = $('#SC_name').val()
+        var SC_sort = $('#SC_sort').val()
+        var SC_id = parseInt($('#SC_id').val())
+        var temp = {
+            name: SC_name,
+            sort: SC_sort
+        }
+        if (value == '添加资源分类') {
+            ajaxPostWithToken('/resourceCategory/create', temp, function (data) {
+                if (data.code == 200) {
+                    toastr.success('添加资源分类成功')
+                    sourceCategoryList()
+                    $('#tb_resourceCategory').bootstrapTable('refresh')
+
+                    $('#model_SC').modal('hide');
+                } else {
+                    toastr.error('添加资源分类失败')
+                }
+            });
+        } else if (value == '修改资源分类') {
+            var url = '/resourceCategory/update/' + SC_id
+            ajaxPostWithToken(url, temp, function (data) {
+                if (data.code == 200) {
+                    toastr.success('修改资源分类')
+                    sourceCategoryList()
+                    $('#model_SC').modal('hide');
+
+                    $('#tb_resourceCategory').bootstrapTable('refresh')
+
+                } else {
+                    toastr.error('修改资源分类')
+                }
+            });
+        }
+
+
+    }
+
+    // 资源添加
+    function add_resource() {
+        $("#model_S_name .modal-title").html("添加资源");
+        $('#model_S').modal('show');
+    }
+
+    function S_Submit() {
+        var temp = $("#model_S_name .modal-title").html();
+        var ls = parseInt($("#resourceList").val());
+        var S_id = parseInt($("#S_id").val())
+        var param = {
+            categoryId: ls,
+            description: $('#S_description').val(),
+            name: $('#S_name').val(),
+            url: $('#S_url').val()
+        }
+        if (temp == '添加资源') {
+            ajaxPostWithToken('/resource/create', param, function (data) {
+                if (data.code==200){
+                    toastr.success('添加资源成功')
+                    $('#model_S').modal('hide');
+                    $('#tb_resource').bootstrapTable('refresh')
+                }else {
+                    toastr.error('添加资源分类失败')
+                }
+            })
+        } else if (temp == '修改资源') {
+            var url='/resource/update/'+ S_id
+            ajaxPostWithToken(url,param,function (data) {
+                if (data.code==200){
+                    toastr.success('修改资源成功')
+                    $('#model_S').modal('hide');
+                    $('#tb_resource').bootstrapTable('refresh')
+                }else {
+                    toastr.error('修改资源失败')
+                }
+            })
+        }
+    }
+
+
+</script>
+</html>

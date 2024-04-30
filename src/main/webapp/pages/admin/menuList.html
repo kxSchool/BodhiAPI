@@ -1,0 +1,511 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <meta charset="utf-8">
+    <title>用户列表</title>
+    <link href="../../static/css/plugins/switchery/switchery.css" rel="stylesheet">
+    <script src="../../static/js/jquery.min.js?v=2.1.4"></script>
+    <script src="../../static/js/bootstrap.min.js?v=3.3.5"></script>
+    <link href="../../static/css/bootstrap.min.css?v=3.3.6" rel="stylesheet">
+    <link href="../../static/css/plugins/bootstrap-switch/bootstrap-switch.css" rel="stylesheet">
+
+
+    <script src="../../static/js/bootstrap-table.js"></script>
+    <script src="../../static/js/plugins/bootstrap-switch/bootstrap-switch.js"></script>
+    <link href="../../static/css/bootstrap-table.css?v=1.18.1" rel="stylesheet">
+    <link href="../../static/css/animate.css" rel="stylesheet">
+    <link href="../../static/css/style.css?v=4.1.0" rel="stylesheet">
+    <script src="../../static/js/bootstrap-table-zh-CN.js"></script>
+    <link href="../../static/css/font-awesome.min.css?v=4.4.0" rel="stylesheet">
+    <link href="../../static/css/plugins/chosen/chosen.css" rel="stylesheet">
+    <!-- bootstrap-select -->
+    <link href="../../static/css/plugins/bootstrap-select2/select2.css" rel="stylesheet">
+    <link href="../../static/css/plugins/bootstrap-select/bootstrap-select.css" rel="stylesheet">
+    <!-- bootstrap-treeview -->
+    <link href="../../static/css/plugins/bootstrap-treeView/bootstrap-treeview.min.css" rel="stylesheet">
+    <base target="_blank">
+    <!-- Switchery -->
+    <script src="../../static/js/plugins/switchery/switchery.js"></script>
+    <script src="../../static/js/jquery-ui-1.10.4.min.js"></script>
+    <script src="../../static/js/plugins/beautifyhtml/beautifyhtml.js"></script>
+    <script src="../../static/js/plugins/validate/jquery.validate.min.js"></script>
+    <script src="../../static/js/plugins/validate/messages_zh.min.js"></script>
+    <script src="../../static/js/plugins/footable/footable.all.min.js"></script>
+    <script src="../../static/js/plugins/sweetalert/sweetalert.min.js"></script>
+    <!-- toastr -->
+    <link href="../../static/css/plugins/toastr/toastr.min.css" rel="stylesheet">
+    <script src="../../static/js/plugins/toastr/toastr.min.js"></script>
+    <!-- form -->
+    <script src="../../static/js/demo/form-validate-demo.js"></script>
+    <!-- Chosen -->
+    <script src="../../static/js/plugins/chosen/chosen.jquery.js"></script>
+    <!-- bootstrap-select -->
+    <script src="../../static/js/plugins/bootstrap-select/bootstrap-select.min.js"></script>
+    <script src="../../static/js/plugins/bootstrap-select/i18n/defaults-zh_CN.min.js"></script>
+    <script src="../../static/js/plugins/bootstrap-select2/select2.min.js"></script>
+    <script src="../../static/js/plugins/bootstrap-select2/i18n/zh-CN.js"></script>
+    <!-- bootstrap-treeview -->
+    <script src="../../static/js/plugins/bootstrap-treeView/bootstrap-treeview.min.js"></script>
+    <!--    <script src="../../static/css/plugins/jqgrid/ui.jqgrid.css"></script>-->
+    <link rel="stylesheet" href="https://cdn.bootcss.com/jquery-treegrid/0.2.0/css/jquery.treegrid.min.css">
+
+    <script src="https://cdn.bootcss.com/bootstrap-table/1.12.0/extensions/treegrid/bootstrap-table-treegrid.js"></script>
+    <script src="https://cdn.bootcss.com/jquery-treegrid/0.2.0/js/jquery.treegrid.min.js"></script>
+
+
+</head>
+<style>
+    .select2-drop {
+        z-index: 10050 !important;
+    }
+
+    .select2-search-choice-close {
+        margin-top: 0 !important;
+        right: 2px !important;
+        min-height: 10px;
+    }
+
+    .select2-search-choice-close:before {
+        color: black !important;
+    }
+
+    /*防止select2不会自动失去焦点*/
+    .select2-container {
+        z-index: 16000 !important;
+    }
+
+    .select2-drop-mask {
+        z-index: 15990 !important;
+    }
+
+    .select2-drop-active {
+        z-index: 15995 !important;
+    }
+</style>
+<body class="gray-bg">
+<div class="wrapper wrapper-content animated fadeInRight">
+    <!--    <div class="row">-->
+    <div class="ibox float-e-margins">
+        <div class="ibox float-e-margins">
+            <div class="ibox-title">
+                <h5>菜单列表</h5>
+                <div class="ibox-tools">
+                    <a class="collapse-link">
+                        <i class="fa fa-chevron-up"></i>
+                    </a>
+                    <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                        <i class="fa fa-wrench"></i>
+                    </a>
+                    <ul class="dropdown-menu dropdown-user">
+                        <li><a href="#">选项1</a>
+                        </li>
+                        <li><a href="#">选项2</a>
+                        </li>
+                    </ul>
+                    <a class="close-link">
+                        <i class="fa fa-times"></i>
+                    </a>
+                </div>
+            </div>
+            <!--            <table id="table"></table>-->
+            <div class="ibox-content">
+                <div class="row row-lg">
+                    <div class="col-sm-12">
+                        <div class="example-wrap">
+                            <div class="example">
+                                <button class="btn btn-primary" id="add_frist_menu" onclick="add_first_menu()" style="float: right;margin: 10px;">
+                                    添加一级菜单
+                                </button>
+                                <table id="tb_menuList"></table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+    <!--    </div>-->
+</div>
+<div class="modal inmodal fade" id="model_updateMenuInfo" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button class="close" type="button" data-dismiss="modal">&times;</button>
+                <div id="model_name" class="model_name">
+                    <h4 class="modal-title"></h4>
+                </div>
+            </div>
+            <input type="text" id="parentId" style="display:none"/>
+            <input type="text" id="id" style="display:none"/>
+            <div class="modal-body">
+                <form class="form-horizontal m-t" id="from_modifyMenu" onsubmit="return false;">
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label">菜单名称：</label>
+                        <div class="col-sm-8">
+                            <input id="title" name="title" class="form-control" type="text">
+                            <!--                            <span class="help-block m-b-none"><i class="fa fa-info-circle"></i> 这里写点提示的内容</span>-->
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label">URL路径：</label>
+                        <div class="col-sm-8">
+                            <input id="url" name="url" class="form-control" type="text">
+                            <!--                            <span class="help-block m-b-none"><i class="fa fa-info-circle"></i> 这里写点提示的内容</span>-->
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label">前端名称：</label>
+                        <div class="col-sm-8">
+                            <input id="name" name="name" class="form-control" type="text">
+                            <!--                            <span class="help-block m-b-none"><i class="fa fa-info-circle"></i> 这里写点提示的内容</span>-->
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label">菜单级数：</label>
+                        <div class="col-sm-8">
+                            <input id="level" name="level" class="form-control" type="text" readonly="readonly">
+                            <!--                            <span class="help-block m-b-none"><i class="fa fa-info-circle"></i> 这里写点提示的内容</span>-->
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label">菜单排序：</label>
+                        <div class="col-sm-8">
+                            <input id="sort" name="sort" value="0" class="form-control" type="text">
+                            <!--                            <span class="help-block m-b-none"><i class="fa fa-info-circle"></i> 这里写点提示的内容</span>-->
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <div class="col-sm-8 col-sm-offset-3">
+                            <div class="checkbox">
+                                <label>
+                                    <input type="checkbox" class="checkbox" id="hidden" name="hidden" value="0"
+                                           οnclick="this.value=(this.value==0)?1:0"> 是否隐藏
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-sm-8 col-sm-offset-3">
+                            <button class="btn btn-primary" type="submit" id="submit" onclick="menuEdite()">提交
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+</body>
+<!-- 引入自定义ajax -->
+<script src="../../static/js/commonrequest.js"></script>
+<script>
+    var $table = $('#tb_menuList');
+
+    $(function () {
+        toastr.options = {
+            "closeButton": false, //是否显示关闭按钮
+            "debug": false, //是否使用debug模式
+            "positionClass": "toast-top-center",//弹出窗的位置
+            "showDuration": "300",//显示的动画时间
+            "hideDuration": "1000",//消失的动画时间
+            "timeOut": "5000", //展现时间
+            "extendedTimeOut": "1000",//加长展示时间
+            "showEasing": "swing",//显示时的动画缓冲方式
+            "hideEasing": "linear",//消失时的动画缓冲方式
+            "showMethod": "fadeIn",//显示时的动画方式
+            "hideMethod": "fadeOut" //消失时的动画方式
+        };
+        tableRefresh()
+
+        //控制台输出一下数据
+        console.log(data);
+    });
+    //初始化表格
+
+    function tableRefresh() {
+        ajaxGet('/menu/treeList', '', function (data) {
+            if (data.code == 200) {
+                var menudata = data.data
+                $table.bootstrapTable({
+                    data: menudata,
+                    idField: 'id',
+                    dataType: 'jsonp',
+                    strictSearch: true,
+                    showColumns: true,                  //是否显示所有的列
+                    showRefresh: true,                  //是否显示刷新按钮
+                    minimumCountColumns: 2,             //最少允许的列数
+                    showToggle: true,                    //是否显示详细视图和列表视图的切换按钮
+                    cardView: false,                    //是否显示详细视图
+                    detailView: false,                   //是否显示父子表
+                    columns: [
+                        {
+                            field: 'check', checkbox: true, formatter: function (value, row, index) {
+                                if (row.check == true) {
+                                    // console.log(row.serverName);
+                                    //设置选中
+                                    return {checked: true};
+                                }
+                            }
+                        },
+                        {field: 'title', title: '名称'},
+                        {field: 'level', title: '菜单级数'},
+                        {field: 'sort', title: '菜单排序'},
+                        {field: 'name', title: '前端名称'},
+                        {field: 'url', title: 'URL路径'},
+                        // {field: 'id', title: '编号', sortable: true, align: 'center'},
+                        // {field: 'pid', title: '所属上级'},
+                        {field: 'hidden', title: '状态', sortable: true, align: 'center', formatter: 'statusFormatter'},
+                        {
+                            field: 'operate',
+                            title: '操作',
+                            align: 'center',
+                            events: operateEvents,
+                            formatter: 'operateFormatter'
+                        },
+                    ],
+
+                    // bootstrap-table-treegrid.js 插件配置 -- start
+
+                    //在哪一列展开树形
+                    treeShowField: 'title',
+                    //指定父id列
+                    parentIdField: 'parentId',
+
+                    onResetView: function (data) {
+                        $table.treegrid({
+                            initialState: 'collapsed',// 所有节点都折叠
+                            // initialState: 'expanded',// 所有节点都展开，默认展开
+                            treeColumn: 1,
+                            // expanderExpandedClass: 'glyphicon glyphicon-minus',  //图标样式
+                            // expanderCollapsedClass: 'glyphicon glyphicon-plus',
+                            onChange: function () {
+                                $table.bootstrapTable('resetWidth');
+                            }
+                        });
+
+                        //只展开树形的第一级节点
+                        $table.treegrid('getRootNodes').treegrid('expand');
+
+                    },
+                    onCheck: function (row) {
+                        var datas = $table.bootstrapTable('getData');
+                        // 勾选子类
+                        selectChilds(datas, row, "id", "pid", true);
+
+                        // 勾选父类
+                        selectParentChecked(datas, row, "id", "pid")
+
+                        // 刷新数据
+                        $table.bootstrapTable('load', datas);
+                    },
+
+                    onUncheck: function (row) {
+                        var datas = $table.bootstrapTable('getData');
+                        selectChilds(datas, row, "id", "pid", false);
+                        $table.bootstrapTable('load', datas);
+                    },
+                    // bootstrap-table-treetreegrid.js 插件配置 -- end
+                });
+            }
+        })
+    }
+
+
+
+    // 格式化按钮
+    function operateFormatter(value, row, index) {
+        if (row.level == 3) {
+            return [
+                '<button type="button" class="RoleOfedit btn-small   btn-warning" style="margin-right:15px;"><i class="fa fa-pencil-square-o" ></i>&nbsp;修改</button>',
+                '<button type="button" class="RoleOfdelete btn-small   btn-danger" style="margin-right:15px;"><i class="fa fa-trash-o" ></i>&nbsp;删除</button>'
+            ].join('');
+        } else {
+            return [
+                '<button type="button" class="RoleOfadd btn-small  btn-info" style="margin-right:15px;"><i class="fa fa-plus" ></i>&nbsp;新增</button>',
+                '<button type="button" class="RoleOfedit btn-small   btn-warning" style="margin-right:15px;"><i class="fa fa-pencil-square-o" ></i>&nbsp;修改</button>',
+            ].join('');
+        }
+
+    }
+
+    // 格式化类型
+    function typeFormatter(value, row, index) {
+        if (value === 'menu') {
+            return '菜单';
+        }
+        if (value === 'button') {
+            return '按钮';
+        }
+        if (value === 'api') {
+            return '接口';
+        }
+        return '-';
+    }
+
+    // 格式化状态
+    function statusFormatter(value, row, index) {
+        if (value === 0) {
+            return '<span class="label label-success">正常</span>';
+        } else {
+            return '<span class="label label-default">锁定</span>';
+        }
+    }
+
+    //初始化操作按钮的方法
+    window.operateEvents = {
+        'click .RoleOfadd': function (e, value, row, index) {
+            $("#model_name .modal-title").html("添加菜单");
+            $("#parentId").val(row.id);
+            $("#level").val(row.level + 1);
+            $("#model_updateMenuInfo").modal('show');
+        },
+        'click .RoleOfdelete': function (e, value, row, index) {
+            var url='/menu/delete/'+row.id;
+            ajaxPostWithToken(url,'',function(data){
+                if (data.code==200){
+                    $table.bootstrapTable('destroy')
+                    $("#model_updateMenuInfo").modal('hide');
+                    tableRefresh()
+                    toastr.success("修改菜单成功")
+                }else {
+                    toastr.success("修改菜单失败")
+                }
+            })
+        },
+        'click .RoleOfedit': function (e, value, row, index) {
+            $("#model_name .modal-title").html("修改菜单");
+            $("#parentId").val(row.parentId);
+            $("#level").val(row.level);
+            $("#title").val(row.title);
+            $("#name").val(row.name);
+            $("#url").val(row.url);
+            $("#id").val(row.id);
+            $("#hidden").val(row.hide);
+            $("#model_updateMenuInfo").modal('show');
+        }
+    };
+    function add_first_menu() {
+        $("#model_name .modal-title").html("添加菜单");
+        $("#parentId").val(0);
+        $("#level").val(1);
+        $("#model_updateMenuInfo").modal('show');
+    }
+
+    //
+    function menuEdite() {
+        var ti=$("#model_name .modal-title").html();
+
+        var param={
+            hidden: parseInt($("#hidden").val()),
+            icon: "",
+            level: parseInt($("#level").val()),
+            name: $("#name").val(),
+            parentId:  parseInt($("#parentId").val()),
+            sort: parseInt($("#sort").val()),
+            title: $("#title").val(),
+            url: $("#url").val()
+        }
+        if (ti=="添加菜单"){
+            ajaxPostWithToken('/menu/create',param,function(data){
+                if (data.code==200){
+                    $table.bootstrapTable('destroy')
+                    $("#model_updateMenuInfo").modal('hide');
+                    tableRefresh()
+                    toastr.success("添加菜单成功")
+                }else {
+                    toastr.success("添加菜单失败")
+                }
+            })
+        }else if (ti=="修改菜单"){
+            var url='/menu/update/'+parseInt($("#id").val());
+            var param={
+                id:parseInt($("#id").val()),
+                hidden: parseInt($("#hidden").val()),
+                icon: "",
+                level: parseInt($("#level").val()),
+                name: $("#name").val(),
+                parentId:  parseInt($("#parentId").val()),
+                sort: parseInt($("#sort").val()),
+                title: $("#title").val(),
+                url: $("#url").val()
+            }
+            ajaxPostWithToken(url,param,function(data){
+                if (data.code==200){
+                    $table.bootstrapTable('destroy')
+                    $("#model_updateMenuInfo").modal('hide');
+                    tableRefresh()
+                    toastr.success("修改菜单成功")
+                }else {
+                    toastr.success("修改菜单失败")
+                }
+            })
+        }
+    }
+
+
+</script>
+<script>
+    /**
+     * 选中父项时，同时选中子项
+     * @param datas 所有的数据
+     * @param row 当前数据
+     * @param id id 字段名
+     * @param pid 父id字段名
+     */
+    function selectChilds(datas, row, id, pid, checked) {
+        for (var i in datas) {
+            if (datas[i][pid] == row[id]) {
+                datas[i].check = checked;
+                selectChilds(datas, datas[i], id, pid, checked);
+            }
+            ;
+        }
+    }
+
+    function selectParentChecked(datas, row, id, pid) {
+        for (var i in datas) {
+            if (datas[i][id] == row[pid]) {
+                datas[i].check = true;
+                selectParentChecked(datas, datas[i], id, pid);
+            }
+            ;
+        }
+    }
+
+    function test() {
+        var selRows = $table.bootstrapTable("getSelections");
+        if (selRows.length == 0) {
+            alert("请至少选择一行");
+            return;
+        }
+
+        var postData = "";
+        $.each(selRows, function (i) {
+            postData += this.id;
+            if (i < selRows.length - 1) {
+                postData += "， ";
+            }
+        });
+        alert("你选中行的 id 为：" + postData);
+
+    }
+
+    function add(id) {
+        alert("add 方法 , id = " + id);
+    }
+
+    function del(id) {
+        alert("del 方法 , id = " + id);
+    }
+
+    function update(id) {
+        alert("update 方法 , id = " + id);
+    }
+
+
+</script>
+</html>

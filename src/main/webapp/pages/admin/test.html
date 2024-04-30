@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link href="../../static/css/plugins/switchery/switchery.css" rel="stylesheet">
+    <script src="../../static/js/jquery.min.js?v=2.1.4"></script>
+    <script src="../../static/js/bootstrap.min.js?v=3.3.5"></script>
+    <link href="../../static/css/bootstrap.min.css?v=3.3.6" rel="stylesheet">
+    <link href="../../static/css/plugins/bootstrap-switch/bootstrap-switch.css" rel="stylesheet">
+    <script src="../../static/js/plugins/bootstrap-switch/bootstrap-switch.js"></script>
+</head>
+<body>
+<input type="checkbox" name="my-checkbox">
+</body>
+<script>
+    $('[name="my-checkbox"]').bootstrapSwitch({
+        onText:"启动",
+        offText:"停止",
+        onColor:"success",
+        offColor:"info",
+        size:"small",
+        // onSwitchChange:function(event,state){
+        //     if(state==true){
+        //         console.log('已打开');
+        //     }else{
+        //         console.log('已关闭');
+        //     }
+        // }
+    })
+</script>
+</html>

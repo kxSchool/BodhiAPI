@@ -1,0 +1,1517 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.modules.shenkang.mapper.MedicalSimpleDao">
+    <!--表名 -->
+    <sql id="patientInfoTableName">
+        shenkang_patient_info
+    </sql>
+
+    <sql id="medicalInfoTableName">
+        shenkang_medical_info
+    </sql>
+    <sql id="medicalInfoField">
+        patient_id
+        ,
+		patient_master_id,
+		patient_class,
+		wdbz,
+		med_rec_no,
+		out_patient_no,
+		in_patient_no,
+		JZLSH,
+		order_uid,
+		organization_id,
+		organization_name,
+		placer_order_no,
+		pathological_number,
+		project_id,
+		project_text,
+		procedure_id,
+		procedure_name,
+		send_doctor_id,
+		send_doctor_name,
+		send_doctor_phone,
+		send_dept_id,
+		send_dept_name,
+		send_date,
+		send_organization_id,
+		send_organization_name,
+		symptom,
+		adverse_reaction,
+		clinic_diagnosis,
+		surgery_info,
+		relevant_clinical_info,
+		collector_id,
+		collector_name,
+		collection_dept,
+		collection_method,
+		collection_volume,
+		collection_date,
+		specimen_received_date,
+		specimen_received_id,
+		specimen_received_name,
+		result_status,
+		result_status_code,
+		reg_time,
+		register_id,
+		register_name,
+		based_time,
+		based_id,
+		based_name,
+		based_record_id,
+		based_record_name,
+		autopsy,
+		production_time,
+		production_id,
+		production_name,
+		result_assistant_date,
+		result_assistant_id,
+		result_assistant_name,
+		result_principal_date,
+		result_principal_id,
+		result_principal_name,
+		abnormal_flags,
+		critical_value,
+		scopically_seen,
+		pathological_diagnosis,
+		specimen_id,
+		check_no,
+		medical_id,
+		medical_name,
+		tumor_classification,
+		cancer_classification,
+		cancer_staging,
+		createTime,
+		pathNo
+    </sql>
+    <sql id="patientInfoField">
+        patient_id,
+        patient_master_id,
+        name,
+        name_spell,
+        mother_name,
+        age,
+        agepart,
+        sex,
+        birth_date,
+        birth_place,
+        nation,
+        citizenship,
+        marital_status,
+        IdentityType,
+        IdentityID,
+        id_card_no,
+        health_card_no,
+        contact_phone_no,
+        email,
+        address_province,
+        address_city,
+        address_district,
+        address_street,
+        address_road,
+        address_detail,
+        postalcode,
+        occupation,
+        work_unit,
+        language,
+        insurance_type,
+        insurance_id,
+        organization_id,
+        createTime,
+        YLY1,
+        YLY2,
+        pathNo
+    </sql>
+    <sql id="specimenInfoField">
+        specimen_id
+        ,
+		specimen_name,
+		specimen_type,
+		specimen_source,
+		specimen_infectious,
+		medical_id
+    </sql>
+    <sql id="specimenInfoTableName">
+        shenkang_specimen_info
+    </sql>
+    <sql id="fileInfoTableName">
+        shenkang_file_info
+    </sql>
+    <resultMap id="medicalJsonPageMap" type="com.example.modules.shenkang.pojo.MedicalJson">
+        <id column="id" jdbcType="INTEGER" property="id" />
+        <result column="req_updateDateTime" jdbcType="VARCHAR" property="req_updateDateTime" />
+        <result column="creatorTime" jdbcType="VARCHAR" property="creatorTime" />
+        <result column="rspJson" jdbcType="VARCHAR" property="rspJson" />
+        <result column="logstate" jdbcType="VARCHAR" property="logstate" />
+    </resultMap>
+
+    <resultMap id="getMedicalDetailsInfoByPathNoMap" type="com.example.modules.shenkang.pojo.MedicalInfo">
+
+        <result column="patient_id" property="patient_id" />
+        <result column="patient_master_id" property="patient_master_id" />
+        <result column="patient_class" property="patient_class" />
+        <result column="wdbz" property="wdbz" />
+
+        <result column="med_rec_no" property="med_rec_no" />
+        <result column="out_patient_no" property="out_patient_no" />
+        <result column="in_patient_no" property="in_patient_no" />
+        <result column="JZLSH" property="JZLSH" />
+        <result column="order_uid" property="order_uid" />
+        <result column="organization_id" property="organization_id" />
+        <result column="organization_name" property="organization_name" />
+        <result column="placer_order_no" property="placer_order_no" />
+        <result column="pathological_number" property="pathological_number" />
+        <result column="project_id" property="project_id" />
+        <result column="project_text" property="project_text" />
+        <result column="procedure_id" property="procedure_id" />
+        <result column="procedure_name" property="procedure_name" />
+        <result column="send_doctor_id" property="send_doctor_id" />
+        <result column="send_doctor_name" property="send_doctor_name" />
+        <result column="send_doctor_phone" property="send_doctor_phone" />
+        <result column="send_dept_id" property="send_dept_id" />
+        <result column="send_dept_name" property="send_dept_name" />
+        <result column="send_date" property="send_date" />
+        <result column="send_organization_id" property="send_organization_id" />
+        <result column="send_organization_name" property="send_organization_name" />
+        <result column="symptom" property="symptom" />
+        <result column="adverse_reaction" property="adverse_reaction" />
+        <result column="clinic_diagnosis" property="clinic_diagnosis" />
+        <result column="surgery_info" property="surgery_info" />
+        <result column="relevant_clinical_info" property="relevant_clinical_info" />
+        <result column="collector_id" property="collector_id" />
+        <result column="collector_name" property="collector_name" />
+        <result column="collection_dept" property="collection_dept" />
+        <result column="collection_method" property="collection_method" />
+        <result column="collection_volume" property="collection_volume" />
+        <result column="collection_date" property="collection_date" />
+        <result column="specimen_received_date" property="specimen_received_date" />
+        <result column="specimen_received_id" property="specimen_received_id" />
+
+        <result column="specimen_received_name" property="specimen_received_name" />
+        <result column="result_status" property="result_status" />
+        <result column="result_status_code" property="result_status_code" />
+        <result column="reg_time" property="reg_time" />
+        <result column="register_id" property="register_id" />
+        <result column="register_name" property="register_name" />
+        <result column="based_time" property="based_time" />
+        <result column="based_id" property="based_id" />
+        <result column="based_name" property="based_name" />
+        <result column="based_record_id" property="based_record_id" />
+        <result column="based_record_name" property="based_record_name" />
+        <result column="autopsy" property="autopsy" />
+        <result column="production_time" property="production_time" />
+        <result column="production_id" property="production_id" />
+        <result column="production_name" property="production_name" />
+        <result column="result_assistant_id" property="result_assistant_id" />
+
+        <result column="result_assistant_name" property="result_assistant_name" />
+        <result column="result_principal_id" property="result_principal_id" />
+        <result column="result_principal_name" property="result_principal_name" />
+        <result column="abnormal_flags" property="abnormal_flags" />
+        <result column="critical_value" property="critical_value" />
+        <result column="scopically_seen" property="scopically_seen" />
+        <result column="pathological_diagnosis" property="pathological_diagnosis" />
+        <result column="specimen_id" property="specimen_id" />
+        <result column="tumor_classification" property="tumor_classification" />
+        <result column="cancer_classification" property="cancer_classification" />
+        <result column="cancer_staging" property="cancer_staging" />
+        <result column="result_assistant_time" property="result_assistant_time" />
+        <result column="result_principal_time" property="result_principal_time" />
+        <result column="ObservationUID" property="ObservationUID" />
+    </resultMap>
+
+    <update id="updateMedicalInfo">
+        update
+        <include refid="medicalInfoTableName"></include>
+        set state=#{state}
+        where id=#{id}
+    </update>
+
+    <update id="updateMedicalInfoStateAndBusinessid">
+        update
+        <include refid="medicalInfoTableName"></include>
+        set state=#{state},ObservationUID=#{businessid}
+        where id=#{id}
+    </update>
+
+    <update id="updateFileInfoObservationUID">
+        update
+        <include refid="fileInfoTableName"></include>
+        set ObservationUID=#{observationUID}
+        where pathNo=#{pathNo}
+    </update>
+
+    <resultMap id="getMedicalDetailsInfoByHisMap" type="com.example.modules.shenkang.pojo.MedicalInfo">
+        <id column="id" property="id" />
+        <result column="patient_id"  property="patient_id" />
+        <result column="patient_master_id"  property="patient_master_id" />
+        <result column="patient_class"  property="patient_class" />
+        <result column="wdbz"  property="wdbz" />
+        <result column="med_rec_no"  property="med_rec_no" />
+        <result column="out_patient_no"  property="out_patient_no" />
+        <result column="in_patient_no"  property="in_patient_no" />
+        <result column="JZLSH"  property="JZLSH" />
+        <result column="order_uid"  property="order_uid" />
+        <result column="organization_id"  property="organization_id" />
+        <result column="organization_name"  property="organization_name" />
+        <result column="placer_order_no"  property="placer_order_no" />
+        <result column="pathological_number"  property="pathological_number" />
+        <result column="project_id"  property="project_id" />
+        <result column="project_text"  property="project_text" />
+        <result column="procedure_id"  property="procedure_id" />
+        <result column="procedure_name"  property="procedure_name" />
+        <result column="send_doctor_id"  property="send_doctor_id" />
+        <result column="send_doctor_name"  property="send_doctor_name" />
+        <result column="send_doctor_phone"  property="send_doctor_phone" />
+        <result column="send_dept_id"  property="send_dept_id" />
+        <result column="send_dept_name"  property="send_dept_name" />
+        <result column="send_date"  property="send_date" />
+        <result column="send_organization_id"  property="send_organization_id" />
+        <result column="send_organization_name"  property="send_organization_name" />
+        <result column="symptom"  property="symptom" />
+        <result column="adverse_reaction"  property="adverse_reaction" />
+        <result column="clinic_diagnosis"  property="clinic_diagnosis" />
+        <result column="surgery_info"  property="surgery_info" />
+        <result column="relevant_clinical_info"  property="relevant_clinical_info" />
+        <result column="collector_id"  property="collector_id" />
+        <result column="collector_name"  property="collector_name" />
+        <result column="collection_dept"  property="collection_dept" />
+        <result column="collection_method"  property="collection_method" />
+        <result column="collection_volume"  property="collection_volume" />
+        <result column="collection_date"  property="collection_date" />
+        <result column="specimen_received_date"  property="specimen_received_date" />
+        <result column="specimen_received_id"  property="specimen_received_id" />
+        <result column="specimen_received_name"  property="specimen_received_name" />
+        <result column="result_status"  property="result_status" />
+        <result column="result_status_code"  property="result_status_code" />
+        <result column="reg_time"  property="reg_time" />
+        <result column="register_id"  property="register_id" />
+        <result column="register_name"  property="register_name" />
+        <result column="based_time"  property="based_time" />
+        <result column="based_id"  property="based_id" />
+        <result column="based_name"  property="based_name" />
+        <result column="based_record_id"  property="based_record_id" />
+        <result column="based_record_name"  property="based_record_name" />
+        <result column="autopsy"  property="autopsy" />
+        <result column="production_time"  property="production_time" />
+        <result column="production_id"  property="production_id" />
+        <result column="production_name"  property="production_name" />
+        <result column="result_assistant_id"  property="result_assistant_id" />
+        <result column="result_assistant_name"  property="result_assistant_name" />
+        <result column="result_principal_id"  property="result_principal_id" />
+        <result column="result_principal_name"  property="result_principal_name" />
+        <result column="abnormal_flags"  property="abnormal_flags" />
+        <result column="critical_value"  property="critical_value" />
+        <result column="scopically_seen"  property="scopically_seen" />
+        <result column="pathological_diagnosis"  property="pathological_diagnosis" />
+        <result column="specimen_id"  property="specimen_id" />
+        <result column="check_no"  property="check_no" />
+        <result column="medical_id"  property="medical_id" />
+        <result column="medical_name"  property="medical_name" />
+        <result column="tumor_classification"  property="tumor_classification" />
+        <result column="cancer_classification"  property="cancer_classification" />
+        <result column="cancer_staging"  property="cancer_staging" />
+        <result column="createTime"  property="createTime" />
+        <result column="pathNo"  property="pathNo" />
+        <result column="result_assistant_time"  property="result_assistant_time" />
+        <result column="result_principal_time"  property="result_principal_time" />
+    </resultMap>
+
+    <select id="getMedicalDetailsInfoByHis" resultMap="getMedicalDetailsInfoByHisMap">
+        select id,
+               patient_id,
+               patient_master_id,
+               patient_class,
+               wdbz,
+               med_rec_no,
+               out_patient_no,
+               in_patient_no,
+               JZLSH,
+               order_uid,
+               organization_id,
+               organization_name,
+               placer_order_no,
+               pathological_number,
+               project_id,
+               project_text,
+               procedure_id,
+               procedure_name,
+               send_doctor_id,
+               CAST(AES_DECRYPT(UNHEX(send_doctor_name), 'salt')as char)       send_doctor_name,
+               CAST(AES_DECRYPT(UNHEX(send_doctor_phone), 'salt') as char)     send_doctor_phone,
+               send_dept_id,
+               send_dept_name,
+               send_date,
+               send_organization_id,
+               send_organization_name,
+               symptom,
+               adverse_reaction,
+               clinic_diagnosis,
+               surgery_info,
+               relevant_clinical_info,
+               collector_id,
+               CAST(AES_DECRYPT(UNHEX(collector_name), 'salt')as char)         collector_name,
+               collection_dept,
+               collection_method,
+               collection_volume,
+               collection_date,
+               specimen_received_date,
+               specimen_received_id,
+               CAST(AES_DECRYPT(UNHEX(specimen_received_name), 'salt')as char) specimen_received_name,
+               result_status,
+               result_status_code,
+               reg_time,
+               register_id,
+               CAST(AES_DECRYPT(UNHEX(register_name), 'salt')as char)          register_name,
+               based_time,
+               based_id,
+               CAST(AES_DECRYPT(UNHEX(based_name), 'salt')as char)   based_name,
+               based_record_id,
+               CAST(AES_DECRYPT(UNHEX(based_record_name), 'salt') as char)     based_record_name,
+               autopsy,
+               production_time,
+               production_id,
+               CAST(AES_DECRYPT(UNHEX(production_name), 'salt')as char)        production_name,
+               result_assistant_id,
+               CAST(AES_DECRYPT(UNHEX(result_assistant_name), 'salt')as char)  result_assistant_name,
+               result_principal_id,
+               CAST(AES_DECRYPT(UNHEX(result_principal_name), 'salt')as char)  result_principal_name,
+               abnormal_flags,
+               critical_value,
+               scopically_seen,
+               pathological_diagnosis,
+               specimen_id,
+               check_no,
+               medical_id,
+               medical_name,
+               tumor_classification,
+               cancer_classification,
+               cancer_staging,
+               createTime,
+               pathNo,
+               result_assistant_date                              result_assistant_time,
+               result_principal_date                              result_principal_time
+        from shenkang_medical_info
+        where shenkang_medical_info.id = #{id}
+    </select>
+
+    <update id="updateMedicalMasterById">
+        update
+        <include refid="medicalInfoTableName"></include>
+        set patient_master_id=#{patient_master_id}
+        where id=#{id}
+    </update>
+
+    <update id="updatePatientMasterById">
+        update
+        <include refid="patientInfoTableName"></include>
+        set patient_master_id=#{patient_master_id}
+        where id=#{id}
+    </update>
+
+    <select id="getMedicalInfoByHis" resultType="com.example.modules.shenkang.pojo.MedicalInfo">
+        select
+        id,
+        patient_id,
+        patient_master_id,
+        patient_class,
+        wdbz,
+        med_rec_no,
+        out_patient_no,
+        in_patient_no,
+        JZLSH,
+        order_uid,
+        organization_id,
+        organization_name,
+        placer_order_no,
+        pathological_number,
+        project_id,
+        project_text,
+        procedure_id,
+        procedure_name,
+        send_doctor_id,
+        AES_DECRYPT(UNHEX(send_doctor_name), 'salt') send_doctor_name,
+        AES_DECRYPT(UNHEX(send_doctor_phone), 'salt') send_doctor_phone,
+        send_dept_id,
+        send_dept_name,
+        send_date,
+        send_organization_id,
+        send_organization_name,
+        symptom,
+        adverse_reaction,
+        clinic_diagnosis,
+        surgery_info,
+        relevant_clinical_info,
+        collector_id,
+        AES_DECRYPT(UNHEX(collector_name), 'salt') collector_name,
+        collection_dept,
+        collection_method,
+        collection_volume,
+        collection_date,
+        specimen_received_date,
+        specimen_received_id,
+        AES_DECRYPT(UNHEX(specimen_received_name), 'salt') specimen_received_name,
+        result_status,
+        result_status_code,
+        reg_time,
+        register_id,
+        AES_DECRYPT(UNHEX(register_name), 'salt') register_name,
+        based_time,
+        based_id,
+        AES_DECRYPT(UNHEX(based_name), 'salt') based_name,
+        based_record_id,
+        AES_DECRYPT(UNHEX(based_record_name), 'salt') based_record_name,
+        autopsy,
+        production_time,
+        production_id,
+        AES_DECRYPT(UNHEX(production_name), 'salt') production_name,
+        result_assistant_id,
+        AES_DECRYPT(UNHEX(result_assistant_name), 'salt') result_assistant_name,
+        result_principal_id,
+        AES_DECRYPT(UNHEX(result_principal_name), 'salt') result_principal_name,
+        abnormal_flags,
+        critical_value,
+        scopically_seen,
+        pathological_diagnosis,
+        specimen_id,
+        check_no,
+        medical_id,
+        medical_name,
+        tumor_classification,
+        cancer_classification,
+        cancer_staging,
+        createTime,
+        pathNo,
+        shenkang_medical_info.result_assistant_date result_assistant_time,
+        result_principal_date result_principal_time
+        from
+        <include refid="medicalInfoTableName"></include>
+        where id= #{id}
+    </select>
+
+    <select id="getUnpushedMedicalIds" resultType="java.lang.String">
+        select id
+        from
+        <include refid="medicalInfoTableName"></include>
+        where state='0';
+    </select>
+
+    <select id="selectwalnutNum" resultType="java.lang.Integer">
+        SELECT count(*)
+        from shenkang_medical_info
+        <where>
+            <if test="pathNo!=null and pathNo!= ''">
+                and pathNo =#{pathNo}
+            </if>
+            <if test="startTime!=null and startTime !='' ">
+                <choose>
+                    <when test="endTime!=null  and  endTime!=''">
+                        and searchDate between #{startTime}and #{endTime}
+                    </when>
+                    <otherwise>
+                        and searchDate like CONCAT('%',#{startTime},'%')
+                    </otherwise>
+                </choose>
+            </if>
+
+        </where>
+    </select>
+
+    <select id="selectwalnut" resultType="com.example.modules.shenkang.pojo.WalnutCommon">
+        SELECT pathNo,searchDate,createTime
+        from shenkang_medical_info
+        <where>
+            <if test="pathNo!=null and pathNo!= ''">
+                and pathNo =#{pathNo}
+            </if>
+            <if test="startTime!=null and startTime !='' ">
+                <choose>
+                    <when test="endTime!=null  and  endTime!=''">
+                        and searchDate between #{startTime} and #{endTime}
+                    </when>
+                    <otherwise>
+                        and searchDate like CONCAT('%',#{startTime},'%')
+                    </otherwise>
+                </choose>
+            </if>
+        </where>
+        order by id desc
+        limit #{num},#{size}
+    </select>
+
+    <select id="selectErrorInfo" resultType="java.lang.String">
+        select distinct pathId
+        from
+        <if test="dbName=='medical_resp' ">
+            shenkang_medical_resp
+        </if>
+        <if test="dbName=='patient_resp'">
+            shenkang_patient_resp
+        </if>
+        <where>
+            <if test="logState !=null">
+                logstate=#{logState}
+            </if>
+        </where>
+    </select>
+
+    <select id="selectwalnutNumByParam" resultType="java.lang.Integer">
+        SELECT count(*)
+        from shenkang_medical_info
+        <where>
+            <if test="myList!=null and myList.size()>0">
+                and pathNo in
+                <foreach collection="myList" index="index" item="item" open="(" close=")" separator=",">
+                    #{item}
+                </foreach>
+            </if>
+            <if test="pathNo!=null and pathNo!= ''">
+                and pathNo =#{pathNo}
+            </if>
+            <if test="startTime!=null and startTime !='' ">
+                <choose>
+                    <when test="endTime!=null  and  endTime!=''">
+                        and searchDate between #{startTime} and #{endTime}
+                    </when>
+                    <otherwise>
+                        and searchDate like CONCAT('%',#{startTime},'%')
+                    </otherwise>
+                </choose>
+            </if>
+        </where>
+    </select>
+
+    <select id="selectwalnutByParam" resultType="com.example.modules.shenkang.pojo.WalnutCommon">
+        SELECT pathNo,searchDate,createTime
+        from shenkang_medical_info
+        <where>
+            <if test="myList!=null and myList.size()>0">
+                and pathNo in
+                <foreach collection="myList" index="index" item="item" open="(" close=")" separator=",">
+                    #{item}
+                </foreach>
+            </if>
+            <if test="pathNo!=null and pathNo!= ''">
+                and pathNo =#{pathNo}
+            </if>
+            <if test="startTime!=null and startTime !='' ">
+                <choose>
+                    <when test="endTime!=null  and  endTime!=''">
+                        and searchDate between #{startTime} and #{endTime}
+                    </when>
+                    <otherwise>
+                        and searchDate like CONCAT('%',#{startTime},'%')
+                    </otherwise>
+                </choose>
+            </if>
+        </where>
+        order by id desc
+        limit #{num},#{size}
+    </select>
+
+    <select id="selectInfoByPathId" resultType="com.example.modules.shenkang.pojo.WalnutDetail">
+        select id, CAST(AES_DECRYPT(UNHEX(rspJson),'salt')as char) as rspJson,logstate
+        from
+        <if test="dbName=='medical_resp' ">
+            shenkang_medical_resp
+        </if>
+        <if test="dbName=='patient_resp'">
+            shenkang_patient_resp
+        </if>
+        where pathId = #{pathNo}
+        <if test="logState!=null">
+            and logstate=#{logState}
+        </if>
+        order by id desc limit 1
+    </select>
+
+    <select id="getMedicalDetailsInfoByPathNo" resultMap="getMedicalDetailsInfoByPathNoMap">
+        select patient_id,
+               patient_master_id,
+               patient_class,
+               wdbz,
+               med_rec_no,
+               out_patient_no,
+               in_patient_no,
+               JZLSH,
+               order_uid,
+               organization_id,
+               organization_name,
+               placer_order_no,
+               pathological_number,
+               project_id,
+               project_text,
+               procedure_id,
+               procedure_name,
+               send_doctor_id,
+               CAST(AES_DECRYPT(UNHEX(send_doctor_name), 'salt')as char)       send_doctor_name,
+               CAST(AES_DECRYPT(UNHEX(send_doctor_phone), 'salt')as char)      send_doctor_phone,
+               send_dept_id,
+               send_dept_name,
+               send_date,
+               send_organization_id,
+               send_organization_name,
+               symptom,
+               adverse_reaction,
+               clinic_diagnosis,
+               surgery_info,
+               relevant_clinical_info,
+               collector_id,
+               CAST(AES_DECRYPT(UNHEX(collector_name), 'salt')as char)         collector_name,
+               collection_dept,
+               collection_method,
+               collection_volume,
+               collection_date,
+               specimen_received_date,
+               specimen_received_id,
+               CAST(AES_DECRYPT(UNHEX(specimen_received_name), 'salt')as char) specimen_received_name,
+               result_status,
+               result_status_code,
+               reg_time,
+               register_id,
+               CAST(AES_DECRYPT(UNHEX(register_name), 'salt')as char)          register_name,
+               based_time,
+               based_id,
+               CAST(AES_DECRYPT(UNHEX(based_name), 'salt')as char)             based_name,
+               based_record_id,
+               CAST(AES_DECRYPT(UNHEX(based_record_name), 'salt')as char)      based_record_name,
+               autopsy,
+               production_time,
+               production_id,
+               CAST(AES_DECRYPT(UNHEX(production_name), 'salt') as char)       production_name,
+               result_assistant_id,
+               CAST(AES_DECRYPT(UNHEX(result_assistant_name), 'salt')as char)  result_assistant_name,
+               result_principal_id,
+               CAST(AES_DECRYPT(UNHEX(result_principal_name), 'salt') as char) result_principal_name,
+               abnormal_flags,
+               critical_value,
+               scopically_seen,
+               pathological_diagnosis,
+               specimen_id,
+               tumor_classification,
+               cancer_classification,
+               cancer_staging,
+               result_assistant_date                              result_assistant_time,
+               result_principal_date                              result_principal_time,
+               ObservationUID
+        from shenkang_medical_info
+        where shenkang_medical_info.pathNo = #{pathNo}
+    </select>
+
+    <select id="selectmedIdByPathNo" resultType="java.lang.Integer">
+        SELECT id
+        FROM shenkang_medical_info
+        WHERE pathological_number = #{pathological_number}
+        order by createTime desc limit 1
+    </select>
+
+    <resultMap id="getPatientByPathNoMap" type="com.example.modules.shenkang.pojo.PatientInfo">
+        <id column="id" property="id" />
+        <result column="patient_id" property="patient_id" />
+        <result column="patient_master_id" property="patient_master_id" />
+        <result column="name" property="name" />
+        <result column="name_spell" property="name_spell" />
+        <result column="mother_name" property="mother_name" />
+        <result column="age" property="age" />
+        <result column="agepart" property="agepart" />
+        <result column="sex" property="sex" />
+        <result column="birth_date" property="birth_date" />
+        <result column="birth_place" property="birth_place" />
+        <result column="nation" property="nation" />
+        <result column="citizenship" property="citizenship" />
+        <result column="marital_status" property="marital_status" />
+        <result column="IdentityType" property="IdentityType" />
+        <result column="IdentityID" property="IdentityID" />
+        <result column="id_card_no" property="id_card_no" />
+        <result column="health_card_no" property="health_card_no" />
+        <result column="contact_phone_no" property="contact_phone_no" />
+        <result column="email" property="email" />
+        <result column="address_province" property="address_province" />
+        <result column="address_city" property="address_city" />
+        <result column="address_district" property="address_district" />
+        <result column="address_street" property="address_street" />
+        <result column="address_road" property="address_road" />
+        <result column="address_detail" property="address_detail" />
+        <result column="postalcode" property="postalcode" />
+        <result column="occupation" property="occupation" />
+        <result column="work_unit" property="work_unit" />
+        <result column="language" property="language" />
+        <result column="insurance_type" property="insurance_type" />
+        <result column="insurance_id" property="insurance_id" />
+        <result column="organization_id" property="organization_id" />
+        <result column="createTime" property="createTime" />
+        <result column="YLY1" property="YLY1" />
+        <result column="YLY2" property="YLY2" />
+        <result column="pathNo" property="pathNo" />
+    </resultMap>
+
+    <select id="getPatientByPathNo" resultMap="getPatientByPathNoMap">
+        select
+        id,
+        patient_id,
+        patient_master_id,
+        CAST(AES_DECRYPT(UNHEX(name), 'salt') as char) name,
+        CAST(AES_DECRYPT(UNHEX(name_spell), 'salt')as char) name_spell,
+        CAST(AES_DECRYPT(UNHEX(mother_name), 'salt')as char) mother_name,
+        age,
+        agepart,
+        sex,
+        birth_date,
+        CAST(AES_DECRYPT(UNHEX(birth_place), 'salt')as char) birth_place,
+        CAST(AES_DECRYPT(UNHEX(nation), 'salt')as char) nation,
+        CAST(AES_DECRYPT(UNHEX(citizenship), 'salt')as char) citizenship,
+        marital_status,
+        IdentityType,
+        CAST(AES_DECRYPT(UNHEX(IdentityID), 'salt')as char) IdentityID,
+        CAST(AES_DECRYPT(UNHEX(id_card_no), 'salt')as char) id_card_no,
+        health_card_no,
+        CAST(AES_DECRYPT(UNHEX(contact_phone_no), 'salt')as char) contact_phone_no,
+        CAST(AES_DECRYPT(UNHEX(email), 'salt') as char) email,
+        CAST(AES_DECRYPT(UNHEX(address_province), 'salt')as char) address_province,
+        CAST(AES_DECRYPT(UNHEX(address_city), 'salt')as char) address_city,
+        CAST(AES_DECRYPT(UNHEX(address_district), 'salt')as char) address_district,
+        CAST(AES_DECRYPT(UNHEX(address_street), 'salt')as char) address_street,
+        CAST(AES_DECRYPT(UNHEX(address_road), 'salt')as char) address_road,
+        CAST(AES_DECRYPT(UNHEX(address_detail), 'salt')as char) address_detail,
+        CAST(AES_DECRYPT(UNHEX(postalcode), 'salt')as char) postalcode,
+        occupation,
+        CAST(AES_DECRYPT(UNHEX(work_unit), 'salt')as char) work_unit,
+        language,
+        insurance_type,
+        insurance_id,
+        organization_id,
+        createTime,
+        YLY1,
+        YLY2,
+        pathNo
+        from
+        <include refid="patientInfoTableName"></include>
+        where pathNo= #{pathNo} limit 1
+    </select>
+
+    <select id="queryLogListSizeByDateAndPathno" resultType="java.lang.Integer">
+        SELECT COUNT(*) from shenkang_wanda_api_req
+        WHERE webAPI=#{type}
+        <if test="logState !=null">
+            and logstate!='0'
+        </if>
+        <if test="pathNo !=null and pathNo!=''">
+            and pathId=#{pathNo}
+        </if>
+        <if test="startTime!=null and startTime !='' ">
+            <choose>
+                <when test="endTime!=null  and  endTime!=''">
+                    and req_updateDateTime between #{startTime} and #{endTime}
+                </when>
+                <otherwise>
+                    and req_updateDateTime like CONCAT('%',#{startTime},'%')
+                </otherwise>
+            </choose>
+        </if>
+    </select>
+
+    <select id="queryLogListSize" resultType="java.lang.Integer">
+        SELECT COUNT(*) from shenkang_wanda_api_req
+        WHERE webAPI=#{type}
+        <if test="logState !=null">
+            and logState=#{logState}
+        </if>
+    </select>
+
+    <select id="selectLogListByDateAndPathno" resultType="com.example.modules.shenkang.pojo.WandaApiReq">
+        SELECT id,CAST(AES_DECRYPT(UNHEX(requestDetails),'salt')as char) as
+        requestDetails,responseDetails,creatime,pathId,state,webAPI,logstate,req_updateDateTime as reqUpdatedatetime
+        from shenkang_wanda_api_req
+        WHERE webAPI=#{type}
+        <if test="logState !=null">
+            and logstate!='0'
+        </if>
+        <if test="pathNo !=null and pathNo!=''">
+            and pathId=#{pathNo}
+        </if>
+        <if test="startTime!=null and startTime !='' ">
+            <choose>
+                <when test="endTime!=null  and  endTime!=''">
+                    and req_updateDateTime between #{startTime} and #{endTime}
+                </when>
+                <otherwise>
+                    and req_updateDateTime like CONCAT('%',#{startTime},'%')
+                </otherwise>
+            </choose>
+        </if>
+        order by id desc limit #{num},#{size}
+    </select>
+
+    <select id="queryLogListSizeByCreatimeAndPathno" resultType="java.lang.Integer">
+        SELECT COUNT(*) from shenkang_wanda_api_req
+        WHERE webAPI=#{type}
+        <if test="logState !=null">
+            and logstate!='0'
+        </if>
+        <if test="pathNo !=null and pathNo!=''">
+            and pathId=#{pathNo}
+        </if>
+        <if test="startTime!=null and startTime !='' ">
+            <choose>
+                <when test="endTime!=null  and  endTime!=''">
+                    and creatime between #{startTime} and #{endTime}
+                </when>
+                <otherwise>
+                    and creatime like CONCAT('%',#{startTime},'%')
+                </otherwise>
+            </choose>
+        </if>
+    </select>
+
+    <select id="selectLogListByCreatimeAndPathno" resultType="com.example.modules.shenkang.pojo.WandaApiReq">
+        SELECT id,AES_DECRYPT(UNHEX(requestDetails),'salt') as
+        requestDetails,responseDetails,creatime,pathId,state,webAPI,logstate,req_updateDateTime as reqUpdatedatetime
+        from shenkang_wanda_api_req
+        WHERE webAPI=#{type}
+        <if test="logState !=null">
+            and logstate!='0'
+        </if>
+        <if test="pathNo !=null and pathNo!=''">
+            and pathId=#{pathNo}
+        </if>
+        <if test="startTime!=null and startTime !='' ">
+            <choose>
+                <when test="endTime!=null  and  endTime!=''">
+                    and creatime between #{startTime} and #{endTime}
+                </when>
+                <otherwise>
+                    and creatime like CONCAT('%',#{startTime},'%')
+                </otherwise>
+            </choose>
+        </if>
+        order by id desc limit #{num},#{size}
+    </select>
+
+    <select id="selectLogList1" resultType="com.example.modules.shenkang.pojo.WandaApiReq">
+        SELECT id,AES_DECRYPT(UNHEX(requestDetails),'salt') as
+        requestDetails,responseDetails,creatime,pathId,state,webAPI,logstate from shenkang_wanda_api_req
+        WHERE webAPI=#{type}
+        <if test="logState !=null">
+            and logstate!='0'
+        </if>
+        order by id desc limit #{num},#{size}
+    </select>
+
+    <select id="getMedicalJson" resultMap="medicalJsonPageMap">
+        select id,req_updateDateTime ,creatorTime,CAST(AES_DECRYPT(UNHEX(rspJson),'salt')as char) as rspJson,logstate
+        from shenkang_medical_resp
+        <where>
+            <if test="state!=null">
+                and state=#{state}
+            </if>
+            <if test="startTime!=null and startTime !='' ">
+                <choose>
+                    <when test="endTime!=null  and  endTime!=''">
+                        and req_updateDateTime between #{startTime} and #{endTime}
+                    </when>
+                    <otherwise>
+                        and req_updateDateTime like CONCAT('%',#{startTime},'%')
+                    </otherwise>
+                </choose>
+            </if>
+            <if test="logstate!=null and logstate!=''">
+                and logstate!='0'
+            </if>
+        </where>
+        order by id desc
+        <if test="beginNum!=null  and pageSize !=null ">
+            limit #{beginNum},#{pageSize}
+        </if>
+    </select>
+
+    <select id="selectSimpleInfoBySearchTime" resultType="com.example.modules.shenkang.pojo.MedicalSimpleInfo">
+        select id, state, pathNo, searchDate as dataDate
+        from shenkang_medical_info
+        <where>
+            <if test="searchTime!=null">
+                and searchDate =#{searchTime}
+            </if>
+        </where>
+        order by id desc limit #{num}, #{size}
+    </select>
+
+    <select id="selectSimpleInfoNumBySearchTime" resultType="java.lang.Integer">
+        select count(*)
+        from shenkang_medical_info
+        <where>
+            <if test="searchTime!=null and searchTime !=''">
+                and searchDate =#{searchTime}
+            </if>
+            <if test="code!=null">
+                and state =#{code}
+            </if>
+            <if test="startTime!=null and startTime !='' ">
+                <choose>
+                    <when test="endTime!=null  and  endTime!=''">
+                        and searchDate between #{startTime} and #{endTime}
+                    </when>
+                    <otherwise>
+                        and searchDate like CONCAT('%',#{startTime},'%')
+                    </otherwise>
+                </choose>
+            </if>
+
+        </where>
+    </select>
+
+    <select id="selectSimpleInfoNumBySearchTime02" resultType="java.lang.Integer">
+        select COUNT(*) from shenkang_medical_info
+        <where>
+            <if test="searchTime!=null">
+                and searchDate =#{searchTime}
+            </if>
+            <if test="startTime!=null and startTime !='' ">
+                <choose>
+                    <when test="endTime!=null  and  endTime!=''">
+                        and searchDate between #{startTime} and #{endTime}
+                    </when>
+                    <otherwise>
+                        and searchDate like CONCAT('%',#{startTime},'%')
+                    </otherwise>
+                </choose>
+            </if>
+        </where>
+    </select>
+    <select id="selectSimpleInfoNum" resultType="java.lang.Integer">
+        select count(*)
+        from shenkang_medical_info
+    </select>
+    <select id="selectLjMById" resultType="java.lang.String">
+        select
+        <if test="state==0 or state==1">
+            CAST(AES_DECRYPT(UNHEX(rspJson),'salt')as char)  as rspJson
+        </if>
+        <if test="state==3">
+            CAST(AES_DECRYPT(UNHEX(requestDetails),'salt')as char) as rspJson
+        </if>
+        <if test="state==4 ">
+            (responseDetails) as rspJson
+        </if>
+        <if test="state==5 ">
+            rspJson
+        </if>
+        <if test="state==0">
+            from shenkang_medical_resp
+        </if>
+        <if test="state==1">
+            from shenkang_patient_resp
+        </if>
+        <if test="state==3 or state== 4">
+            from shenkang_wanda_api_req
+        </if>
+        <if test="state== 5">
+            from shenkang_ai_resp
+        </if>
+        where id=#{id}
+    </select>
+    <update id="updateLogStateById">
+        update shenkang_debug_log
+        set state=#{state}
+        where id = #{id}
+    </update>
+
+    <resultMap id="patientJsonPageMap" type="com.example.modules.shenkang.pojo.PatientJson">
+        <id column="id" jdbcType="INTEGER" property="id" />
+        <result column="req_updateDateTime" jdbcType="VARCHAR" property="req_updateDateTime" />
+        <result column="creatorTime" jdbcType="VARCHAR" property="creatorTime" />
+        <result column="rspJson" jdbcType="VARCHAR" property="rspJson" />
+        <result column="logstate" jdbcType="VARCHAR" property="logstate" />
+    </resultMap>
+
+    <select id="getPatientJson" resultMap="patientJsonPageMap">
+        select id,req_updateDateTime,creatorTime,CAST(AES_DECRYPT(UNHEX(rspJson),'salt') as char) as rspJson,logstate as logstate
+        from shenkang_patient_resp
+        <where>
+            <if test="state!=null">
+                and state=#{state}
+            </if>
+            <if test="startTime!=null and startTime !='' ">
+                <choose>
+                    <when test="endTime!=null  and  endTime!=''">
+                        and req_updateDateTime between #{startTime} and #{endTime}
+                    </when>
+                    <otherwise>
+                        and req_updateDateTime like CONCAT('%',#{startTime},'%')
+                    </otherwise>
+                </choose>
+            </if>
+            <if test="logstate!=null and logstate!=''">
+                and logstate!='0'
+            </if>
+        </where>
+        order by id desc
+        <if test="beginNum!=null  and pageSize !=null ">
+            limit #{beginNum},#{pageSize}
+        </if>
+    </select>
+
+    <insert id="insertPatientJson" keyColumn="id" useGeneratedKeys="true" keyProperty="id"
+            parameterType="com.example.modules.shenkang.pojo.PatientJson">
+        insert into shenkang_patient_resp
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="req_updateDateTime != null">
+                req_updateDateTime,
+            </if>
+            <if test="creatorTime != null">
+                creatorTime,
+            </if>
+            <if test="rspJson != null">
+                `rspJson`,
+            </if>
+            <if test="pathId != null">
+                `pathId`,
+            </if>
+            <if test="state != null">
+                `state`,
+            </if>
+            <if test="logstate != null">
+                `logstate`,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="req_updateDateTime != null">
+                #{req_updateDateTime},
+            </if>
+            <if test="creatorTime != null">
+                #{creatorTime},
+            </if>
+            <if test="rspJson != null">
+                HEX(AES_ENCRYPT(#{rspJson}, 'salt')),
+            </if>
+            <if test="pathId != null">
+                #{pathId},
+            </if>
+            <if test="state != null">
+                #{state},
+            </if>
+            <if test="logstate != null">
+                #{logstate},
+            </if>
+        </trim>
+    </insert>
+
+    <select id="getCountMedicalByPathNo" resultType="java.lang.Integer">
+        select count(id)
+        from
+        <include refid="medicalInfoTableName"></include>
+        where pathNo=#{pathNo};
+    </select>
+    <insert id="addMedicalInfo" keyColumn="id" keyProperty="medicalInfo.id"
+            parameterType="com.example.modules.shenkang.pojo.MedicalSimple"
+            useGeneratedKeys="true">
+        insert into <include refid="medicalInfoTableName"></include> (
+        <include refid="medicalInfoField"></include>,searchDate
+        )
+        values(
+        #{medicalInfo.patient_id},
+        #{medicalInfo.patient_master_id},
+        #{medicalInfo.patient_class},
+        #{medicalInfo.wdbz},
+        #{medicalInfo.med_rec_no},
+        #{medicalInfo.out_patient_no},
+        #{medicalInfo.in_patient_no},
+        #{medicalInfo.JZLSH},
+        #{medicalInfo.order_uid},
+        #{medicalInfo.organization_id},
+        #{medicalInfo.organization_name},
+        #{medicalInfo.placer_order_no},
+        #{medicalInfo.pathological_number},
+        #{medicalInfo.project_id},
+        #{medicalInfo.project_text},
+        #{medicalInfo.procedure_id},
+        #{medicalInfo.procedure_name},
+        #{medicalInfo.send_doctor_id},
+        HEX(AES_ENCRYPT(#{medicalInfo.send_doctor_name},"salt")),
+        HEX(AES_ENCRYPT(#{medicalInfo.send_doctor_phone},"salt")),
+        #{medicalInfo.send_dept_id},
+        #{medicalInfo.send_dept_name},
+        #{medicalInfo.send_date},
+        #{medicalInfo.send_organization_id},
+        #{medicalInfo.send_organization_name},
+        #{medicalInfo.symptom},
+        #{medicalInfo.adverse_reaction},
+        #{medicalInfo.clinic_diagnosis},
+        #{medicalInfo.surgery_info},
+        #{medicalInfo.relevant_clinical_info},
+        #{medicalInfo.collector_id},
+        HEX(AES_ENCRYPT(#{medicalInfo.collector_name},"salt")),
+        #{medicalInfo.collection_dept},
+        #{medicalInfo.collection_method},
+        #{medicalInfo.collection_volume},
+        #{medicalInfo.collection_date},
+        #{medicalInfo.specimen_received_date},
+        #{medicalInfo.specimen_received_id},
+        HEX(AES_ENCRYPT(#{medicalInfo.specimen_received_name},"salt")),
+        #{medicalInfo.result_status},
+        #{medicalInfo.result_status_code},
+        #{medicalInfo.reg_time},
+        #{medicalInfo.register_id},
+        HEX(AES_ENCRYPT(#{medicalInfo.register_name},"salt")),
+        #{medicalInfo.based_time},
+        #{medicalInfo.based_id},
+        HEX(AES_ENCRYPT(#{medicalInfo.based_name},"salt")),
+        #{medicalInfo.based_record_id},
+        HEX(AES_ENCRYPT(#{medicalInfo.based_record_name},"salt")),
+        #{medicalInfo.autopsy},
+        #{medicalInfo.production_time},
+        #{medicalInfo.production_id},
+        HEX(AES_ENCRYPT(#{medicalInfo.production_name},"salt")),
+        #{medicalInfo.result_assistant_time},
+        #{medicalInfo.result_assistant_id},
+        HEX(AES_ENCRYPT(#{medicalInfo.result_assistant_name},"salt")),
+        #{medicalInfo.result_principal_time},
+        #{medicalInfo.result_principal_id},
+        HEX(AES_ENCRYPT(#{medicalInfo.result_principal_name},"salt")),
+        #{medicalInfo.abnormal_flags},
+        #{medicalInfo.critical_value},
+        #{medicalInfo.scopically_seen},
+        #{medicalInfo.pathological_diagnosis},
+        #{medicalInfo.specimen_id},
+        #{medicalInfo.check_no},
+        #{medicalInfo.medical_id},
+        #{medicalInfo.medical_name},
+        #{medicalInfo.tumor_classification},
+        #{medicalInfo.cancer_classification},
+        #{medicalInfo.cancer_staging},
+        #{medicalInfo.createTime},
+        #{medicalInfo.pathNo},
+        #{searchDate}
+        )
+    </insert>
+    <update id="updateMedical">
+        update
+        <include refid="medicalInfoTableName"></include>
+        set
+        patient_id=#{medicalInfo.patient_id},
+        patient_class=#{medicalInfo.patient_class},
+        wdbz=#{medicalInfo.wdbz},
+        med_rec_no=#{medicalInfo.med_rec_no},
+        out_patient_no=#{medicalInfo.out_patient_no},
+        in_patient_no=#{medicalInfo.in_patient_no},
+        JZLSH=#{medicalInfo.JZLSH},
+        order_uid=#{medicalInfo.order_uid},
+        organization_id=#{medicalInfo.organization_id},
+        organization_name=#{medicalInfo.organization_name},
+        placer_order_no=#{medicalInfo.placer_order_no},
+        pathological_number=#{medicalInfo.pathological_number},
+        project_id=#{medicalInfo.project_id},
+        project_text=#{medicalInfo.project_text},
+        procedure_id=#{medicalInfo.procedure_id},
+        procedure_name=#{medicalInfo.procedure_name},
+        send_doctor_id=#{medicalInfo.send_doctor_id},
+        send_doctor_name=HEX(AES_ENCRYPT(#{medicalInfo.send_doctor_name},"salt")),
+        send_doctor_phone=HEX(AES_ENCRYPT(#{medicalInfo.send_doctor_phone},"salt")),
+        send_dept_id=#{medicalInfo.send_dept_id},
+        send_dept_name=#{medicalInfo.send_dept_name},
+        send_date=#{medicalInfo.send_date},
+        send_organization_id=#{medicalInfo.send_organization_id},
+        send_organization_name=#{medicalInfo.send_organization_name},
+        symptom=#{medicalInfo.symptom},
+        adverse_reaction=#{medicalInfo.adverse_reaction},
+        clinic_diagnosis=#{medicalInfo.clinic_diagnosis},
+        surgery_info=#{medicalInfo.surgery_info},
+        relevant_clinical_info=#{medicalInfo.relevant_clinical_info},
+        collector_id=#{medicalInfo.collector_id},
+        collector_name=HEX(AES_ENCRYPT(#{medicalInfo.collector_name},"salt")),
+        collection_dept=#{medicalInfo.collection_dept},
+        collection_method=#{medicalInfo.collection_method},
+        collection_volume=#{medicalInfo.collection_volume},
+        collection_date=#{medicalInfo.collection_date},
+        specimen_received_date=#{medicalInfo.specimen_received_date},
+        specimen_received_id=#{medicalInfo.specimen_received_id},
+        specimen_received_name=HEX(AES_ENCRYPT(#{medicalInfo.specimen_received_name},"salt")),
+        result_status=#{medicalInfo.result_status},
+        result_status_code=#{medicalInfo.result_status_code},
+        reg_time=#{medicalInfo.reg_time},
+        register_id=#{medicalInfo.register_id},
+        register_name=HEX(AES_ENCRYPT(#{medicalInfo.register_name},"salt")),
+        based_time=#{medicalInfo.based_time},
+        based_id=#{medicalInfo.based_id},
+        based_name=HEX(AES_ENCRYPT(#{medicalInfo.based_name},"salt")),
+        based_record_id=#{medicalInfo.based_record_id},
+        based_record_name=HEX(AES_ENCRYPT(#{medicalInfo.based_record_name},"salt")),
+        autopsy=#{medicalInfo.autopsy},
+        production_time=#{medicalInfo.production_time},
+        production_id=#{medicalInfo.production_id},
+        production_name=HEX(AES_ENCRYPT(#{medicalInfo.production_name},"salt")),
+        result_assistant_date=#{medicalInfo.result_assistant_time},
+        result_assistant_id=#{medicalInfo.result_assistant_id},
+        result_assistant_name=HEX(AES_ENCRYPT(#{medicalInfo.result_assistant_name},"salt")),
+        result_principal_date=#{medicalInfo.result_principal_time},
+        result_principal_id=#{medicalInfo.result_principal_id},
+        result_principal_name=HEX(AES_ENCRYPT(#{medicalInfo.result_principal_name},"salt")),
+        abnormal_flags=#{medicalInfo.abnormal_flags},
+        critical_value=#{medicalInfo.critical_value},
+        scopically_seen=#{medicalInfo.scopically_seen},
+        pathological_diagnosis=#{medicalInfo.pathological_diagnosis},
+        specimen_id=#{medicalInfo.specimen_id},
+        check_no=#{medicalInfo.check_no},
+        medical_id=#{medicalInfo.medical_id},
+        medical_name=#{medicalInfo.medical_name},
+        tumor_classification=#{medicalInfo.tumor_classification},
+        cancer_classification=#{medicalInfo.cancer_classification},
+        cancer_staging=#{medicalInfo.cancer_staging},
+        modifyTime=#{medicalInfo.createTime},
+        searchDate=#{searchDate},
+        state='0'
+        where pathNo=#{medicalInfo.pathNo}
+    </update>
+    <select id="getMedicalIdByPathNo" resultType="java.lang.Integer">
+        select distinct id
+        from
+        <include refid="medicalInfoTableName"></include>
+        where pathNo=#{pathNo};
+    </select>
+    <insert id="insertAIJson" keyColumn="id" useGeneratedKeys="true" keyProperty="id"
+            parameterType="com.example.modules.shenkang.pojo.AIJson">
+        insert into shenkang_ai_resp
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="pathNo != null">
+                pathNo,
+            </if>
+            <if test="creatorTime != null">
+                creatorTime,
+            </if>
+            <if test="rspJson != null">
+                `rspJson`,
+            </if>
+            <if test="logstate != null">
+                `logstate`,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="pathNo != null">
+                #{pathNo},
+            </if>
+            <if test="creatorTime != null">
+                #{creatorTime},
+            </if>
+            <if test="rspJson != null">
+                #{rspJson},
+            </if>
+            <if test="logstate != null">
+                #{logstate},
+            </if>
+        </trim>
+    </insert>
+    <insert id="insertSpecimenInfos" keyColumn="id" useGeneratedKeys="true" keyProperty="id"
+            parameterType="com.example.modules.shenkang.pojo.SpecimenInfo">
+        insert into<include refid="specimenInfoTableName"></include>(
+        <include refid="specimenInfoField"></include>
+        )
+        values
+        <foreach collection="list" item="specimenInfo" separator=",">
+            (
+            #{specimenInfo.specimen_id},
+            #{specimenInfo.specimen_name},
+            #{specimenInfo.specimen_type},
+            #{specimenInfo.specimen_source},
+            #{specimenInfo.specimen_infectious},
+            #{specimenInfo.medical_id}
+            )
+        </foreach>
+    </insert>
+
+    <select id="getAiJson" resultType="java.util.Map">
+        select *
+        from shenkang_ai_resp
+        <where>
+            <if test="startTime!=null and startTime !='' ">
+                <choose>
+                    <when test="endTime!=null  and  endTime!=''">
+                        and creatorTime between #{startTime} and #{endTime}
+                    </when>
+                    <otherwise>
+                        and creatorTime like CONCAT('%',#{startTime},'%')
+                    </otherwise>
+                </choose>
+            </if>
+            <if test="pathNo!=null and pathNo!=''">
+                and pathNo=#{pathNo}
+            </if>
+            <if test="logstate!=null">
+                and logstate!='0'
+            </if>
+
+        </where>
+        order by id desc
+        <if test="beginNum!=null  and pageSize !=null ">
+            limit #{beginNum},#{pageSize}
+        </if>
+    </select>
+
+    <select id="getDebugLogs" resultType="com.example.modules.shenkang.pojo.DebugLog">
+        select id,reqjson,rspjson,apiName,state,pathNo,reqdate,createTime,paramNo
+        from shenkang_debug_log
+        <where>
+            <if test="apiName!=null">
+                and apiName=#{apiName}
+            </if>
+            <if test="pathNo!=null and pathNo !='' ">
+                and pathNo=#{pathNo}
+            </if>
+            <if test="startTime!=null and startTime !='' ">
+                <choose>
+                    <when test="endTime!=null  and  endTime!=''">
+                        and createTime between #{startTime} and #{endTime}
+                    </when>
+                    <otherwise>
+                        and createTime >=#{startTime}
+                    </otherwise>
+                </choose>
+            </if>
+            <if test="state!=null and state!=''">
+                and state!='0'
+            </if>
+        </where>
+        order by id desc
+        <if test="beginNum!=null  and pageSize !=null ">
+            limit #{beginNum},#{pageSize}
+        </if>
+    </select>
+    <insert id="insertMedicalJson" keyColumn="id" useGeneratedKeys="true" keyProperty="id"
+            parameterType="com.example.modules.shenkang.pojo.MedicalJson">
+        insert into shenkang_medical_resp
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="req_updateDateTime != null">
+                req_updateDateTime,
+            </if>
+            <if test="creatorTime != null">
+                creatorTime,
+            </if>
+            <if test="rspJson != null">
+                `rspJson`,
+            </if>
+            <if test="pathId != null">
+                `pathId`,
+            </if>
+            <if test="state != null">
+                `state`,
+            </if>
+            <if test="logstate != null">
+                `logstate`,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="req_updateDateTime != null">
+                #{req_updateDateTime},
+            </if>
+            <if test="creatorTime != null">
+                #{creatorTime},
+            </if>
+            <if test="rspJson != null">
+                HEX(AES_ENCRYPT(#{rspJson}, 'salt')),
+            </if>
+            <if test="pathId != null">
+                #{pathId},
+            </if>
+            <if test="state != null">
+                #{state},
+            </if>
+            <if test="logstate != null">
+                #{logstate},
+            </if>
+        </trim>
+    </insert>
+    <insert id="insertPatient" keyColumn="id" useGeneratedKeys="true" keyProperty="patient.id"
+            parameterType="com.example.modules.shenkang.pojo.Patient">
+        INSERT INTO shenkang_patient_info(
+        <include refid="patientInfoField"></include>,searchDate
+        ) VALUE (
+        #{patient.patient_id},
+        #{patient.patient_master_id},
+        HEX(AES_ENCRYPT(#{patient.name},"salt")),
+        HEX(AES_ENCRYPT(#{patient.name_spell},"salt")),
+        HEX(AES_ENCRYPT(#{patient.mother_name},"salt")),
+        #{patient.age},
+        #{patient.agepart},
+        #{patient.sex},
+        #{patient.birth_date},
+        HEX(AES_ENCRYPT(#{patient.birth_place},"salt")),
+        HEX(AES_ENCRYPT(#{patient.nation},"salt")),
+        HEX(AES_ENCRYPT(#{patient.citizenship},"salt")),
+        #{patient.marital_status},
+        #{patient.IdentityType},
+        HEX(AES_ENCRYPT(#{patient.id_card_no},"salt")),
+        HEX(AES_ENCRYPT(#{patient.id_card_no},"salt")),
+        #{patient.health_card_no},
+        HEX(AES_ENCRYPT(#{patient.contact_phone_no},"salt")),
+        HEX(AES_ENCRYPT(#{patient.email},"salt")),
+        HEX(AES_ENCRYPT(#{patient.address_province},"salt")),
+        HEX(AES_ENCRYPT(#{patient.address_city},"salt")),
+        HEX(AES_ENCRYPT(#{patient.address_district},"salt")),
+        HEX(AES_ENCRYPT(#{patient.address_street},"salt")),
+        HEX(AES_ENCRYPT(#{patient.address_road},"salt")),
+        HEX(AES_ENCRYPT(#{patient.address_detail},"salt")),
+        HEX(AES_ENCRYPT(#{patient.postalcode},"salt")),
+        #{patient.occupation},
+        HEX(AES_ENCRYPT(#{patient.work_unit},"salt")),
+        #{patient.language},
+        #{patient.insurance_type},
+        #{patient.insurance_id},
+        #{patient.organization_id},
+        #{patient.createTime},
+        #{patient.YLY1},
+        #{patient.YLY2},
+        #{patient.pathNo},
+        #{searchDate}
+        )
+    </insert>
+
+    <select id="getCountPatientByPathNo" resultType="java.lang.Integer">
+        select count(id)
+        from
+        <include refid="patientInfoTableName"></include>
+        where pathNo=#{pathNo};
+    </select>
+
+    <update id="updatePatient">
+        update
+        <include refid="patientInfoTableName"></include>
+        set
+        patient_id=#{patient.patient_id},
+        name=HEX(AES_ENCRYPT(#{patient.name},"salt")),
+        name_spell=HEX(AES_ENCRYPT(#{patient.name_spell},"salt")),
+        mother_name=HEX(AES_ENCRYPT(#{patient.mother_name},"salt")),
+        age=#{patient.age},
+        agepart=#{patient.agepart},
+        sex=#{patient.sex},
+        birth_date=#{patient.birth_date},
+        birth_place=HEX(AES_ENCRYPT(#{patient.birth_place},"salt")),
+        nation=HEX(AES_ENCRYPT(#{patient.nation},"salt")),
+        citizenship=HEX(AES_ENCRYPT(#{patient.citizenship},"salt")),
+        marital_status=#{patient.marital_status},
+        IdentityType=#{patient.IdentityType},
+        IdentityID=HEX(AES_ENCRYPT(#{patient.id_card_no},"salt")),
+        id_card_no=HEX(AES_ENCRYPT(#{patient.id_card_no},"salt")),
+        health_card_no=#{patient.health_card_no},
+        contact_phone_no=HEX(AES_ENCRYPT(#{patient.contact_phone_no},"salt")),
+        email=HEX(AES_ENCRYPT(#{patient.email},"salt")),
+        address_province=HEX(AES_ENCRYPT(#{patient.address_province},"salt")),
+        address_city=HEX(AES_ENCRYPT(#{patient.address_city},"salt")),
+        address_district=HEX(AES_ENCRYPT(#{patient.address_district},"salt")),
+        address_street=HEX(AES_ENCRYPT(#{patient.address_street},"salt")),
+        address_road=HEX(AES_ENCRYPT(#{patient.address_road},"salt")),
+        address_detail=HEX(AES_ENCRYPT(#{patient.address_detail},"salt")),
+        postalcode=HEX(AES_ENCRYPT(#{patient.postalcode},"salt")),
+        occupation=#{patient.occupation},
+        work_unit=HEX(AES_ENCRYPT(#{patient.work_unit},"salt")),
+        language=#{patient.language},
+        insurance_type=#{patient.insurance_type},
+        insurance_id=#{patient.insurance_id},
+        organization_id=#{patient.organization_id},
+        YLY1=#{patient.YLY1},
+        YLY2=#{patient.YLY2},
+        modifyTime=#{patient.createTime},
+        searchDate=#{searchDate}
+        where
+        pathNo=#{patient.pathNo}
+    </update>
+
+
+</mapper>

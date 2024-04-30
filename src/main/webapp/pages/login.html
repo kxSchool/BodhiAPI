@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<link rel="stylesheet" type="text/css" href="../static/css/login/login.css"/>
+	<script src="../static/js/login/jquery.js"></script>
+	<script src="../static/js/login/jquery_1.12.3.js"></script>
+	<script src="../static/js/login/jquery.tips.js"></script>
+	<title>login</title>
+</head>
+<body>
+<div class="login">
+	<div class="login-frame">
+		<div class="left">
+			<!--儿童医学中心-->
+<!--			<img src="../static/image/login-bg-ertong.png">-->
+			<!--公卫-->
+<!--			<img src="../static/image/login-bg-gongwei.png">-->
+			<!--肺科-->
+			 <img src="../static/img/login/login-bg-feike.png">
+		</div>
+		<div class="right">
+			<div class="title">
+				申康病理数据<br>
+				人工智能科研平台
+			</div>
+
+			<form id="loginbox">
+				<div class="input-group">
+					<img src="../static/img/login/user.png">
+					<input placeholder="登录账号"  id="username">
+				</div>
+				<div class="input-group">
+					<img src="../static/img/login/password.png">
+					<input type="password" placeholder="登录密码"  id="password">
+				</div>
+				<div class="input-group">
+					<img src="../static/img/login/hospital.png">
+<!--					<span>上海儿童医学中心</span>-->
+<!--					<span>上海公共卫生临床中心</span>-->
+					<span>上海市肺科医院</span>
+				</div>
+				<div class="input-group">
+					<img src="../static/img/login/system.png">
+					<span>科研平台</span>
+				</div>
+				<button id="submit">登录</button>
+			</form>
+			<div class="copy-right">
+				&copy; 2020 上海市申康医院发展中心<br>
+				技术支持：赵老师 183 5536 3415
+			</div>
+		</div>
+	</div>
+</div>
+</body>
+</html>
+<script type="text/javascript" src="../static/js/commonrequest.js"></script>
+<script type="text/javascript">
+
+	function check(){
+		if($("#username").val()==""){
+			$("#username").tips({
+				side:3,
+				msg:'输入用户名',
+				bg:'#AE81FF',
+				time:2
+			});
+			$("#username").focus();
+			$("#username").val('');
+			return false;
+		}else{
+			$("#username").val(jQuery.trim($('#username').val()));
+		}
+		if($("#password").val()==""){
+			$("#password").tips({
+				side:3,
+				msg:'输入密码',
+				bg:'#AE81FF',
+				time:2
+			});
+			$("#password").focus();
+			return false;
+		}
+		return true;
+	}
+	$(function(){
+		var $btnObj=$("#submit");
+		$btnObj.click(function(){
+			if(check()){
+				$("#submit").html("提交中...");
+				$('#submit').attr('disabled', true);
+				var username = $("#username").val();//用户名
+				var password = $("#password").val();//密码
+				var logins=JSON.stringify({"username":username,"password":password})
+
+				var data=myAjaxPost('/admin/login',logins, function(data){
+					if (data.code == "200") {
+						//如果服务器返回的是 ok 则进行跳转到index.jsp页面
+						handleLocalStorage('set','Authorization',data.data.tokenHead + data.data.token);
+						window.location.href = "index.html";
+					} else if (data.code == "500") {
+						//反之进行弹框提示   登录失败
+						alert(data.message+"！！！");
+						//如果账户错误则清空账户
+						$("#name").val("");
+					} else if (data.code == "404") {
+						//反之进行弹框提示   登录失败
+						alert(data.message+"！！！");
+						//如果密码错误则清空密码
+						$("#name").val("");
+						$("#pwd").val("");
+					} else {
+						alert("登录失败！！！");
+						//如果账户和密码都错误则清空账户密码
+						$("#name").val("");
+						$("#pwd").val("");
+					}
+				})
+
+
+				// $.ajax({
+				// 	type: "POST",
+				// 	url: '/admin/login',
+				// 	data: logins,
+				// 	dataType:'json',
+				// 	cache: false,
+				// 	contentType: "application/json; charset=UTF-8",
+				// 	success: function(data){
+				// 		if (data.code == "200") {
+				// 			//如果服务器返回的是 ok 则进行跳转到index.jsp页面
+				// 			window.location.href = "index.html";
+				// 		} else if (data.code == "500") {
+				// 			//反之进行弹框提示   登录失败
+				// 			alert(data.message+"！！！");
+				// 			//如果账户错误则清空账户
+				// 			$("#name").val("");
+				// 		} else if (data.code == "404") {
+				// 			//反之进行弹框提示   登录失败
+				// 			alert(data.message+"！！！");
+				// 			//如果密码错误则清空密码
+				// 			$("#name").val("");
+				// 			$("#pwd").val("");
+				// 		} else {
+				// 			alert("登录失败！！！");
+				// 			//如果账户和密码都错误则清空账户密码
+				// 			$("#name").val("");
+				// 			$("#pwd").val("");
+				// 		}
+				// 	}
+				// });
+			}else{
+				return false;
+			}
+		});
+	});
+	//加密
+	var keyStr = "ABCDEFGHIJKLMNOP" + "QRSTUVWXYZabcdef" + "ghijklmnopqrstuv"
+			+ "wxyz0123456789+/" + "=";
+	function encode64(input) {
+		var output = "";
+		var chr1, chr2, chr3 = "";
+		var enc1, enc2, enc3, enc4 = "";
+		var i = 0;
+		do {
+			chr1 = input.charCodeAt(i++);
+			chr2 = input.charCodeAt(i++);
+			chr3 = input.charCodeAt(i++);
+			enc1 = chr1 >> 2;
+			enc2 = ((chr1 & 3) << 4) | (chr2 >> 4);
+			enc3 = ((chr2 & 15) << 2) | (chr3 >> 6);
+			enc4 = chr3 & 63;
+			if (isNaN(chr2)) {
+				enc3 = enc4 = 64;
+			} else if (isNaN(chr3)) {
+				enc4 = 64;
+			}
+			output = output + keyStr.charAt(enc1) + keyStr.charAt(enc2)
+					+ keyStr.charAt(enc3) + keyStr.charAt(enc4);
+			chr1 = chr2 = chr3 = "";
+			enc1 = enc2 = enc3 = enc4 = "";
+		} while (i < input.length);
+
+		return output;
+	}
+</script>

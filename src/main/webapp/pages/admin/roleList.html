@@ -1,0 +1,706 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <meta charset="utf-8">
+    <title>角色列表</title>
+    <link href="../../static/css/plugins/switchery/switchery.css" rel="stylesheet">
+    <script src="../../static/js/jquery.min.js?v=2.1.4"></script>
+    <script src="../../static/js/bootstrap.min.js?v=3.3.5"></script>
+    <link href="../../static/css/bootstrap.min.css?v=3.3.6" rel="stylesheet">
+    <link href="../../static/css/plugins/bootstrap-switch/bootstrap-switch.css" rel="stylesheet">
+    <link href="../../static/css/plugins/sweetalert/sweetalert.css" rel="stylesheet">    <!-- Sweet alert -->
+
+    <script src="../../static/js/bootstrap-table.js"></script>
+    <script src="../../static/js/plugins/bootstrap-switch/bootstrap-switch.js"></script>
+    <link href="../../static/css/bootstrap-table.css?v=1.18.1" rel="stylesheet">
+    <link href="../../static/css/animate.css" rel="stylesheet">
+    <link href="../../static/css/style.css?v=4.1.0" rel="stylesheet">
+    <script src="../../static/js/bootstrap-table-zh-CN.js"></script>
+    <link href="../../static/css/font-awesome.min.css?v=4.4.0" rel="stylesheet">
+    <link href="../../static/css/plugins/chosen/chosen.css" rel="stylesheet">
+    <!-- bootstrap-select -->
+    <link href="../../static/css/plugins/bootstrap-select2/select2.css" rel="stylesheet">
+    <link href="../../static/css/plugins/bootstrap-select/bootstrap-select.css" rel="stylesheet">
+    <link href="https://cdn.bootcdn.net/ajax/libs/bootstrap-treeview/1.2.0/bootstrap-treeview.min.css" rel="stylesheet">
+
+    <base target="_blank">
+    <!-- Switchery -->
+    <script src="../../static/js/plugins/switchery/switchery.js"></script>
+    <script src="../../static/js/jquery-ui-1.10.4.min.js"></script>
+    <script src="../../static/js/plugins/beautifyhtml/beautifyhtml.js"></script>
+    <script src="../../static/js/plugins/validate/jquery.validate.min.js"></script>
+    <script src="../../static/js/plugins/validate/messages_zh.min.js"></script>
+    <script src="../../static/js/plugins/footable/footable.all.min.js"></script>
+    <script src="../../static/js/plugins/sweetalert/sweetalert.min.js"></script>
+    <!-- toastr -->
+    <link href="../../static/css/plugins/toastr/toastr.min.css" rel="stylesheet">
+    <script src="../../static/js/plugins/toastr/toastr.min.js"></script>
+    <!-- form -->
+    <script src="../../static/js/demo/form-validate-demo.js"></script>
+    <!-- Chosen -->
+    <script src="../../static/js/plugins/chosen/chosen.jquery.js"></script>
+    <!-- bootstrap-select -->
+    <script src="../../static/js/plugins/bootstrap-select/bootstrap-select.min.js"></script>
+    <script src="../../static/js/plugins/bootstrap-select/i18n/defaults-zh_CN.min.js"></script>
+    <script src="../../static/js/plugins/bootstrap-select2/select2.min.js"></script>
+    <script src="../../static/js/plugins/bootstrap-select2/i18n/zh-CN.js"></script>
+    <script src="https://cdn.bootcdn.net/ajax/libs/bootstrap-treeview/1.2.0/bootstrap-treeview.min.js"></script>
+    <!-- Sweet alert -->
+    <script src="../../static/js/plugins/sweetalert/sweetalert.min.js"></script>
+
+</head>
+<style>
+    .select2-drop {
+        z-index: 10050 !important;
+    }
+
+    .select2-search-choice-close {
+        margin-top: 0 !important;
+        right: 2px !important;
+        min-height: 10px;
+    }
+
+    .select2-search-choice-close:before {
+        color: black !important;
+    }
+
+    /*防止select2不会自动失去焦点*/
+    .select2-container {
+        z-index: 16000 !important;
+    }
+
+    .select2-drop-mask {
+        z-index: 15990 !important;
+    }
+
+    .select2-drop-active {
+        z-index: 15995 !important;
+    }
+</style>
+<body class="gray-bg">
+<div class="wrapper wrapper-content animated fadeInRight">
+    <!--    <div class="row">-->
+    <div class="ibox float-e-margins">
+        <div class="ibox float-e-margins">
+            <div class="ibox-title">
+                <h5>角色列表</h5>
+                <div class="ibox-tools">
+                    <a class="collapse-link">
+                        <i class="fa fa-chevron-up"></i>
+                    </a>
+                    <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                        <i class="fa fa-wrench"></i>
+                    </a>
+                    <ul class="dropdown-menu dropdown-user">
+                        <li><a href="#">选项1</a>
+                        </li>
+                        <li><a href="#">选项2</a>
+                        </li>
+                    </ul>
+                    <a class="close-link">
+                        <i class="fa fa-times"></i>
+                    </a>
+                </div>
+            </div>
+            <div class="ibox-content">
+                <div class="col-sm-2 col-md-offset-4 col-lg-offset-4col-xl-offset-4">
+                    <input type="text" id="pathNo" value="" class="form-control" name="searchText"
+                           placeholder="搜索">
+                    <label id="keyword" hidden></label>
+                </div>
+                <div class="col-sm-2 col-sm-offset-1">
+                    <button class="btn btn-primary" id="eventquery">查询</button>
+                    <button class="btn btn-white" id="clearLog">清空</button>
+                </div>
+                <div class="row row-lg">
+                    <div class="col-sm-12">
+                        <div class="example-wrap">
+                            <div class="example">
+                                <button class="btn btn-primary" id="add_frist_menu" onclick="add_role()" style="float: right;margin: 10px;">
+                                    添加角色
+                                </button>
+                                <table id="tb_userList"></table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--    </div>-->
+</div>
+
+
+<div class="modal inmodal fade" id="model_selectMenu" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button class="close" type="button" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">配置菜单</h4>
+            </div>
+            <div class="modal-body">
+                <div id="menuTree"></div>
+                <input type="text" id="model_roleId" style="display: none"/>
+                <button class="btn btn-primary" type="submit" id="menuSubmit" onclick="menuSubmit()">提交
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal inmodal fade" id="model_selectResource" tabindex="-1" role="dialog" aria-hidden="true">
+    <input type="test" id="model_selectResource_roleId" style="display: none"/>
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button class="close" type="button" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">配置资源</h4>
+            </div>
+            <div class="modal-body">
+
+            </div>
+            <dic class="modal-footer">
+                <div class="col-md-6">
+                    <button class="btn btn-primary" id="updateResource" onclick="updateResource()">提交</button>
+                </div>
+            </dic>
+        </div>
+    </div>
+</div>
+<div class="modal inmodal fade" id="model_editMenu" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button class="close" type="button" data-dismiss="modal">&times;</button>
+                <div id="model_name" class="model_name">
+                    <h4 class="modal-title"></h4>
+                </div>
+            </div>
+            <div class="modal-body">
+                <form class="form-horizontal m-t" id="from_modifyAccount" onsubmit="return false;">
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label">角色名称：</label>
+                        <div class="col-sm-8">
+                            <input id="R_name" name="R_name" class="form-control" type="text">
+                            <!--                            <span class="help-block m-b-none"><i class="fa fa-info-circle"></i> 这里写点提示的内容</span>-->
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label">角色描述：</label>
+                        <div class="col-sm-8">
+                            <input id="R_description" name="R_description" class="form-control" type="text">
+                            <!--                            <span class="help-block m-b-none"><i class="fa fa-info-circle"></i> 这里写点提示的内容</span>-->
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-sm-8 col-sm-offset-3">
+                            <button class="btn btn-primary" type="submit" id="submit" onclick="R_Submit()">提交
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <input id="R_id" type="text" style="display:none">
+</div>
+
+
+</body>
+<!-- 引入自定义ajax -->
+<script src="../../static/js/commonrequest.js"></script>
+<script>
+    var roleList;
+    $(function () {
+        toastr.options = {
+            "closeButton": false, //是否显示关闭按钮
+            "debug": false, //是否使用debug模式
+            "positionClass": "toast-top-center",//弹出窗的位置
+            "showDuration": "300",//显示的动画时间
+            "hideDuration": "1000",//消失的动画时间
+            "timeOut": "5000", //展现时间
+            "extendedTimeOut": "1000",//加长展示时间
+            "showEasing": "swing",//显示时的动画缓冲方式
+            "hideEasing": "linear",//消失时的动画缓冲方式
+            "showMethod": "fadeIn",//显示时的动画方式
+            "hideMethod": "fadeOut" //消失时的动画方式
+        };
+        //1.初始化Table
+        var oTable = new TableInit();
+        oTable.Init();
+
+        $("#eventquery").click(function () {
+            $('#tb_userList').bootstrapTable(('refresh')); // 很重要的一步，刷新url！
+        });
+        $("#clearLog").click(function () {
+            $('#pathNo').val(''); // 很重要的一步，刷新url！
+        });
+
+        //请求获取角色列表
+    });
+
+
+    window.operateEvents = {
+        'click #configureMenu': function (e, value, row, index) {
+            $('#model_selectMenu').modal('show')
+            $('#model_roleId').val(row.id)
+            showMenuTree(row.id)
+        },
+        'click #configureSource': function (e, value, row, index) {
+            $('#model_selectResource').modal('show')
+            $('#model_selectResource_roleId').val(row.id)
+            addCard(row.id)
+
+        },
+        'click #roleEdite': function (e, value, row, index) {
+            $("#model_name .modal-title").html("修改角色信息");
+            $('#R_id').val(row.id)
+            $('#R_description').val(row.description)
+            $('#R_name').val(row.name)
+            $('#model_editMenu').modal('show')
+
+        },
+        'click #roleDelete': function (e, value, row, index) {
+            var ids=[]
+            ids.push(row.id)
+            var params={
+                ids:ids,
+            }
+            swal({
+                title: "您确定要删除这条信息吗",
+                text: "删除后将无法恢复，请谨慎操作！",
+                type: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#DD6B55",
+                confirmButtonText: "删除",
+                closeOnConfirm: false
+            }, function () {
+                var url = '/role/delete'
+                ajaxPostWithToken(url,params, function (data) {
+                    if (data.code == 200) {
+                        $('#tb_userList').bootstrapTable('refresh')
+                        swal("删除成功！", "您已经永久删除了这条信息。", "success");
+                    } else {
+                        swal("删除失败！", "您已经永久删除了这条信息。", "error");
+                    }
+                })
+            });
+
+        }
+    };
+
+    function showMenuTree(roleId) {
+        ajaxGet('/menu/treeList2/' + roleId, '', function (data) {
+            if (data.code == 200) {
+                $('#menuTree').treeview({
+                    showCheckbox: true,   //是否显示复选框
+                    highlightSelected: false,    //是否高亮选中
+                    emptyIcon: '',    //没有子节点的节点图标
+                    multiSelect: true,    //多选
+                    // onNodeChecked: nodeChecked,   //级联选择
+                    onNodeUnchecked: nodeUnchecked, //级联选择
+                    data: data.data,
+                })
+                $('#menuTree').treeview('collapseAll', {silent: true});
+            }
+        })
+
+        // var state = new Array();
+        // state['checked'] = true;
+        // var checkedList=[]
+        // var url='/role/listMenu/'+roleId
+        // ajaxGet(url, '', function (data) {
+        //     if (data.code == 200) {
+        //         checkedList=data.data
+        //     }
+        // })
+
+
+    }
+
+    function menuSubmit() {
+        var check = $('#menuTree').treeview('getChecked');
+        var roleId = $('#model_roleId').val()
+        var roles = []
+        $.each(check, function (idx, item) {
+            roles.push(item.id)
+        });
+        var param = {
+            menuIds: roles,
+            roleId: roleId
+        }
+        ajaxPostWithToken('/role/allocMenu', param, function (data) {
+            if (data.code == 200) {
+                $('#model_selectMenu').modal('hide')
+                toastr.success("菜单配置成功")
+            } else {
+                toastr.error("菜单配置失败")
+            }
+        })
+    }
+
+    /**
+     * 操作列
+     * @param value 传入的数据
+     * @param row 当前行
+     * @param index 当前列数
+     * @returns {string} 返回渲染数据
+     */
+    function operationForCheck(value, row, index) {
+        if (row.status == 1) {
+            return "<input value='" + row.id + "' type='checkbox' id='project_status_switch_on' name='mycheck' checked />";
+        } else if (row.status == 0) {
+            return "<input value='" + row.id + "' type='checkbox' id='project_status_switch_off' name='mycheck' check />";
+        }
+    }
+
+    function operationTable(value, row, index) {
+        return "<button class='btn-small btn-info' id='configureMenu'> 配置菜单 </button>" +
+            "&nbsp;&nbsp;" +
+            "<button class='btn-small btn-info' id='configureSource'> 配置资源 </button>" +
+            "&nbsp;&nbsp;" +
+            "<button class='btn-small btn-warning' id='roleEdite'> 修改 </button>" +
+            "&nbsp;&nbsp;" +
+            "<button class='btn-small btn-danger' id='roleDelete'> 删除 </button>";
+    }
+
+    var TableInit = function () {
+        var oTableInit = new Object();
+        //初始化Table
+        oTableInit.Init = function () {
+            $('#tb_userList').bootstrapTable({
+                url: '/role/list',                  //请求后台的URL（*）
+                method: 'get',                      //请求方式（*）
+                toolbar: '#toolbar',                //工具按钮用哪个容器
+                striped: true,                      //是否显示行间隔色
+                cache: false,                       //是否使用缓存，默认为true，所以一般情况下需要设置一下这个属性（*）
+                pagination: true,                   //是否显示分页（*）
+                sortable: false,                    //是否启用排序
+                sortOrder: "asc",                   //排序方式
+                queryParams: oTableInit.queryParams,//传递参数（*）
+                sidePagination: "server",           //分页方式：client客户端分页，server服务端分页（*）
+                pageNumber: 1,                      //初始化加载第一页，默认第一页
+                pageSize: 10,                       //每页的记录行数（*）
+                pageList: [10, 25, 50, 100],        //可供选择的每页的行数（*）
+                //search: true,                     //是否显示表格搜索，此搜索是客户端搜索，不会进服务端，所以，个人感觉意义不大
+                strictSearch: true,
+                showColumns: true,                  //是否显示所有的列
+                showRefresh: true,                  //是否显示刷新按钮
+                minimumCountColumns: 2,             //最少允许的列数
+                //clickToSelect: false,             //是否启用点击选中行
+                height: 500,                        //行高，如果没有设置height属性，表格自动根据记录条数觉得表格高度
+                uniqueId: "ID",                     //每一行的唯一标识，一般为主键列
+                showToggle: true,                   //是否显示详细视图和列表视图的切换按钮
+                cardView: false,                    //是否显示详细视图
+                detailView: false,                  //是否显示父子表
+                ajaxOptions: {
+                    headers: {"Authorization": handleLocalStorage('get', 'Authorization')}
+                },
+                responseHandler: function (res) {
+                    return {
+                        "total": res.data.total,
+                        "rows": res.data.list,
+                    }
+                },
+                columns: [
+                    {
+                        title: '编号',//标题
+                        formatter: function (value, row, index) {
+                            var pageSize = $('#tb_userList').bootstrapTable('getOptions').pageSize;
+                            var pageNumber = $('#tb_userList').bootstrapTable('getOptions').pageNumber;
+                            return pageSize * (pageNumber - 1) + index + 1;
+                        }
+                    }, {
+                        field: "name",
+                        title: "名称"
+                    }, {
+                        field: "description",
+                        title: "描述"
+                    }, {
+                        field: 'admin_count',
+                        title: '后台用户数量',
+
+                    }, {
+                        field: 'create_time',
+                        title: '创建时间',
+
+                    }, {
+                        field: 'status',
+                        title: '启用状态',
+                        formatter: operationForCheck
+                    }, {
+                        field: 'id',
+                        title: '操作',
+                        align: 'center',
+                        valign: 'middle',
+                        events: operateEvents,
+                        formatter: operationTable
+                    }
+                ],
+            });
+        }
+        //得到查询的参数
+        oTableInit.queryParams = function (params) {
+            var temp = {   //这里的键的名字和控制器的变量名必须一直，这边改动，控制器也需要改成一样的
+                pageSize: params.limit,   //页面大小
+                pageNum: params.offset,  //页码val()
+                keyword: $('#pathNo').val(),
+            };
+
+            return temp;
+        };
+        return oTableInit;
+    };
+
+
+    //添加单个卡片
+    function addCard(roleId) {
+
+        var resourceList = [];
+        var MyresourceList = [];
+        ajaxGet2('/resource/listAll', '', function (data) {
+            if (data.code == 200) {
+                resourceList = data.data;
+            }
+        })
+        ajaxGet2('/role/listResource/' + roleId, '', function (data) {
+            if (data.code == 200) {
+                var ss = data.data;
+                console.log(ss);
+                MyresourceList = ss
+            }
+        })
+
+
+        var arr = []
+        for (const arrKey in MyresourceList) {
+            arr.push(MyresourceList[arrKey].id)
+        }
+        var html = '';
+
+        for (const resource in resourceList) {
+            if (arr.indexOf(resourceList[resource].id) > -1) {
+                html += "<input name='resourceCheckBox' class='col-md-4' value='" + resourceList[resource].id + "' type='checkbox' checked ='checked'><span class='col-md-8'>" + resourceList[resource].name + "</span></input>"
+            } else {
+                html += "<input name='resourceCheckBox' class='col-md-4' value='" + resourceList[resource].id + "' type='checkbox'><span class='col-md-8'>" + resourceList[resource].name + "</span></input>"
+            }
+        }
+        $('#model_selectResource .modal-content .modal-body .panel').remove()
+        $('#model_selectResource .modal-content .modal-body').append('<div class="panel panel-default">\n' +
+            '                    <div class="panel-heading">\n' +
+            '                        <h3 class="panel-title">\n' +
+            '                            选择资源\n' +
+            '                        </h3>\n' +
+            '                    </div>\n' +
+            '                    <div class="panel-body">\n' +
+            html +
+            '                    </div>\n' +
+            '                </div>')
+
+    }
+
+    function updateResource() {
+        var roleId = $('#model_selectResource_roleId').val();
+        // /role/allocResource
+        var btns = [];
+        $("input[name='resourceCheckBox']:checked").each(function (key, value) {
+            btns[key] = parseInt($(this).val());
+        })
+        var param = {
+            roleId: roleId,
+            resourceIds: btns
+        }
+        ajaxPostWithToken('/role/allocResource', param, function (data) {
+            if (data.code == 200) {
+                $('#model_selectResource').modal('hide')
+                toastr.success("资源配置成功")
+            } else {
+                toastr.error("资源配置失败")
+            }
+        })
+    }
+
+    function add_role() {
+        $('#R_description').val('')
+        $('#R_name').val('')
+        $("#model_name .modal-title").html("添加角色信息");
+        $('#model_editMenu').modal('show')
+    }
+
+    function R_Submit() {
+        var temp = $("#model_name .modal-title").html();
+        var roleId = $('#R_id').val()
+        var description = $('#R_description').val()
+        var name = $('#R_name').val()
+        var param = {
+            description: description,
+            name: name,
+            status: 1
+        }
+        if (temp == '修改角色信息') {
+            var url = '/role/update/' + roleId;
+            ajaxPostWithToken(url, param, function (data) {
+                if (data.code == 200) {
+                    $('#tb_userList').bootstrapTable('refresh');
+                    toastr.success("修改成功")
+                } else {
+                    toastr.error("修改失败")
+                }
+            })
+
+        } else if (temp == '添加角色信息') {
+            ajaxPostWithToken('/role/create', param, function (data) {
+                if (data.code == 200) {
+                    $('#tb_userList').bootstrapTable('refresh');
+                    toastr.success("添加成功")
+                } else {
+                    toastr.error("添加失败")
+                }
+            })
+        }
+        $('#model_editMenu').modal('hide')
+    }
+
+</script>
+<script>
+
+
+    //得到所有选中的节点id
+    function getChildChecked(node) {
+        for (var i in node) {
+            idList += node[i].id + ",";
+            //var _index=node[i].text.indexOf("(");
+            //var text = node[i].text.substring(0,_index+1)
+            //areaList += text + ",";
+            var r = /\((\d+)\)/;
+            var n = r.exec(node[i].text);
+            num += parseInt(n[1]);
+            if (node[i].nodes != null && node[i].nodes.length > 0) {
+                //有子节点，移除父节点
+                var nodeid = node[i].id;
+                idList = idList.toString().replace(nodeid, '-1');
+                num -= parseInt(n[1]);
+            }
+        }
+    }
+
+    //级联选择
+
+    var nodeCheckedSilent = false;
+
+    function nodeChecked(event, node) {
+        if (nodeCheckedSilent) {
+            return;
+        }
+        nodeCheckedSilent = true;
+        checkAllParent(node);
+        checkAllSon(node);
+        nodeCheckedSilent = false;
+    }
+
+    var nodeUncheckedSilent = false;
+
+    function nodeUnchecked(event, node) {
+        if (nodeUncheckedSilent)
+            return;
+        nodeUncheckedSilent = true;
+        uncheckAllParent(node);
+        uncheckAllSon(node);
+        nodeUncheckedSilent = false;
+    }
+
+    //选中全部父节点
+    function checkAllParent(node) {
+        // $('#menuTree').treeview('checkNode', node.nodeId, { silent: true });
+        var parentNode = $('#menuTree').treeview('getParent', node.nodeId);
+        var siblings = $('#menuTree').treeview('getSiblings', node.nodeId);
+        if (!("nodeId" in parentNode)) {
+            return;
+        }
+        var isAllChecked = true;  //是否全部没选中
+        if (node.nodes != null && node.nodes.length > 0) {
+            for (var i in node.nodes) {
+                if (!node.nodes[i].state.checked) {
+                    isAllChecked = false;
+                    break;
+                }
+            }
+        }
+        for (var j in siblings) {
+            if (!siblings[j].state.checked) {
+                isAllChecked = false;
+                break;
+            }
+        }
+        if (isAllChecked) {
+            // checkAllParent(parentNode);
+            $('#menuTree').treeview('checkNode', parentNode, {silent: true});
+        }
+        //else {
+        //    checkAllParent(parentNode);
+        //}
+    }
+
+    //取消全部父节点
+    function uncheckAllParent(node) {
+        $('#menuTree').treeview('uncheckNode', node.nodeId, {silent: true});
+        var siblings = $('#menuTree').treeview('getSiblings', node.nodeId);
+        var parentNode = $('#menuTree').treeview('getParent', node.nodeId);
+        if (!("nodeId" in parentNode)) {
+            return;
+        }
+        var isAllUnchecked = true;  //是否全部没选中
+        //for (var i in siblings) {
+        //    if (siblings[i].state.checked) {
+        //        isAllUnchecked = false;
+        //        break;
+        //    }
+        //}
+        if (isAllUnchecked) {
+            uncheckAllParent(parentNode);
+        }
+
+    }
+
+    //级联选中所有子节点
+    function checkAllSon(node) {
+        $('#menuTree').treeview('checkNode', node.nodeId, {silent: true});
+        if (node.nodes != null && node.nodes.length > 0) {
+            for (var i in node.nodes) {
+                checkAllSon(node.nodes[i]);
+            }
+        }
+    }
+
+    //级联取消所有子节点
+    function uncheckAllSon(node) {
+        $('#menuTree').treeview('uncheckNode', node.nodeId, {silent: true});
+        if (node.nodes != null && node.nodes.length > 0) {
+            for (var i in node.nodes) {
+                uncheckAllSon(node.nodes[i]);
+            }
+        }
+    }
+
+    function getChildChecked(node) {
+        for (var i in node) {
+            idList += node[i].Id + ",";
+            //var _index=node[i].text.indexOf("(");
+            //var text = node[i].text.substring(0,_index+1)
+            //areaList += text + ",";
+            var r = /\((\d+)\)/;
+            var n = r.exec(node[i].text);
+            num += parseInt(n[1]);
+            if (node[i].nodes != null && node[i].nodes.length > 0) {
+                //有子节点，移除父节点
+                var nodeid = node[i].Id;
+                idList = idList.toString().replace(nodeid, '-1');
+                num -= parseInt(n[1]);
+            }
+        }
+    }
+
+
+</script>
+</html>

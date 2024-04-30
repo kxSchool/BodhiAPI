@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <meta charset="utf-8">
+    <title>TJ_ConfirmItems列表</title>
+    <link href="../../static/css/plugins/switchery/switchery.css" rel="stylesheet">
+    <link href="../../static/css/bootstrap.min.css?v=3.3.6" rel="stylesheet">
+    <link href="../../static/css/plugins/bootstrap-switch/bootstrap-switch.css" rel="stylesheet">
+    <link href="../../static/css/plugins/sweetalert/sweetalert.css" rel="stylesheet">    <!-- Sweet alert -->
+    <link href="../../static/css/bootstrap-table.css?v=1.18.1" rel="stylesheet">
+    <link href="../../static/css/animate.css" rel="stylesheet">
+    <link href="../../static/css/style.css?v=4.1.0" rel="stylesheet">
+    <link href="../../static/css/font-awesome.min.css?v=4.4.0" rel="stylesheet">
+    <link href="../../static/css/plugins/chosen/chosen.css" rel="stylesheet">
+    <!-- bootstrap-select -->
+    <link href="../../static/css/plugins/bootstrap-select2/select2.css" rel="stylesheet">
+    <link href="../../static/css/plugins/bootstrap-select/bootstrap-select.css" rel="stylesheet">
+    <link href="https://cdn.bootcdn.net/ajax/libs/bootstrap-treeview/1.2.0/bootstrap-treeview.min.css" rel="stylesheet">
+    <link href="../../static/css/plugins/toastr/toastr.min.css" rel="stylesheet">
+</head>
+<style>
+    .wrap-logs {
+        width: 500px;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+        overflow: hidden;
+    }
+</style>
+<body class="gray-bg">
+<div class="wrapper wrapper-content animated fadeInRight">
+    <!--    <div class="row">-->
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="ibox float-e-margins">
+                <div class="ibox-title">
+                    <h5>报告发布接口调用日志</h5>
+                    <div class="ibox-tools">
+                        <a class="collapse-link">
+                            <i class="fa fa-chevron-up"></i>
+                        </a>
+                        <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                            <i class="fa fa-wrench"></i>
+                        </a>
+                    </div>
+                </div>
+                <div class="ibox-content">
+                    <form role="form" class="form-horizontal m-t" id="inputForm" target="_self">
+                        <div class="form-group ">
+                            <label class="col-sm-2 control-label">HIS ID：</label>
+                            <div class="col-sm-2">
+                                <input type="text" id="his" value="" name="searchText" class="form-control"
+                                       placeholder="">
+                                <span class="help-block m-b-none"></span>
+                                <label id="hisTemp" hidden></label>
+                            </div>
+                            <label class="col-sm-1 control-label">创建日期：</label>
+                            <div class="col-sm-3">
+                                <input type="date" id="dateStart" value="" name="dateStart" class="form-control"
+                                       placeholder="样式：2020/02/03">
+                                <span class="help-block m-b-none"></span>
+                                <label id="dateStartTemp" hidden></label>
+                            </div>
+                            <div class="col-sm-3">
+                                <input id="dateEnd" name="dateEnd" value="" class="form-control"  type="date"/>
+                                <span class="help-block m-b-none"></span>
+                                <label id="dateEndTemp" hidden></label>
+                            </div>
+                        </div>
+                        <div class="hr-line-dashed"></div>
+                        <div class="form-group">
+                            <div class="col-sm-4 col-sm-offset-5">
+                                <button class="btn btn-primary" id="search">查询</button>
+                                <button class="btn btn-white" id="clearLog">清空</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="ibox-content">
+                    <table id="tb_debugLogs"></table>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--    </div>-->
+</div>
+</body>
+<!-- 引入自定义ajax -->
+<script src="../../static/js/jquery.min.js?v=2.1.4"></script>
+<script src="../../static/js/bootstrap.min.js?v=3.3.5"></script>
+<script src="../../static/js/bootstrap-table.js"></script>
+<script src="../../static/js/plugins/bootstrap-switch/bootstrap-switch.js"></script>
+<script src="../../static/js/bootstrap-table-zh-CN.js"></script>
+<!-- Switchery -->
+<script src="../../static/js/plugins/switchery/switchery.js"></script>
+<script src="../../static/js/jquery-ui-1.10.4.min.js"></script>
+<script src="../../static/js/plugins/beautifyhtml/beautifyhtml.js"></script>
+<script src="../../static/js/plugins/validate/jquery.validate.min.js"></script>
+<script src="../../static/js/plugins/validate/messages_zh.min.js"></script>
+<script src="../../static/js/plugins/footable/footable.all.min.js"></script>
+<script src="../../static/js/plugins/sweetalert/sweetalert.min.js"></script>
+<!-- toastr -->
+<script src="../../static/js/plugins/toastr/toastr.min.js"></script>
+<!-- form -->
+<script src="../../static/js/demo/form-validate-demo.js"></script>
+<!-- Chosen -->
+<script src="../../static/js/plugins/chosen/chosen.jquery.js"></script>
+<!-- bootstrap-select -->
+<script src="../../static/js/plugins/bootstrap-select/bootstrap-select.min.js"></script>
+<script src="../../static/js/plugins/bootstrap-select/i18n/defaults-zh_CN.min.js"></script>
+<script src="../../static/js/plugins/bootstrap-select2/select2.min.js"></script>
+<script src="../../static/js/plugins/bootstrap-select2/i18n/zh-CN.js"></script>
+<script src="https://cdn.bootcdn.net/ajax/libs/bootstrap-treeview/1.2.0/bootstrap-treeview.min.js"></script>
+<!-- Sweet alert -->
+<script src="../../static/js/plugins/sweetalert/sweetalert.min.js"></script>
+<!-- 引入自定义ajax -->
+<script src="../../static/js/commonrequest.js"></script>
+<script type="text/javascript">
+    $(function () {
+        //1.初始化Table
+        var oTable = new TableInit();
+        oTable.Init();
+        //2.初始化Button的点击事件
+        var oButtonInit = new ButtonInit();
+        oButtonInit.Init();
+
+        var oTableDebug = new TableDebugInit();
+        oTableDebug.Init();
+    });
+
+    var TableInit = function () {
+        var oTableInit = new Object();
+        //初始化Table
+        oTableInit.Init = function () {
+            $('#tb_debugLogs').bootstrapTable({
+                url: '/hisInterface/getDebugLog',         //请求后台的URL（*）
+                method: 'post',                      //请求方式（*）
+                toolbar: '#toolbar',                //工具按钮用哪个容器
+                striped: true,                      //是否显示行间隔色
+                cache: false,                       //是否使用缓存，默认为true，所以一般情况下需要设置一下这个属性（*）
+                pagination: true,                   //是否显示分页（*）
+                sortable: false,                     //是否启用排序
+                sortOrder: "asc",                   //排序方式
+                queryParams: oTableInit.queryParams,//传递参数（*）
+                sidePagination: "server",           //分页方式：client客户端分页，server服务端分页（*）
+                pageNumber:1,                       //初始化加载第一页，默认第一页
+                pageSize: 10,                       //每页的记录行数（*）
+                pageList: [10, 25, 50, 100],        //可供选择的每页的行数（*）
+                //search: true,                       //是否显示表格搜索，此搜索是客户端搜索，不会进服务端，所以，个人感觉意义不大
+                strictSearch: true,
+                showColumns: true,                  //是否显示所有的列
+                showRefresh: true,                  //是否显示刷新按钮
+                minimumCountColumns: 2,             //最少允许的列数
+                //clickToSelect: false,                //是否启用点击选中行
+                height: 500,                        //行高，如果没有设置height属性，表格自动根据记录条数觉得表格高度
+                uniqueId: "ID",                     //每一行的唯一标识，一般为主键列
+                showToggle:true,                    //是否显示详细视图和列表视图的切换按钮
+                cardView: false,                    //是否显示详细视图
+                detailView: false,                   //是否显示父子表
+                columns: [
+                    {
+                        checkbox: false
+                    },
+                    {
+                        title: '编号',//标题
+                        formatter: function (value, row, index) {
+                            var pageSize=$('#tb_debugLogs').bootstrapTable('getOptions').pageSize;
+                            var pageNumber=$('#tb_debugLogs').bootstrapTable('getOptions').pageNumber;
+                            return pageSize * (pageNumber - 1) + index + 1;
+                        }
+                    },{
+                        field:"param",
+                        title:'HIS ID'
+                    }
+                    ,{
+                        field: 'reqParam',
+                        title: '请求信息',
+                        align: 'center',
+                        valign: 'middle',
+                        formatter: reqjsonLogFormatter //添加超链接的方法
+                    }, {
+                        field: 'respParam',
+                        title: '接口返回信息',
+                        align: 'center',
+                        valign: 'middle',
+                        formatter: rspjsonLogFormatter //添加超链接的方法
+                    },{
+                        field: 'time',
+                        title: '创建时间'
+                    }
+                    ,{
+                        field: 'state',
+                        title: '日志状态',
+                        align: 'center',
+                        valign: 'middle',
+                        formatter: stateFormatterLog
+                    }
+                    ,{
+                        field: 'oprate',
+                        title: '日志操作',
+                        align: 'center',
+                        valign: 'middle',
+                        formatter: ingnoereFormatter
+                    }
+                ],
+                responseHandler:function(res){
+                    console.log(res);
+                    return{
+                        "total":res.data.total,
+                        "rows":res.data.records
+                    }
+                }
+            });
+        };
+        //得到查询的参数
+        oTableInit.queryParams = function (params) {
+            console.log(params);
+            var temp = {   //这里的键的名字和控制器的变量名必须一直，这边改动，控制器也需要改成一样的
+                pageSize: params.limit,   //页面大小
+                pageNum: params.offset,
+                method:"TJ_RetrieveReport",
+                hisId:$("#hisTemp").val(),
+                startTime:$("#dateStartTemp").val(),
+                endTime:$("#dateEndTemp").val(),
+                type:1
+            };
+            return temp;
+        };
+        return oTableInit;
+    };
+    var ButtonInit = function () {
+        var oInit = new Object();
+        var postdata = {};
+
+        oInit.Init = function () {
+            //初始化页面上面的按钮事件
+
+        };
+        return oInit;
+    };
+
+    function addMenuTab(dataUrl, menuName, dataIndex) {
+        return window.parent.addMenuTab(dataUrl, menuName, dataIndex);
+    }
+
+
+    $("#inputForm").validate(
+        {
+            rules:{},
+            submitHandler: function () {
+                $("#hisTemp").val($("#his").val());
+                $("#dateStartTemp").val($("#dateStart").val());
+                $("#dateEndTemp").val($("#dateEnd").val());
+                $("#tb_debugLogs").bootstrapTable('refresh');
+            }
+        });
+
+    $("#clearLog").click(function(){
+        $("#hisTemp").val("");
+        $("#his").val("");
+        $("#dateStart").val("");
+        $("#dateStartTemp").val("");
+        $("#dateEnd").val("")
+        $("#dateEndTemp").val("");
+    });
+</script>
+<script src="../../static/js/funtionTools.js"></script>
+</html>

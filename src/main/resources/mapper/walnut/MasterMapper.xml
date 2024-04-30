@@ -1,0 +1,435 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.modules.walnut.mapper.MasterMapper">
+    <!-- 查看本库申请单 -->
+    <select id="queryMyApplyNoInMysql" resultType="string">
+        SELECT a.apply_no
+        FROM apply a
+                 JOIN patient_info p ON a.pat_no = p.pat_id
+        WHERE p.patient_type = #{patientType}
+          AND p.his_id = #{hisId};
+    </select>
+    <!-- 查字典送检医生名称 -->
+    <select id="queryInspectDoctor" resultType="string">
+        SELECT content
+        FROM dictionary_type
+        where type = 'System_User'
+          and code = #{code} limit 1;
+    </select>
+    <!-- BG01 -->
+    <select id="queryBG01ByReId" resultType="com.example.modules.walnut.domain.HIS.BG01">
+        <!-- SELECT
+            a.apply_no AS reqno,
+            a.re_id as repno,
+            p.pat_no AS patid,
+            p.patient_type as xtbz,
+            a.path_id AS blh,
+            p.his_id AS cardno,
+            p.pat_name AS hzxm,
+            p.pat_sex AS sex,
+            p.pat_age AS age,
+            a.inspect_office AS sjksdm,
+            d1.content AS sjksmc,
+            a.disease_district AS bqdm,
+            d2.content AS bqmc,
+            a.bed_no AS cwdm,
+            a.inspect_doctor AS sjysxm,
+            a.inspect_time AS sjrq,
+            re.audit_time AS reprq,
+            p.patient_type AS xtbz,
+            DATE_FORMAT((),NOW'%Y%m%d%h%m%s')  as pubtime
+
+        FROM report re JOIN apply a ON a.re_id = re.re_id
+        JOIN patient_info p ON p.pat_id = a.pat_no
+        LEFT JOIN dictionary_type d1 ON d1.code = a.inspect_office AND d1.type = 'Administrative_office'
+        LEFT JOIN dictionary_type d2 ON d2.code = a.disease_district AND d2.type = 'Ward' -->
+        SELECT
+        a.apply_no AS reqno,
+        a.re_id as repno,
+        p.pat_no AS patid,
+        (CASE WHEN p.patient_type=501 then 1 WHEN p.patient_type=502 THEN 0 WHEN p.patient_type=503 THEN 3 ELSE 99 END )
+        as xtbz,
+        a.path_id AS blh,
+        p.his_id AS cardno,
+        p.pat_name AS hzxm,
+        p.pat_sex AS sex,
+        p.pat_age AS age,
+        t.inspectOffice AS sjksdm,
+        t.inspectOfficeName AS sjksmc,
+        a.disease_district AS bqdm,
+        d2.content AS bqmc,
+        a.bed_no AS cwdm,
+        a.inspect_doctor AS sjysxm,
+        a.inspect_time AS sjrq,
+        t.auditTime AS reprq,
+        DATE_FORMAT(NOW(),'%Y%m%d%h%m%s') as pubtime,
+        t.syxh
+        FROM task_assembly t
+        JOIN apply a ON a.re_id = t.reId
+        JOIN patient_info p ON p.pat_id = a.pat_no
+        LEFT JOIN dictionary_type d2 ON d2.type = 'Ward' AND d2.code = a.disease_district
+        WHERE t.reId = #{reId};
+    </select>
+<!--    <insert id="insertChargeList">-->
+<!--        INSERT INTO `charge`-->
+<!--        (`his_id`, `patient_type`, `pat_no`, `syxh`, `require_no`, `require_no_item`, `require_type`, `apply_no`,-->
+<!--        `apply_id`, `apply_dept`, `apply_doc`, `apply_time`, `apply_doc_code`, `apply_dept_code`, `item_code`,-->
+<!--        `item_name`, `item_price`, `item_unit`, `item_qty`, `item_type`, `item_status`, `status_remark`, `url`,-->
+<!--        `is_emergency`, `baby_no`, `specimen_type`, `status`, `charge_flag`, `add_type`, `create_time`,`chargeInfo`)-->
+<!--        VALUES-->
+<!--        <foreach collection="charge" item="ch" separator=",">-->
+<!--            (#{ch.hisId}, #{ch.patientType}, #{ch.patNo}, #{ch.syxh}, #{ch.requireNo},-->
+<!--            #{ch.requireNoItem},#{ch.requireType}, #{ch.applyNo},-->
+<!--            #{applyId}, #{ch.applyDept}, #{ch.applyDoc},#{ch.applyTime}, #{ch.applyDocCode},#{ch.applyDeptCode},-->
+<!--            #{ch.itemCode},-->
+<!--            #{ch.itemName}, #{ch.itemPrice}, #{ch.itemUnit},#{ch.itemQty}, #{ch.itemType}, #{ch.itemStatus},-->
+<!--            #{ch.statusRemark}, #{ch.url},-->
+<!--            #{ch.isEmergency},#{ch.babyNo}, #{ch.specimenType}, #{ch.status}, #{ch.chargeFlag}, #{ch.addType},-->
+<!--            now(),#{ch.chargeNo})-->
+<!--        </foreach>-->
+<!--    </insert>-->
+    <!-- 根据chId修改收费项目 -->
+<!--    <update id="updateChargeByChId">-->
+<!--        UPDATE `charge`-->
+<!--        <set>-->
+<!--            <if test="charge.hisId != null and charge.hisId != ''">-->
+<!--                `his_id`=#{charge.hisId},-->
+<!--            </if>-->
+<!--            <if test="charge.patientType != null and charge.patientType != ''">-->
+<!--                `patient_type`=#{charge.patientType},-->
+<!--            </if>-->
+<!--            <if test="charge.patNo != null and charge.patNo != ''">-->
+<!--                `pat_no`=#{charge.patNo},-->
+<!--            </if>-->
+<!--            <if test="charge.syxh != null and charge.syxh != ''">-->
+<!--                `syxh`=#{charge.syxh},-->
+<!--            </if>-->
+<!--            <if test="charge.requireNo != null and charge.requireNo != ''">-->
+<!--                `require_no`=#{charge.requireNo},-->
+<!--            </if>-->
+<!--            <if test="charge.requireNoItem != null and charge.requireNoItem != ''">-->
+<!--                `require_no_item`=#{charge.requireNoItem},-->
+<!--            </if>-->
+<!--            <if test="charge.requireType != null and charge.requireType != ''">-->
+<!--                `require_type`=#{charge.requireType},-->
+<!--            </if>-->
+<!--            <if test="charge.applyNo != null and charge.applyNo != ''">-->
+<!--                `apply_no`=#{charge.applyNo},-->
+<!--            </if>-->
+<!--            <if test="charge.applyDept != null and charge.applyDept != ''">-->
+<!--                `apply_dept`=#{charge.applyDept},-->
+<!--            </if>-->
+<!--            <if test="charge.applyDoc != null and charge.applyDoc != ''">-->
+<!--                `apply_doc`=#{charge.applyDoc},-->
+<!--            </if>-->
+<!--            <if test="charge.applyDocCode != null and charge.applyDocCode != ''">-->
+<!--                `apply_time`=#{charge.applyDocCode},-->
+<!--            </if>-->
+<!--            <if test="charge.applyDeptCode != null and charge.applyDeptCode != ''">-->
+<!--                `apply_doc_code`=#{charge.applyDeptCode},-->
+<!--            </if>-->
+<!--            <if test="charge.applyTime != null and charge.applyTime != ''">-->
+<!--                `apply_dept_code`=#{charge.applyTime},-->
+<!--            </if>-->
+<!--            <if test="charge.itemCode != null and charge.itemCode != ''">-->
+<!--                `item_code`=#{charge.itemCode},-->
+<!--            </if>-->
+<!--            <if test="charge.itemName != null and charge.itemName != ''">-->
+<!--                `item_name`=#{charge.itemName},-->
+<!--            </if>-->
+<!--            <if test="charge.itemPrice != null and charge.itemPrice != ''">-->
+<!--                `item_price`=#{charge.itemPrice},-->
+<!--            </if>-->
+<!--            <if test="charge.itemUnit != null and charge.itemUnit != ''">-->
+<!--                `item_unit`=#{charge.itemUnit},-->
+<!--            </if>-->
+<!--            <if test="charge.itemQty != null and charge.itemQty != ''">-->
+<!--                `item_qty`=#{charge.itemQty},-->
+<!--            </if>-->
+<!--            <if test="charge.itemType != null and charge.itemType != ''">-->
+<!--                `item_type`=#{charge.itemType},-->
+<!--            </if>-->
+<!--            <if test="charge.itemStatus != null and charge.itemStatus != ''">-->
+<!--                `item_status`=#{charge.itemStatus},-->
+<!--            </if>-->
+<!--            <if test="charge.statusRemark != null and charge.statusRemark != ''">-->
+<!--                `status_remark`=#{charge.statusRemark},-->
+<!--            </if>-->
+<!--            <if test="charge.url != null and charge.url != ''">-->
+<!--                `url`=#{charge.url},-->
+<!--            </if>-->
+<!--            <if test="charge.isEmergency != null and charge.isEmergency != ''">-->
+<!--                `is_emergency`=#{charge.isEmergency},-->
+<!--            </if>-->
+<!--            <if test="charge.babyNo != null and charge.babyNo != ''">-->
+<!--                `baby_no`=#{charge.babyNo},-->
+<!--            </if>-->
+<!--            <if test="charge.specimenType != null and charge.specimenType != ''">-->
+<!--                `specimen_type`=#{charge.specimenType},-->
+<!--            </if>-->
+<!--            <if test="charge.status != null and charge.status != ''">-->
+<!--                `status`=#{charge.status},-->
+<!--            </if>-->
+<!--            <if test="charge.chargeFlag != null and charge.chargeFlag != ''">-->
+<!--                `charge_flag`=#{charge.chargeFlag},-->
+<!--            </if>-->
+<!--            <if test="charge.addType != null and charge.addType != ''">-->
+<!--                `add_type`=#{charge.addType}-->
+<!--            </if>-->
+<!--        </set>-->
+<!--        WHERE `ch_id` = #{charge.chId};-->
+<!--    </update>-->
+    <!-- 根据科室代码判断送检单位 -->
+    <select id="queryInspectUnitByInspectOffice" resultType="string">
+        SELECT content
+        FROM dictionary_type d1
+        WHERE d1.type = 'Administrative_office'
+          AND d1.code = #{inspectOffice} LIMIT 1
+    </select>
+    <!-- 查看QF01VO -->
+    <select id="queryQF01ByReId" resultType="com.example.modules.walnut.domain.Charge">
+        SELECT ch_id           AS chId,
+               his_id          AS hisId,
+               patient_type    AS patientType,
+               pat_no          AS patNo,
+               syxh            AS syxh,
+               require_no      AS requireNo,
+               require_no_item AS requireNoItem,
+               require_type    AS requireType,
+               apply_no        AS applyNo,
+               apply_dept      AS applyDept,
+               apply_doc       AS applyDoc,
+               apply_time      AS applyDocCode,
+               apply_doc_code  AS applyDeptCode,
+               apply_dept_code AS applyTime,
+               item_code       AS itemCode,
+               item_name       AS itemName,
+               item_price      AS itemPrice,
+               item_unit       AS itemUnit,
+               item_qty        AS itemQty,
+               item_type       AS itemType,
+               item_status     AS itemStatus,
+               status_remark   AS statusRemark,
+               url             AS url,
+               is_emergency    AS isEmergency,
+               baby_no         AS babyNo,
+               specimen_type   AS specimenType,
+               `status`        AS status,
+               charge_flag     AS chargeFlag,
+               add_type        AS addType
+        FROM charge
+        WHERE ch_id = #{chId} LIMIT 1;
+    </select>
+    <select id="searchReportIdByApplyNo" resultType="java.lang.Integer">
+        select reId
+        from task_assembly
+        where applyId = #{applyId}
+    </select>
+    <select id="selChargeNoByInfo" resultType="java.lang.String">
+        select chargeInfo
+        from charge
+        where ch_id = #{chId}
+    </select>
+    <select id="selectYY03ByCode" resultType="java.lang.String">
+        SELECT type
+        from hisyy03
+        WHERE code = #{chargeCode}
+    </select>
+    <select id="selectAllByapplyId" resultType="com.example.modules.walnut.domain.TaskAssembly">
+        select patientTtype as patientType,
+               hisId        as hisId,
+               patNo        as patNo,
+               patName      as patName
+        from task_assembly
+        where applyId = #{applyId}
+
+    </select>
+    <select id="queryDictionaryByCode" resultType="java.lang.String">
+        SELECT name from dictionary_type
+        <where>
+            type=type
+            <choose>
+                <when test="type =='Hospital_district'">
+                    and id = #{code}
+                </when>
+                <otherwise>
+                    and code = #{code}
+                </otherwise>
+            </choose>
+        </where>
+
+    </select>
+    <select id="selUserInfoById" resultType="com.example.modules.wnhis.pojo.SysUser">
+        SELECT
+        us.`user_id` as userId,
+        us.`full_name` as fullName,
+        us.`jobnum` as jobnum,
+        us.`tel` as tel,
+        us.`sex` as sex
+        FROM sys_user us
+        <where>
+            us.user_id = #{userId}
+        </where>
+
+    </select>
+
+    <!-- 根据报告id查看当前状态 -->
+    <select id="queryReCurrentTypeByReId" resultType="com.example.modules.walnut.domain.ReportTypeCurrentType">
+        SELECT
+            if(count(re.re_id) &gt; 0, re.current_type, 0) as currentType,
+            re.re_type as reType,
+            if(re.re_doctor &gt; 1,re.re_doctor,0) as reDoctor,
+            if(re.visit_doctor &gt; 1,re.visit_doctor,0) as visitDoctor,
+            if(re.andtodo is null,0 ,re.andtodo) as andtodo,
+            if(re.re_content is null,0,1) as reContent,
+            re.audit_doctor as auditDoctor,
+            re.send as send,
+            re.gross_finding as grossFinding,
+            re.re_content as reContentDetail
+        FROM report re WHERE re_id = #{reId};
+    </select>
+    <!-- 根据病理号查看患者信息 -->
+    <select id="queryPatientInfoByPathId" resultType="com.example.modules.walnut.domain.PatientInfoApply">
+        SELECT
+        p.pat_id as patId,
+        p.pat_no as patNo,
+        p.patient_type as patientType,
+        d.content as patientTypeName,
+        if(p.his_id = a.path_id,'',his_id) as hisId,
+        a.apply_no as applyNo,
+        a.apply_id as applyId,
+        a.path_id as pathId,
+        a.melib_id as melibId,
+        m.melib_name as melibName,
+        p.pat_name as patName,
+        p.pat_sex as patSex,
+        p.pat_birthday as patBirthday,
+        p.pat_age as patAge,
+        p.pat_age_unit as patAgeUnit,
+        p.pat_tel as patTel,
+        p.marital_status as maritalStatus,
+        p.pat_idcard as patIdcard,
+        p.nation as nation,
+        p.pat_address as patAddress,
+        p.profession as profession,
+        a.apply_id as applyId,
+        a.apply_no as applyNo,
+        a.re_id as reId,
+        a.apply_status as applyStatus,
+        a.inspect_unit as inspectUnit,
+        a.inspect_office as inspectOffice,
+        a.inspect_doctor as inspectDoctor,
+        a.inspect_time as inspectTIme,
+        a.accept_doctor as acceptDoctor,
+        a.charge_type as chargeType,
+        a.disease_district as diseaseDistrict,
+        d2.content as diseaseDistrictName,
+        a.bed_no as bedNo,
+        a.accept_time as acceptTime,
+        a.whether_menopause as whetherMenopause,
+        a.last_menopause as lastMenopause,
+        a.clinical_diagnosis as clinicalDiagnosis,
+        a.clinical_data as clinicalData,
+        a.duty_doctor as dutyDoctor,
+        a.specimen_type as specimenType,
+        a.specimen_name as specimenName,
+        a.specimen_sum as specimenSum,
+        a.ops_doctor as opsDoctor,
+        a.ops_time as opsTime,
+        a.specimen_case as specimenCase,
+        a.disqualification as disqualification,
+        a.clinical_advice as clinicalAdvice,
+        a.urgent as urgent,
+        a.postpone as postpone,
+        a.delay_cause as delayCausea,
+        re.re_type as reType,
+        re.template as template,
+        re.gross_finding as grossFinding,
+        re.image_url as imageUrl,
+        re.print_time as printTime,
+        a.consultation as consultation,
+        a.materials_doctor as materialsDoctor
+        FROM patient_info  p
+        LEFT JOIN apply a ON p.pat_id = a.pat_no
+        LEFT JOIN report re ON re.re_id = a.re_id
+        LEFT JOIN medical_library m ON m.melib_id = a.melib_id
+        LEFT JOIN dictionary_type d ON d.id= p.patient_type and d.type='Patient_type'
+        LEFT JOIN dictionary_type d2 ON d2.code=a.disease_district and d2.type='Ward'
+        <where>
+            <!--            <if test="patNo != null and patNo != ''">-->
+            <!--                p.pat_no = #{patNo}-->
+            <!--            </if>-->
+            <if test="applyId != null">
+                and a.apply_id = #{applyId}
+            </if>
+            <!--and d.type='Patient_type'and d2.type='Ward'-->
+        </where>
+        <!-- <if test="applyNo == null">
+            order by a.create_time desc
+        </if>-->
+        limit 1;
+    </select>
+    <select id="selectReContByApplyNo" resultType="string">
+        SELECT audit_content from report where re_id=(SELECT re_id from apply where apply_id=#{applyId})
+    </select>
+
+    <select id="selectAuditTimeByApplyNo" resultType="java.lang.String">
+        SELECT auditTime FROM  task_assembly where applyId=#{applyId}
+    </select>
+
+    <select id="selectMecPatientInfoByReId" resultType="java.util.Map">
+        SELECT t.patNo, t.patientTtype, t.reId, t.auditDoctor, t.reDoctorName, c.require_no as logno,t.specimenName,t.melibId
+        FROM task_assembly t
+                 LEFT JOIN charge c ON t.hisId=c.his_id and t.patientTtype=c.patient_type and t.patNo=c.pat_no and t.reType>107
+        WHERE t.patientTtype=503 and  reId=#{reId}
+            LIMIT 1;
+
+    </select>
+
+    <select id="selectFullNameById" resultType="java.lang.String">
+        select full_name from sys_user where user_id=#{emId}
+    </select>
+
+    <!-- 报告里查看报告信息 -->
+    <select id="queryReportContentByPathId" resultType="com.example.modules.walnut.domain.Report">
+        SELECT
+        ap.path_id as pathId,
+        re.re_id as reId,
+        re.re_type as reType,
+        dic1.content as reTypeName,
+        re.re_doctor as reDoctor,
+        u1.full_name as reDoctorName,
+        re.visit_doctor as visitDoctor,
+        u2.full_name as visitDoctorName,
+        re.audit_doctor as auditDoctor,
+        u3.full_name as auditDoctorName,
+        re.audit_time as reTime,
+        re.audit_time as auditTime,
+        re.report_url as reportUrl,
+        re.image_url as imageUrl,
+        re.re_content as reContent,
+        re.audit_content as auditContent,
+        re.send as send,
+        re.template as template,
+        re.immune as immune,
+        re.print_time as printTime,
+        re.current_type as currentType,
+        p.pat_name as patName
+        FROM report re
+        join apply ap on ap.re_id = re.re_id
+        join patient_info p on ap.pat_no = p.pat_id
+        left join dictionary_type dic1 on dic1.id = re.re_type
+        left join sys_user u1 on u1.user_id = re.re_doctor
+        left join sys_user u2 on u2.user_id = re.visit_doctor
+        left join sys_user u3 on u3.user_id = re.audit_doctor
+        <where>
+            <!--            <if test="patNo != null and patNo != ''">-->
+            <!--                p.pat_no = #{patNo} -->
+            <!--            </if>-->
+            <if test="applyId != null and applyId != ''">
+                and ap.apply_id = #{applyId}
+            </if>
+        </where>
+        limit 1;
+    </select>
+</mapper>

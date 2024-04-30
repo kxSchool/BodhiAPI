@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+
+    <title>H+ 后台主题UI框架 - Bootstrap3 Markdown编辑器</title>
+    <meta name="keywords" content="H+后台主题,后台bootstrap框架,会员中心主题,后台HTML,响应式后台">
+    <meta name="description" content="H+是一个完全响应式，基于Bootstrap3最新版本开发的扁平化主题，她采用了主流的左右两栏式布局，使用了Html5+CSS3等现代技术">
+
+    <link rel="shortcut icon" href="favicon.ico">
+
+    <link href="../../static/css/font-awesome.min.css?v=4.4.0" rel="stylesheet">
+    <link href="../../static/css/animate.css" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="../../static/css/plugins/markdown/bootstrap-markdown.min.css"/>
+    <link href="../../static/css/style.css?v=4.0.0" rel="stylesheet">
+    <base target="_blank">
+
+    <script src="../../static/js/jquery.min.js?v=2.1.4"></script>
+    <script src="../../static/js/jquery-ui-1.10.4.min.js"></script>
+
+    <link href="../../static/css/bootstrap.min.css?v=3.3.5" rel="stylesheet">
+    <script src="../../static/js/bootstrap.min.js?v=3.3.5"></script>
+
+    <script src="../../static/js/moment-with-locales.min.js"></script>
+    <link href="../../static/css/bootstrap-datetimepicker.min.css" rel="stylesheet">
+    <script src="../../static/js/bootstrap-datetimepicker.min.js"></script>
+</head>
+<body class="gray-bg">
+<div class="wrapper wrapper-content">
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="ibox float-e-margins">
+                <div class="ibox-title">
+                    <h5>住院增加收费退费调试</h5>
+                    <div class="ibox-tools">
+                        <a class="collapse-link">
+                            <i class="fa fa-chevron-up"></i>
+                        </a>
+                        <a class="dropdown-toggle" data-toggle="dropdown" href="form_editors.html#">
+                            <i class="fa fa-wrench"></i>
+                        </a>
+                    </div>
+                    <div class="ibox-content">
+                        <form role="form" class="form-horizontal m-t" id="generateXML" target="_self">
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label">接口名称：</label>
+                                <div class="col-sm-2">
+                                    <p class="form-control-static">患者信息提取</p>
+                                </div>
+                                <label class="col-sm-2 control-label">接口编码：</label>
+                                <div class="col-sm-2">
+                                    <input id="MsgCode" type="text" name="MsgCode" class="form-control" value="提取患者信息"
+                                           readonly="readonly">
+                                </div>
+                            </div>
+                            <div class="form-group ">
+                                <label class="col-sm-2 control-label">病人类别：</label>
+                                <div class="col-sm-2">
+                                    <input id="patientType" type="text" name="patientType" class="form-control XMLState"
+                                           placeholder="患者类别：501（住院）502（门诊）503（体检）">
+                                </div>
+                                <label class="col-sm-1 control-label">HISID：</label>
+                                <div class="col-sm-2">
+                                    <input id="hisId" type="text" name="hisId" class="form-control XMLState"
+                                           placeholder="HISID">
+                                </div>
+                                <label class="col-sm-1 control-label">申请单号：</label>
+                                <div class="col-sm-2">
+                                    <input id="applyNo" type="text" name="applyNo" class="form-control XMLState"
+                                           placeholder="申请单号">
+                                </div>
+                            </div>
+                            <div class="form-group ">
+                                <label class="col-sm-2 control-label">当前操作用户ID：</label>
+                                <div class="col-sm-2">
+                                    <input id="userId" type="text" name="userId" class="form-control XMLState"
+                                           placeholder="当前操作用户ID">
+                                </div>
+                            </div>
+                            <div class="hr-line-dashed"></div>
+                            <div class="form-group ">
+                                <div class="col-sm-12 col-sm-offset-4">
+                                    <button class="btn btn-primary" id="submit" type="submit">请求</button>
+                                    <button class="btn btn-white" id="clear1" type="submit">重置</button>
+                                </div>
+                            </div>
+                        </form>
+                        <div class="clearfix"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="ibox float-e-margins">
+                <div class="ibox-title">
+                    <h5>返回接口信息</h5>
+                    <div class="ibox-tools">
+                        <a class="collapse-link">
+                            <i class="fa fa-chevron-up"></i>
+                        </a>
+                        <a class="dropdown-toggle" data-toggle="dropdown" href="form_editors.html#">
+                            <i class="fa fa-wrench"></i>
+                        </a>
+                    </div>
+                </div>
+                <div class="ibox-content">
+                    <div class="form-group ">
+                        <div class="col-sm-12 col-sm-offset-4">
+                            <button class="btn btn-primary" id="clear2" type="submit">清空</button>
+                        </div>
+                    </div>
+                    <div class="clearfix"></div>
+                    <div class="row m-t-lg">
+                        <div class="col-lg-12">
+                            <pre id="toastrOptions2" class="p-m"></pre>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="../../static/js/content.js?v=1.0.0"></script>
+<script type="text/javascript" src="../../static/js/plugins/markdown/markdown.js"></script>
+<script type="text/javascript" src="../../static/js/plugins/markdown/to-markdown.js"></script>
+<script type="text/javascript" src="../../static/js/plugins/markdown/bootstrap-markdown.js"></script>
+<script type="text/javascript" src="../../static/js/plugins/markdown/bootstrap-markdown.zh.js"></script>
+<script src="../../static/js/plugins/beautifyhtml/beautifyhtml.js"></script>
+<script src="../../static/js/plugins/validate/jquery.validate.min.js"></script>
+<script src="../../static/js/plugins/validate/messages_zh.min.js"></script>
+<script src="../../static/js/demo/form-validate-demo.js"></script>
+<script src="../../static/js/commonrequest.js"></script>
+<script type="text/javascript">
+    $(function () {
+        $("#clear1").click(function(){
+            $(".XMLState").each(function(){
+                $(this).val("");
+            });
+        });
+        $("#submit").click(function () {
+            requesta();
+        });
+        $("#clear2").click(function () {
+            $('#toastrOptions2').val('');
+        });
+    });
+
+    function requesta() {
+        var param={
+            patientType:parseInt($('#patientType').val()),
+            userId:parseInt($('#hisId').val()),
+            applyNo:$('#applyNo').val(),
+            hisId:$('#hisId').val()
+        }
+        ajaxPostWithToken('/walnutInterface/extraction',param, function (data){
+            if (data.code == 200){
+                $('#toastrOptions2').val(data.data);
+            }else {
+                alert(data)
+            }
+        })
+    }
+</script>
+</body>
+</html>

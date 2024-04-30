@@ -1,0 +1,2 @@
+"tokenHead": "Bearer ",
+"token": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbiIsImNyZWF0ZWQiOjE2MTM2Mzk0NzEzOTgsImV4cCI6MTYxNDI0NDI3MX0._Ila5L0iZVyq3QlEuXqDHpI9LOCa_GTHOo7iIjfTkfwbvF7TtHOvvxX8Sj-xaEwnKYHLwIrLAtz91l1yEp8RTA"

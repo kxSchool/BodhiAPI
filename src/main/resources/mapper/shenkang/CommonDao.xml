@@ -1,0 +1,888 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.modules.shenkang.mapper.CommonDao">
+
+    <select id="selectSearchTimeByPathNo" resultType="java.lang.String">
+        select searchDate from shenkang_medical_info where pathNo=#{pathNo}
+    </select>
+
+    <insert id="insertToken">
+        INSERT INTO shenkang_tokens (token)
+        VALUE (#{access_token})
+        ON DUPLICATE KEY UPDATE
+            token = #{access_token}
+    </insert>
+
+    <select id="selectFileIdByApplyID_H" resultType="com.example.modules.shenkang.pojo.HFileInfo">
+        SELECT file_name as fileName,file_path as filePath,file_type as fileType,file_fid as fileFid,FileUID as FileUID
+        FROM file_info where medical_id = #{applyId}
+    </select>
+
+    <resultMap id="selectinfoByMedIdMap" type="com.example.modules.shenkang.pojo.MedicalInfo">
+        <result column="pathological_number" jdbcType="VARCHAR" property="pathological_number" />
+        <result column="organization_id" jdbcType="VARCHAR" property="organization_id" />
+    </resultMap>
+
+    <select id="selectinfoByMedId" resultMap="selectinfoByMedIdMap">
+        select  pathological_number as pathological_number,
+                organization_id as organization_id
+        from shenkang_medical_info where id=#{id}
+    </select>
+
+    <insert id="insertPatient" keyColumn="id" keyProperty="patientInfo.id" parameterType="com.example.modules.shenkang.pojo.PatientInfo"
+            useGeneratedKeys="true">
+        INSERT INTO shenkang_patient_info
+         (IdentityID,IdentityType,`patient_id`,`name`,`name_spell`,`mother_name`,`sex`,`birth_date`,`birth_place`,
+         `nation`,`citizenship`,`marital_status`,`id_card_no`,`health_card_no`,`contact_phone_no`,`email`,
+         `address_province`,`address_city`,`address_district`,`address_street`,`address_road`,`address_detail`,
+         `postalcode`,`occupation`,`work_unit`,`language`,`insurance_type`,`insurance_id`,`organization_id`,`pathNo`,`createTime`,`searchDate`)
+        VALUES
+        (HEX(AES_ENCRYPT(#{patientInfo.IdentityID},"salt")),#{patientInfo.IdentityType},#{patientInfo.patient_id},HEX(AES_ENCRYPT(#{patientInfo.name},"salt")),
+		HEX(AES_ENCRYPT(#{patientInfo.name_spell},"salt")),HEX(AES_ENCRYPT(#{patientInfo.mother_name},"salt")),
+		#{patientInfo.sex},#{patientInfo.birth_date},HEX(AES_ENCRYPT(#{patientInfo.birth_place},"salt")),
+		HEX(AES_ENCRYPT(#{patientInfo.nation},"salt")),HEX(AES_ENCRYPT(#{patientInfo.citizenship},"salt")),
+		#{patientInfo.marital_status},HEX(AES_ENCRYPT(#{patientInfo.id_card_no},"salt")),
+		#{patientInfo.health_card_no},HEX(AES_ENCRYPT(#{patientInfo.contact_phone_no},"salt")),
+		HEX(AES_ENCRYPT(#{patientInfo.email},"salt")),HEX(AES_ENCRYPT(#{patientInfo.address_province},"salt")),
+		HEX(AES_ENCRYPT(#{patientInfo.address_city},"salt")),HEX(AES_ENCRYPT(#{patientInfo.address_district},"salt")),
+		HEX(AES_ENCRYPT(#{patientInfo.address_street},"salt")),HEX(AES_ENCRYPT(#{patientInfo.address_road},"salt")),
+		HEX(AES_ENCRYPT(#{patientInfo.address_detail},"salt")),HEX(AES_ENCRYPT(#{patientInfo.postalcode},"salt")),
+		#{patientInfo.occupation},HEX(AES_ENCRYPT(#{patientInfo.work_unit},"salt")),#{patientInfo.language},#{patientInfo.insurance_type},
+		#{patientInfo.insurance_id},#{patientInfo.organization_id},#{patientInfo.pathNo},#{patientInfo.createTime},#{searchDate})
+    </insert>
+
+    <select id="selectMed_id" resultType="java.lang.Integer">
+         select distinct id from shenkang_medical_info where pathNo=#{pathNo}
+    </select>
+
+    <insert id="insertMedical" keyColumn="id" keyProperty="medicalInfo.id" parameterType="com.example.modules.shenkang.pojo.MedicalInfo"
+            useGeneratedKeys="true">
+        insert into shenkang_medical_info
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="medicalInfo.patient_id != null">
+                patient_id,
+            </if>
+            <if test="medicalInfo.patient_master_id != null">
+                patient_master_id,
+            </if>
+            <if test="medicalInfo.patient_class != null">
+                patient_class,
+            </if>
+            <if test="medicalInfo.med_rec_no != null">
+                med_rec_no,
+            </if>
+            <if test="medicalInfo.out_patient_no != null">
+                out_patient_no,
+            </if>
+            <if test="medicalInfo.in_patient_no != null">
+                in_patient_no,
+            </if>
+            <if test="medicalInfo.order_uid != null">
+                order_uid,
+            </if>
+            <if test="medicalInfo.organization_id != null">
+                organization_id,
+            </if>
+            <if test="medicalInfo.organization_name != null">
+                organization_name,
+            </if>
+            <if test="medicalInfo.placer_order_no != null">
+                placer_order_no,
+            </if>
+            <if test="medicalInfo.pathological_number != null">
+                pathological_number,
+            </if>
+            <if test="medicalInfo.project_id != null">
+                project_id,
+            </if>
+            <if test="medicalInfo.project_text != null">
+                project_text,
+            </if>
+            <if test="medicalInfo.procedure_id != null">
+                procedure_id,
+            </if>
+            <if test="medicalInfo.procedure_name != null">
+                procedure_name,
+            </if>
+            <if test="medicalInfo.send_doctor_id != null">
+                send_doctor_id,
+            </if>
+            <if test="medicalInfo.send_doctor_name != null">
+                send_doctor_name,
+            </if>
+            <if test="medicalInfo.send_doctor_phone != null">
+                send_doctor_phone,
+            </if>
+            <if test="medicalInfo.send_dept_id != null">
+                send_dept_id,
+            </if>
+            <if test="medicalInfo.send_dept_name != null">
+                send_dept_name,
+            </if>
+            <if test="medicalInfo.send_date != null">
+                send_date,
+            </if>
+            <if test="medicalInfo.send_organization_id != null">
+                send_organization_id,
+            </if>
+            <if test="medicalInfo.send_organization_name != null">
+                send_organization_name,
+            </if>
+            <if test="medicalInfo.symptom != null">
+                symptom,
+            </if>
+            <if test="medicalInfo.adverse_reaction != null">
+                adverse_reaction,
+            </if>
+            <if test="medicalInfo.clinic_diagnosis != null">
+                clinic_diagnosis,
+            </if>
+            <if test="medicalInfo.surgery_info != null">
+                surgery_info,
+            </if>
+            <if test="medicalInfo.relevant_clinical_info != null">
+                relevant_clinical_info,
+            </if>
+            <if test="medicalInfo.collector_id != null">
+                collector_id,
+            </if>
+            <if test="medicalInfo.collector_name != null">
+                collector_name,
+            </if>
+            <if test="medicalInfo.collection_dept != null">
+                collection_dept,
+            </if>
+            <if test="medicalInfo.collection_method != null">
+                collection_method,
+            </if>
+            <if test="medicalInfo.collection_volume != null">
+                collection_volume,
+            </if>
+            <if test="medicalInfo.collection_date != null">
+                collection_date,
+            </if>
+            <if test="medicalInfo.specimen_received_date != null">
+                specimen_received_date,
+            </if>
+            <if test="medicalInfo.specimen_received_id != null">
+                specimen_received_id,
+            </if>
+            <if test="medicalInfo.specimen_received_name != null">
+                specimen_received_name,
+            </if>
+            <if test="medicalInfo.result_status != null">
+                result_status,
+            </if>
+            <if test="medicalInfo.result_status_code != null">
+                result_status_code,
+            </if>
+            <if test="medicalInfo.reg_time != null">
+                reg_time,
+            </if>
+            <if test="medicalInfo.register_id != null">
+                register_id,
+            </if>
+            <if test="medicalInfo.register_name != null">
+                register_name,
+            </if>
+            <if test="medicalInfo.based_time != null">
+                based_time,
+            </if>
+            <if test="medicalInfo.based_id != null">
+                based_id,
+            </if>
+            <if test="medicalInfo.based_name != null">
+                based_name,
+            </if>
+            <if test="medicalInfo.based_record_id != null">
+                based_record_id,
+            </if>
+            <if test="medicalInfo.based_record_name != null">
+                based_record_name,
+            </if>
+            <if test="medicalInfo.autopsy != null">
+                autopsy,
+            </if>
+            <if test="medicalInfo.production_time != null">
+                production_time,
+            </if>
+            <if test="medicalInfo.production_id != null">
+                production_id,
+            </if>
+            <if test="medicalInfo.production_name != null">
+                production_name,
+            </if>
+            <if test="medicalInfo.result_assistant_time!= null">
+                result_assistant_date,
+            </if>
+            <if test="medicalInfo.result_assistant_id != null">
+                result_assistant_id,
+            </if>
+            <if test="medicalInfo.result_assistant_name != null">
+                result_assistant_name,
+            </if>
+            <if test="medicalInfo.result_principal_time!= null">
+                result_principal_date,
+            </if>
+            <if test="medicalInfo.result_principal_id != null">
+                result_principal_id,
+            </if>
+            <if test="medicalInfo.result_principal_name != null">
+                result_principal_name,
+            </if>
+            <if test="medicalInfo.abnormal_flags != null">
+                abnormal_flags,
+            </if>
+            <if test="medicalInfo.critical_value != null">
+                critical_value,
+            </if>
+            <if test="medicalInfo.scopically_seen != null">
+                scopically_seen,
+            </if>
+            <if test="medicalInfo.pathological_diagnosis != null">
+                pathological_diagnosis,
+            </if>
+            <if test="medicalInfo.check_no != null">
+                check_no,
+            </if>
+            <if test="medicalInfo.wdbz != null">
+                wdbz,
+            </if>
+            <if test="medicalInfo.pathNo != null">
+                pathNo,
+            </if>
+            <if test="medicalInfo.createTime != null">
+                createTime,
+            </if>
+            <if test="searchDate != null">
+                searchDate,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="medicalInfo.patient_id != null">
+                #{medicalInfo.patient_id,jdbcType=VARCHAR},
+            </if>
+            <if test="medicalInfo.patient_master_id != null">
+                #{medicalInfo.patient_master_id,jdbcType=VARCHAR},
+            </if>
+            <if test="medicalInfo.patient_class != null">
+                #{medicalInfo.patient_class,jdbcType=VARCHAR},
+            </if>
+            <if test="medicalInfo.med_rec_no != null">
+                #{medicalInfo.med_rec_no,jdbcType=VARCHAR},
+            </if>
+            <if test="medicalInfo.out_patient_no != null">
+                #{medicalInfo.out_patient_no,jdbcType=VARCHAR},
+            </if>
+            <if test="medicalInfo.in_patient_no != null">
+                #{medicalInfo.in_patient_no,jdbcType=VARCHAR},
+            </if>
+            <if test="medicalInfo.order_uid != null">
+                #{medicalInfo.order_uid,jdbcType=VARCHAR},
+            </if>
+            <if test="medicalInfo.organization_id != null">
+                #{medicalInfo.organization_id,jdbcType=VARCHAR},
+            </if>
+            <if test="medicalInfo.organization_name != null">
+                #{medicalInfo.organization_name,jdbcType=VARCHAR},
+            </if>
+            <if test="medicalInfo.placer_order_no != null">
+                #{medicalInfo.placer_order_no,jdbcType=VARCHAR},
+            </if>
+            <if test="medicalInfo.pathological_number != null">
+                #{medicalInfo.pathological_number,jdbcType=VARCHAR},
+            </if>
+            <if test="medicalInfo.project_id != null">
+                #{medicalInfo.project_id,jdbcType=VARCHAR},
+            </if>
+            <if test="medicalInfo.project_text != null">
+                #{medicalInfo.project_text,jdbcType=VARCHAR},
+            </if>
+            <if test="medicalInfo.procedure_id != null">
+                #{medicalInfo.procedure_id,jdbcType=VARCHAR},
+            </if>
+            <if test="medicalInfo.procedure_name != null">
+                #{medicalInfo.procedure_name,jdbcType=VARCHAR},
+            </if>
+            <if test="medicalInfo.send_doctor_id != null">
+                #{medicalInfo.send_doctor_id,jdbcType=VARCHAR},
+            </if>
+            <if test="medicalInfo.send_doctor_name != null">
+                HEX(AES_ENCRYPT(#{medicalInfo.send_doctor_name,jdbcType=VARCHAR},"salt")),
+            </if>
+            <if test="medicalInfo.send_doctor_phone != null">
+                HEX(AES_ENCRYPT(#{medicalInfo.send_doctor_phone,jdbcType=VARCHAR},"salt")),
+            </if>
+            <if test="medicalInfo.send_dept_id != null">
+                #{medicalInfo.send_dept_id,jdbcType=VARCHAR},
+            </if>
+            <if test="medicalInfo.send_dept_name != null">
+                #{medicalInfo.send_dept_name,jdbcType=VARCHAR},
+            </if>
+            <if test="medicalInfo.send_date != null">
+                #{medicalInfo.send_date,jdbcType=VARCHAR},
+            </if>
+            <if test="medicalInfo.send_organization_id != null">
+                #{medicalInfo.send_organization_id,jdbcType=VARCHAR},
+            </if>
+            <if test="medicalInfo.send_organization_name != null">
+                #{medicalInfo.send_organization_name,jdbcType=VARCHAR},
+            </if>
+            <if test="medicalInfo.symptom != null">
+                #{medicalInfo.symptom,jdbcType=VARCHAR},
+            </if>
+            <if test="medicalInfo.adverse_reaction != null">
+                #{medicalInfo.adverse_reaction,jdbcType=VARCHAR},
+            </if>
+            <if test="medicalInfo.clinic_diagnosis != null">
+                #{medicalInfo.clinic_diagnosis,jdbcType=VARCHAR},
+            </if>
+            <if test="medicalInfo.surgery_info != null">
+                #{medicalInfo.surgery_info,jdbcType=VARCHAR},
+            </if>
+            <if test="medicalInfo.relevant_clinical_info != null">
+                #{medicalInfo.relevant_clinical_info,jdbcType=VARCHAR},
+            </if>
+            <if test="medicalInfo.collector_id != null">
+                #{medicalInfo.collector_id,jdbcType=VARCHAR},
+            </if>
+            <if test="medicalInfo.collector_name != null">
+                HEX(AES_ENCRYPT(#{medicalInfo.collector_name,jdbcType=VARCHAR},"salt")),
+            </if>
+            <if test="medicalInfo.collection_dept != null">
+                #{medicalInfo.collection_dept,jdbcType=VARCHAR},
+            </if>
+            <if test="medicalInfo.collection_method != null">
+                #{medicalInfo.collection_method,jdbcType=VARCHAR},
+            </if>
+            <if test="medicalInfo.collection_volume != null">
+                #{medicalInfo.collection_volume,jdbcType=VARCHAR},
+            </if>
+            <if test="medicalInfo.collection_date != null">
+                #{medicalInfo.collection_date,jdbcType=VARCHAR},
+            </if>
+            <if test="medicalInfo.specimen_received_date != null">
+                #{medicalInfo.specimen_received_date,jdbcType=VARCHAR},
+            </if>
+            <if test="medicalInfo.specimen_received_id != null">
+                #{medicalInfo.specimen_received_id,jdbcType=VARCHAR},
+            </if>
+            <if test="medicalInfo.specimen_received_name != null">
+                HEX(AES_ENCRYPT(#{medicalInfo.specimen_received_name,jdbcType=VARCHAR},"salt")),
+            </if>
+            <if test="medicalInfo.result_status != null">
+                #{medicalInfo.result_status,jdbcType=VARCHAR},
+            </if>
+            <if test="medicalInfo.result_status_code != null">
+                #{medicalInfo.result_status_code,jdbcType=VARCHAR},
+            </if>
+            <if test="medicalInfo.reg_time != null">
+                #{medicalInfo.reg_time,jdbcType=VARCHAR},
+            </if>
+            <if test="medicalInfo.register_id != null">
+                #{medicalInfo.register_id,jdbcType=VARCHAR},
+            </if>
+            <if test="medicalInfo.register_name != null">
+                HEX(AES_ENCRYPT(#{medicalInfo.register_name,jdbcType=VARCHAR},"salt")),
+            </if>
+            <if test="medicalInfo.based_time != null">
+                #{medicalInfo.based_time,jdbcType=VARCHAR},
+            </if>
+            <if test="medicalInfo.based_id != null">
+                #{medicalInfo.based_id,jdbcType=VARCHAR},
+            </if>
+            <if test="medicalInfo.based_name != null">
+                HEX(AES_ENCRYPT(#{medicalInfo.based_name,jdbcType=VARCHAR},"salt")),
+            </if>
+            <if test="medicalInfo.based_record_id != null">
+                #{medicalInfo.based_record_id,jdbcType=VARCHAR},
+            </if>
+            <if test="medicalInfo.based_record_name != null">
+                HEX(AES_ENCRYPT(#{medicalInfo.based_record_name,jdbcType=VARCHAR},"salt")),
+            </if>
+            <if test="medicalInfo.autopsy != null">
+                #{medicalInfo.autopsy,jdbcType=VARCHAR},
+            </if>
+            <if test="medicalInfo.production_time != null">
+                #{medicalInfo.production_time,jdbcType=VARCHAR},
+            </if>
+            <if test="medicalInfo.production_id != null">
+                #{medicalInfo.production_id,jdbcType=VARCHAR},
+            </if>
+            <if test="medicalInfo.production_name != null">
+                HEX(AES_ENCRYPT(#{medicalInfo.production_name,jdbcType=VARCHAR},"salt")),
+            </if>
+            <if test="medicalInfo.result_assistant_time != null">
+                #{medicalInfo.result_assistant_time,jdbcType=VARCHAR},
+            </if>
+            <if test="medicalInfo.result_assistant_id != null">
+                #{medicalInfo.result_assistant_id,jdbcType=VARCHAR},
+            </if>
+            <if test="medicalInfo.result_assistant_name != null">
+                HEX(AES_ENCRYPT(#{medicalInfo.result_assistant_name,jdbcType=VARCHAR},"salt")),
+            </if>
+            <if test="medicalInfo.result_principal_time != null">
+                #{medicalInfo.result_principal_time,jdbcType=VARCHAR},
+            </if>
+            <if test="medicalInfo.result_principal_id != null">
+                #{medicalInfo.result_principal_id,jdbcType=VARCHAR},
+            </if>
+            <if test="medicalInfo.result_principal_name != null">
+                HEX(AES_ENCRYPT(#{medicalInfo.result_principal_name,jdbcType=VARCHAR},"salt")),
+            </if>
+            <if test="medicalInfo.abnormal_flags != null">
+                #{medicalInfo.abnormal_flags,jdbcType=VARCHAR},
+            </if>
+            <if test="medicalInfo.critical_value != null">
+                #{medicalInfo.critical_value,jdbcType=VARCHAR},
+            </if>
+            <if test="medicalInfo.scopically_seen != null">
+                #{medicalInfo.scopically_seen,jdbcType=VARCHAR},
+            </if>
+            <if test="medicalInfo.pathological_diagnosis != null">
+                #{medicalInfo.pathological_diagnosis,jdbcType=VARCHAR},
+            </if>
+            <if test="medicalInfo.checkNo != null">
+                #{medicalInfo.checkNo,jdbcType=VARCHAR},
+            </if>
+            <if test="medicalInfo.wdbz != null">
+                #{medicalInfo.wdbz},
+            </if>
+            <if test="medicalInfo.pathNo != null">
+                #{medicalInfo.pathNo},
+            </if>
+            <if test="medicalInfo.createTime != null">
+                #{medicalInfo.createTime},
+            </if>
+            <if test="searchDate != null">
+                #{searchDate}
+            </if>
+        </trim>
+    </insert>
+
+
+    <update id="updateMedical">
+        UPDATE `shenkang_medical_info`
+        <set>
+            <if test="medicalInfo.patient_class != null and medicalInfo.patient_class != ''">
+                `patient_class`=#{medicalInfo.patient_class},
+            </if>
+            <if test="medicalInfo.wdbz != null and medicalInfo.wdbz != ''">
+                `wdbz`=#{medicalInfo.wdbz},
+            </if>
+            <if test="medicalInfo.med_rec_no != null and medicalInfo.med_rec_no != ''">
+                `med_rec_no`=#{medicalInfo.med_rec_no},
+            </if>
+            <if test="medicalInfo.out_patient_no != null and medicalInfo.out_patient_no != ''">
+                `out_patient_no`=#{medicalInfo.out_patient_no},
+            </if>
+            <if test="medicalInfo.in_patient_no != null and medicalInfo.in_patient_no != ''">
+                `in_patient_no`=#{medicalInfo.in_patient_no},
+            </if>
+            <if test="medicalInfo.JZLSH != null and medicalInfo.JZLSH != ''">
+                `JZLSH`=#{medicalInfo.JZLSH},
+            </if>
+            <if test="medicalInfo.order_uid != null and medicalInfo.order_uid != ''">
+                `order_uid`=#{medicalInfo.order_uid},
+            </if>
+            <if test="medicalInfo.organization_id != null and medicalInfo.organization_id != ''">
+                `organization_id`=#{medicalInfo.organization_id},
+            </if>
+            <if test="medicalInfo.organization_name != null and medicalInfo.organization_name != ''">
+                `organization_name`=#{medicalInfo.organization_name},
+            </if>
+            <if test="medicalInfo.placer_order_no != null and medicalInfo.placer_order_no != ''">
+                `placer_order_no`=#{medicalInfo.placer_order_no},
+            </if>
+            <if test="medicalInfo.pathological_number != null and medicalInfo.pathological_number != ''">
+                `pathological_number`=#{medicalInfo.pathological_number},
+            </if>
+            <if test="medicalInfo.project_id != null and medicalInfo.project_id != ''">
+                `project_id`=#{medicalInfo.project_id},
+            </if>
+            <if test="medicalInfo.project_text != null and medicalInfo.project_text != ''">
+                `project_text`=#{medicalInfo.project_text},
+            </if>
+            <if test="medicalInfo.procedure_id != null and medicalInfo.procedure_id != ''">
+                `procedure_id`=#{medicalInfo.procedure_id},
+            </if>
+            <if test="medicalInfo.procedure_name != null and medicalInfo.procedure_name != ''">
+                `procedure_name`=#{medicalInfo.procedure_name},
+            </if>
+            <if test="medicalInfo.send_doctor_id != null and medicalInfo.send_doctor_id != ''">
+                `send_doctor_id`=#{medicalInfo.send_doctor_id},
+            </if>
+            <if test="medicalInfo.send_doctor_name != null and medicalInfo.send_doctor_name != ''">
+                `send_doctor_name`=HEX(AES_ENCRYPT(#{medicalInfo.send_doctor_name},"salt")),
+            </if>
+            <if test="medicalInfo.send_doctor_phone != null and medicalInfo.send_doctor_phone != ''">
+                `send_doctor_phone`=HEX(AES_ENCRYPT(#{medicalInfo.send_doctor_phone},"salt")),
+            </if>
+            <if test="medicalInfo.send_dept_id != null and medicalInfo.send_dept_id != ''">
+                `send_dept_id`=#{medicalInfo.send_dept_id},
+            </if>
+            <if test="medicalInfo.send_dept_name != null and medicalInfo.send_dept_name != ''">
+                `send_dept_name`=#{medicalInfo.send_dept_name},
+            </if>
+            <if test="medicalInfo.send_date != null and medicalInfo.send_date != ''">
+                `send_date`=#{medicalInfo.send_date},
+            </if>
+            <if test="medicalInfo.send_organization_id != null and medicalInfo.send_organization_id != ''">
+                `send_organization_id`=#{medicalInfo.send_organization_id},
+            </if>
+            <if test="medicalInfo.send_organization_name != null and medicalInfo.send_organization_name != ''">
+                `send_organization_name`=#{medicalInfo.send_organization_name},
+            </if>
+            <if test="medicalInfo.symptom != null and medicalInfo.symptom != ''">
+                `symptom`=#{medicalInfo.symptom},
+            </if>
+            <if test="medicalInfo.adverse_reaction != null and medicalInfo.adverse_reaction != ''">
+                `adverse_reaction`=#{medicalInfo.adverse_reaction},
+            </if>
+            <if test="medicalInfo.clinic_diagnosis != null and medicalInfo.clinic_diagnosis != ''">
+                `clinic_diagnosis`=#{medicalInfo.clinic_diagnosis},
+            </if>
+            <if test="medicalInfo.surgery_info != null and medicalInfo.surgery_info != ''">
+                `surgery_info`=#{medicalInfo.surgery_info},
+            </if>
+            <if test="medicalInfo.relevant_clinical_info != null and medicalInfo.relevant_clinical_info != ''">
+                `relevant_clinical_info`=#{medicalInfo.relevant_clinical_info},
+            </if>
+            <if test="medicalInfo.collector_id != null and medicalInfo.collector_id != ''">
+                `collector_id`=#{medicalInfo.collector_id},
+            </if>
+            <if test="medicalInfo.collector_name != null and medicalInfo.collector_name != ''">
+                `collector_name`=HEX(AES_ENCRYPT(#{medicalInfo.collector_name},"salt")),
+            </if>
+            <if test="medicalInfo.collection_dept != null and medicalInfo.collection_dept != ''">
+                `collection_dept`=#{medicalInfo.collection_dept},
+            </if>
+            <if test="medicalInfo.collection_method != null and medicalInfo.collection_method != ''">
+                `collection_method`=#{medicalInfo.collection_method},
+            </if>
+            <if test="medicalInfo.collection_volume != null and medicalInfo.collection_volume != ''">
+                `collection_volume`=#{medicalInfo.collection_volume},
+            </if>
+            <if test="medicalInfo.collection_date != null and medicalInfo.collection_date != ''">
+                `collection_date`=#{medicalInfo.collection_date},
+            </if>
+            <if test="medicalInfo.specimen_received_date != null and medicalInfo.specimen_received_date != ''">
+                `specimen_received_date`=#{medicalInfo.specimen_received_date},
+            </if>
+            <if test="medicalInfo.specimen_received_id != null and medicalInfo.specimen_received_id != ''">
+                `specimen_received_id`=#{medicalInfo.specimen_received_id},
+            </if>
+            <if test="medicalInfo.specimen_received_name != null and medicalInfo.specimen_received_name != ''">
+                `specimen_received_name`=HEX(AES_ENCRYPT(#{medicalInfo.specimen_received_name},"salt")),
+            </if>
+            <if test="medicalInfo.result_status != null and medicalInfo.result_status != ''">
+                `result_status`=#{medicalInfo.result_status},
+            </if>
+            <if test="medicalInfo.result_status_code != null and medicalInfo.result_status_code != ''">
+                `result_status_code`=#{medicalInfo.result_status_code},
+            </if>
+            <if test="medicalInfo.reg_time != null and medicalInfo.reg_time != ''">
+                `reg_time`=#{medicalInfo.reg_time},
+            </if>
+            <if test="medicalInfo.register_id != null and medicalInfo.register_id != ''">
+                `register_id`=#{medicalInfo.register_id},
+            </if>
+            <if test="medicalInfo.register_name != null and medicalInfo.register_name != ''">
+                `register_name`=HEX(AES_ENCRYPT(#{medicalInfo.register_name},"salt")),
+            </if>
+            <if test="medicalInfo.based_time != null and medicalInfo.based_time != ''">
+                `based_time`=#{medicalInfo.based_time},
+            </if>
+            <if test="medicalInfo.based_id != null and medicalInfo.based_id != ''">
+                `based_id`=#{medicalInfo.based_id},
+            </if>
+            <if test="medicalInfo.based_name != null and medicalInfo.based_name != ''">
+                `based_name`=HEX(AES_ENCRYPT(#{medicalInfo.based_name},"salt")),
+            </if>
+            <if test="medicalInfo.based_record_id != null and medicalInfo.based_record_id != ''">
+                `based_record_id`=#{medicalInfo.based_record_id},
+            </if>
+            <if test="medicalInfo.based_record_name != null and medicalInfo.based_record_name != ''">
+                `based_record_name`=HEX(AES_ENCRYPT(#{medicalInfo.based_record_name},"salt")),
+            </if>
+            <if test="medicalInfo.autopsy != null and medicalInfo.autopsy != ''">
+                `autopsy`=#{medicalInfo.autopsy},
+            </if>
+            <if test="medicalInfo.production_time != null and medicalInfo.production_time != ''">
+                `production_time`=#{medicalInfo.production_time},
+            </if>
+            <if test="medicalInfo.production_id != null and medicalInfo.production_id != ''">
+                `production_id`=#{medicalInfo.production_id},
+            </if>
+            <if test="medicalInfo.production_name != null and medicalInfo.production_name != ''">
+                `production_name`=HEX(AES_ENCRYPT(#{medicalInfo.production_name},"salt")),
+            </if>
+            <if test="medicalInfo.result_assistant_time != null and medicalInfo.result_assistant_time != ''">
+                `result_assistant_date`=#{medicalInfo.result_assistant_time},
+            </if>
+            <if test="medicalInfo.result_assistant_id != null and medicalInfo.result_assistant_id != ''">
+                `result_assistant_id`=#{medicalInfo.result_assistant_id},
+            </if>
+            <if test="medicalInfo.result_assistant_name != null and medicalInfo.result_assistant_name != ''">
+                `result_assistant_name`=HEX(AES_ENCRYPT(#{medicalInfo.result_assistant_name},"salt")),
+            </if>
+            <if test="medicalInfo.result_principal_time != null and medicalInfo.result_principal_time != ''">
+                `result_principal_date`=#{medicalInfo.result_principal_time},
+            </if>
+            <if test="medicalInfo.result_principal_id != null and medicalInfo.result_principal_id != ''">
+                `result_principal_id`=#{medicalInfo.result_principal_id},
+            </if>
+            <if test="medicalInfo.result_principal_name != null and medicalInfo.result_principal_name != ''">
+                `result_principal_name`=HEX(AES_ENCRYPT(#{medicalInfo.result_principal_name},"salt")),
+            </if>
+            <if test="medicalInfo.abnormal_flags != null and medicalInfo.abnormal_flags != ''">
+                `abnormal_flags`=#{medicalInfo.abnormal_flags},
+            </if>
+            <if test="medicalInfo.critical_value != null and medicalInfo.critical_value != ''">
+                `critical_value`=#{medicalInfo.critical_value},
+            </if>
+            <if test="medicalInfo.scopically_seen != null and medicalInfo.scopically_seen != ''">
+                `scopically_seen`=#{medicalInfo.scopically_seen},
+            </if>
+            <if test="medicalInfo.pathological_diagnosis != null and medicalInfo.pathological_diagnosis != ''">
+                `pathological_diagnosis`=#{medicalInfo.pathological_diagnosis},
+            </if>
+            <if test="medicalInfo.specimen_id != null and medicalInfo.specimen_id != ''">
+                `specimen_id`=#{medicalInfo.specimen_id},
+            </if>
+            <if test="medicalInfo.check_no != null and medicalInfo.check_no != ''">
+                `check_no`=#{medicalInfo.check_no},
+            </if>
+            <if test="medicalInfo.medical_id != null and medicalInfo.medical_id != ''">
+                `medical_id`=#{medicalInfo.medical_id},
+            </if>
+            <if test="medicalInfo.medical_name != null and medicalInfo.medical_name != ''">
+                `medical_name`=#{medicalInfo.medical_name},
+            </if>
+            <if test="medicalInfo.tumor_classification != null and medicalInfo.tumor_classification != ''">
+                `tumor_classification`=#{medicalInfo.tumor_classification},
+            </if>
+            <if test="medicalInfo.cancer_classification != null and medicalInfo.cancer_classification != ''">
+                `cancer_classification`=#{medicalInfo.cancer_classification},
+            </if>
+            <if test="medicalInfo.cancer_staging != null and medicalInfo.cancer_staging != ''">
+                `cancer_staging`=#{medicalInfo.cancer_staging},
+            </if>
+            <if test="medicalInfo.modifyTime != null and medicalInfo.modifyTime != ''">
+                `modifyTime`=#{medicalInfo.modifyTime},
+            </if>
+            <if test="medicalInfo.patient_id != null and medicalInfo.patient_id != ''">
+                `patient_id`=#{medicalInfo.patient_id},
+            </if>
+            <if test="searchDate != null and searchDate != ''">
+                `searchDate`=#{searchDate},
+            </if>
+            state='0'
+        </set>
+        where pathNo =#{medicalInfo.pathNo}
+    </update>
+
+    <update id="updataPatient" >
+        UPDATE `shenkang_patient_info`
+        <set>
+            <if test="patientInfo.IdentityID != null and patientInfo.IdentityID != ''">
+                `IdentityID`=HEX(AES_ENCRYPT(#{patientInfo.IdentityID},"salt")),
+            </if>
+            <if test="patientInfo.IdentityType != null and patientInfo.IdentityType != ''">
+                `IdentityType`=#{patientInfo.IdentityType},
+            </if>
+            <if test="patientInfo.name != null and patientInfo.name != ''">
+                `name`=HEX(AES_ENCRYPT(#{patientInfo.name},"salt")),
+            </if>
+            <if test="patientInfo.name_spell != null and patientInfo.name_spell != ''">
+                `name_spell`=HEX(AES_ENCRYPT(#{patientInfo.name_spell},"salt")),
+            </if>
+            <if test="patientInfo.mother_name != null and patientInfo.mother_name != ''">
+                `mother_name`=HEX(AES_ENCRYPT(#{patientInfo.mother_name},"salt")),
+            </if>
+            <if test="patientInfo.sex != null and patientInfo.sex != ''">
+                `sex`=#{patientInfo.sex},
+            </if>
+            <if test="patientInfo.birth_date != null and patientInfo.birth_date != ''">
+                `birth_date`=#{patientInfo.birth_date},
+            </if>
+            <if test="patientInfo.birth_place != null and patientInfo.birth_place != ''">
+                `birth_place`=HEX(AES_ENCRYPT(#{patientInfo.birth_place},"salt")) ,
+            </if>
+            <if test="patientInfo.nation != null and patientInfo.nation != ''">
+                `nation`=HEX(AES_ENCRYPT(#{patientInfo.nation},"salt")) ,
+            </if>
+            <if test="patientInfo.citizenship != null and patientInfo.citizenship != ''">
+                `citizenship`=HEX(AES_ENCRYPT(#{patientInfo.citizenship},"salt")) ,
+            </if>
+            <if test="patientInfo.marital_status != null and patientInfo.marital_status != ''">
+                `marital_status`=#{patientInfo.marital_status},
+            </if>
+            <if test="patientInfo.id_card_no != null and patientInfo.id_card_no != ''">
+                `id_card_no`=HEX(AES_ENCRYPT(#{patientInfo.id_card_no},"salt")) ,
+            </if>
+            <if test="patientInfo.health_card_no != null and patientInfo.health_card_no != ''">
+                `health_card_no`=#{patientInfo.health_card_no},
+            </if>
+            <if test="patientInfo.contact_phone_no != null and patientInfo.contact_phone_no != ''">
+                `contact_phone_no`=HEX(AES_ENCRYPT(#{patientInfo.contact_phone_no},"salt")) ,
+            </if>
+            <if test="patientInfo.email != null and patientInfo.email != ''">
+                `email`=HEX(AES_ENCRYPT(#{patientInfo.email},"salt")) ,
+            </if>
+
+            <if test="patientInfo.address_province != null and patientInfo.address_province != ''">
+                `address_province`=HEX(AES_ENCRYPT(#{patientInfo.address_province},"salt")) ,
+            </if>
+            <if test="patientInfo.address_city != null and patientInfo.address_city != ''">
+                `address_city`=HEX(AES_ENCRYPT(#{patientInfo.address_city},"salt")) ,
+            </if>
+            <if test="patientInfo.address_district != null and patientInfo.address_district != ''">
+                `address_district`=HEX(AES_ENCRYPT(#{patientInfo.address_district},"salt")) ,
+            </if>
+            <if test="patientInfo.address_street != null and patientInfo.address_street != ''">
+                `address_street`=HEX(AES_ENCRYPT(#{patientInfo.address_street},"salt")) ,
+            </if>
+            <if test="patientInfo.address_road != null and patientInfo.address_road != ''">
+                `address_road`=HEX(AES_ENCRYPT(#{patientInfo.address_road},"salt")) ,
+            </if>
+            <if test="patientInfo.address_detail != null and patientInfo.address_detail != ''">
+                `address_detail`=HEX(AES_ENCRYPT(#{patientInfo.address_detail},"salt")) ,
+            </if>
+            <if test="patientInfo.postalcode != null and patientInfo.postalcode != ''">
+                `postalcode`=HEX(AES_ENCRYPT(#{patientInfo.postalcode},"salt")) ,
+            </if>
+            <if test="patientInfo.occupation != null and patientInfo.occupation != ''">
+                `occupation`=#{patientInfo.occupation},
+            </if>
+            <if test="patientInfo.work_unit != null and patientInfo.work_unit != ''">
+                `work_unit`=HEX(AES_ENCRYPT(#{patientInfo.work_unit},"salt")) ,
+            </if>
+
+            <if test="patientInfo.language != null and patientInfo.language != ''">
+                `language`=#{patientInfo.language},
+            </if>
+            <if test="patientInfo.insurance_type != null and patientInfo.insurance_type != ''">
+                `insurance_type`=#{patientInfo.insurance_type},
+            </if>
+            <if test="patientInfo.insurance_id != null and patientInfo.insurance_id != ''">
+                `insurance_id`=#{patientInfo.insurance_id},
+            </if>
+            <if test="patientInfo.organization_id != null and patientInfo.organization_id != ''">
+                `organization_id`=#{patientInfo.organization_id},
+            </if>
+            <if test="patientInfo.createTime != null and patientInfo.createTime != ''">
+                `modifyTime`=#{patientInfo.createTime},
+            </if>
+            <if test="searchDate != null and searchDate != ''">
+                `searchDate`=#{searchDate}
+            </if>
+        </set>
+        where pathNo =#{patientInfo.pathNo}
+    </update>
+
+    <delete id="deleteSpecimenInfo">
+        delete
+        from shenkang_specimen_info
+        where medical_id=#{id}
+    </delete>
+
+    <insert id="insertFileInfo">
+        insert into
+        shenkang_file_info (file_name,file_path,specimen_id,file_type,medical_id,filesize,pathNo)
+        values
+        <foreach collection="fileInfo" item="emp" separator=",">
+            (#{emp.fileName},#{emp.filePath},#{emp.specimenId},#{emp.fileType},#{emp.medicalId},#{emp.filesize},#{emp.pathNo})
+        </foreach>
+    </insert>
+
+    <insert id="insertSpecimenInfo">
+        insert into shenkang_specimen_info
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="specimenInfos.specimen_id != null">
+                specimen_id,
+            </if>
+            <if test="specimenInfos.specimen_name != null">
+                specimen_name,
+            </if>
+            <if test="specimenInfos.specimen_type != null">
+                specimen_type,
+            </if>
+            <if test="specimenInfos.specimen_source != null">
+                specimen_source,
+            </if>
+            <if test="specimenInfos.pathological_number != null">
+                pathological_number,
+            </if>
+            <if test="id != null">
+                medical_id,
+            </if>
+        </trim>
+
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="specimenInfos.specimen_id != null">
+                #{specimenInfos.specimen_id} ,
+            </if>
+            <if test="specimenInfos.specimen_name != null">
+                #{specimenInfos.specimen_name} ,
+            </if>
+            <if test="specimenInfos.specimen_type != null">
+                #{specimenInfos.specimen_type} ,
+            </if>
+            <if test="specimenInfos.specimen_source != null">
+                #{specimenInfos.specimen_source} ,
+            </if>
+            <if test="specimenInfos.pathological_number != null">
+                #{specimenInfos.pathological_number},
+            </if>
+            <if test="id != null">
+                #{id}
+            </if>
+        </trim>
+    </insert>
+
+    <select id="selectFileByFileid" resultType="com.example.modules.shenkang.pojo.HFileInfo">
+        SELECT file_name as fileName,file_path as filePath,file_type as fileType,file_fid as fileFid,FileUID as FileUID,
+               file_id as fileId,ObservationUID,filesize,pathNo
+        FROM shenkang_file_info
+        where file_id=#{fileId}
+    </select>
+
+    <select id="selectFileIdByApplyID03" resultType="com.example.modules.shenkang.pojo.HFileInfo">
+        SELECT file_name as fileName,file_path as filePath,file_type as fileType,file_fid as fileFid,FileUID as FileUID,
+               file_id as fileId,ObservationUID,filesize
+        FROM shenkang_file_info where medical_id = #{medId} and file_type=#{fileType}
+  </select>
+
+    <update id="upFileUidById">
+        update shenkang_file_info set fileUid= #{fileUid} where file_id=#{fileId}
+    </update>
+
+    <select id="selectFilesIdByMedicalId" resultType="com.example.modules.shenkang.pojo.HFileInfo">
+        SELECT file_name as fileName,file_path as filePath,file_type as fileType,file_fid as fileFid,FileUID as FileUID,
+        file_id as fileId,ObservationUID,filesize,pathNo
+        FROM shenkang_file_info
+        <where>
+            <if test="pathNo != null and pathNo != ''">
+                pathNo = #{pathNo}
+            </if>
+            <if test="fileType != null and fileType != ''">
+                and file_type = #{fileType}
+            </if>
+            <if test="pushState != null and pushState != ''">
+                <choose>
+                    <when test="pushState=='yes'">
+                        and ISNULL(FileUID)=0 and LENGTH(trim(FileUID))>0
+                    </when>
+                    <otherwise>
+                        and ((ISNULL(FileUID)=1) || (LENGTH(trim(FileUID))=0))
+                    </otherwise>
+                </choose>
+            </if>
+        </where>
+        order by pathNo desc
+        <if test="num != null and num != ''">
+            limit #{num},#{size}
+        </if>
+    </select>
+</mapper>

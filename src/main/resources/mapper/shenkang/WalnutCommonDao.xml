@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.modules.shenkang.mapper.WalnutCommonDao">
+
+    <resultMap id="patientInfoMap" type="com.example.modules.shenkang.pojo.PatientInfo">
+        <id column="pat_id" jdbcType="INTEGER" property="id" />
+        <result column="patient_id" jdbcType="VARCHAR" property="patient_id" />
+        <result column="name" jdbcType="VARCHAR" property="name" />
+        <result column="sex" jdbcType="VARCHAR" property="sex" />
+        <result column="age" jdbcType="VARCHAR" property="age" />
+        <result column="birth_date" jdbcType="VARCHAR" property="birth_date" />
+        <result column="birth_place" jdbcType="VARCHAR" property="birth_place" />
+        <result column="nation" jdbcType="VARCHAR" property="nation" />
+        <result column="citizenship" jdbcType="VARCHAR" property="citizenship" />
+        <result column="id_card_no" jdbcType="VARCHAR" property="id_card_no" />
+        <result column="contact_phone_no" jdbcType="VARCHAR" property="contact_phone_no" />
+        <result column="insurance_id" jdbcType="VARCHAR" property="insurance_id" />
+    </resultMap>
+
+    <resultMap id="medicalInfoMap" type="com.example.modules.shenkang.pojo.MedicalInfo">
+        <result column="patient_id" jdbcType="VARCHAR" property="patient_id" />
+        <result column="patient_class" jdbcType="VARCHAR" property="patient_class" />
+        <result column="placer_order_no" jdbcType="VARCHAR" property="placer_order_no" />
+        <result column="pathological_number" jdbcType="VARCHAR" property="pathological_number" />
+        <result column="project_text" jdbcType="VARCHAR" property="project_text" />
+        <result column="procedure_name" jdbcType="VARCHAR" property="procedure_name" />
+        <result column="send_doctor_name" jdbcType="VARCHAR" property="send_doctor_name" />
+        <result column="send_dept_name" jdbcType="VARCHAR" property="send_dept_name" />
+        <result column="send_date" jdbcType="VARCHAR" property="send_date" />
+        <result column="send_organization_name" jdbcType="VARCHAR" property="send_organization_name" />
+        <result column="clinic_diagnosis" jdbcType="VARCHAR" property="clinic_diagnosis" />
+        <result column="relevant_clinical_info" jdbcType="VARCHAR" property="relevant_clinical_info" />
+        <result column="specimen_received_time" jdbcType="VARCHAR" property="specimen_received_date" />
+        <result column="specimen_received_name" jdbcType="VARCHAR" property="specimen_received_name" />
+        <result column="autopsy" jdbcType="VARCHAR" property="autopsy" />
+        <result column="result_assistant_name" jdbcType="VARCHAR" property="result_assistant_name" />
+        <result column="result_assistant_time" jdbcType="VARCHAR" property="result_assistant_time" />
+        <result column="result_principal_name" jdbcType="VARCHAR" property="result_principal_name" />
+        <result column="result_principal_time" jdbcType="VARCHAR" property="result_principal_time" />
+        <result column="reContent" jdbcType="VARCHAR" property="recontent" />
+        <result column="reg_time" jdbcType="VARCHAR" property="reg_time" />
+        <result column="result_status" jdbcType="VARCHAR" property="result_status" />
+    </resultMap>
+
+    <resultMap id="specimenInfoInfoMap" type="com.example.modules.shenkang.pojo.SpecimenInfo">
+        <result column="specimen_id" jdbcType="VARCHAR" property="specimen_id" />
+        <result column="specimen_name" jdbcType="VARCHAR" property="specimen_name" />
+        <result column="specimen_type" jdbcType="VARCHAR" property="specimen_type" />
+    </resultMap>
+
+    <select id="selectFileInfosByWaxId" resultType="com.example.modules.shenkang.pojo.HFileInfo">
+        SELECT fi.file_name as fileName ,
+               fi.file_path as filePath,
+               CAST( si.wax_id AS CHAR) as  specimenId ,
+               'ExamImage' as fileType,
+                #{medId} as medicalId
+        FROM slide_info si
+        LEFT JOIN file_info fi on fi.file_id=si.fileId WHERE wax_id=#{parseInt}
+
+    </select>
+
+    <select id="selSpecimenListByApplyId" resultMap="specimenInfoInfoMap">
+        SELECT
+        CAST( wi.wax_id AS CHAR) as specimen_id,
+        wi.specimen_part as specimen_name,
+        ai.specimenType as specimen_type
+        FROM wax_info wi left join task_assembly ai on wi.apply_id=ai.applyId
+        WHERE wi.apply_id=#{applyId}
+
+    </select>
+
+    <select id="selectPatient02" resultMap="patientInfoMap">
+        select distinct
+        pat_id,
+        his_id as patient_id,
+        pat_name as name,
+        pat_sex as sex,
+        pat_age as age,
+        pat_birthday as birth_date,
+        pat_address as birth_place,
+        nation as nation,
+        profession as citizenship,
+        pat_idcard as id_card_no,
+        pat_tel as contact_phone_no,
+        cardNo as insurance_id
+        from patient_info
+        where
+        pat_no = #{patients}
+        order by pat_id desc
+        limit 1
+    </select>
+
+    <select id="selectMediInfoByApplyId" resultMap="medicalInfoMap">
+        select hisId as patient_id,
+               patientTtypeName as patient_class,
+               applyNo as placer_order_no,
+               pathId as pathological_number,
+               template as project_text,
+               specimenName as procedure_name,
+               inspectDoctor as send_doctor_name,
+               inspectOfficeName as send_dept_name,
+               inspectTime as send_date,
+               inspectUunit as send_organization_name,
+               clinicalDiagnosis as clinic_diagnosis,
+               clinicalData as relevant_clinical_info,
+               inspectTime as specimen_received_time,
+               inspectDoctor as specimen_received_name,
+               grossFinding as autopsy,
+               reDoctorName as result_assistant_name,
+               reTime as result_assistant_time,
+               auditDoctor as result_principal_name,
+               auditTime as result_principal_time,
+               reContent as reContent,
+               creationTime as reg_time,
+                reType as result_status
+        from task_assembly
+        where applyId =#{applyId} and hisId is not null
+
+    </select>
+
+</mapper>

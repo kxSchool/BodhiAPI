@@ -1,0 +1,87 @@
+server:
+  port: 9080
+
+spring:
+  profiles:
+    active: dev
+
+mybatis-plus:
+  mapper-locations: classpath:/mapper/**/*.xml
+  global-config:
+    db-config:
+      id-type: auto
+  configuration:
+    auto-mapping-behavior: partial
+    map-underscore-to-camel-case: true
+
+jwt:
+  tokenHeader: Authorization #JWT\u5B58\u50A8\u7684\u8BF7\u6C42\u5934
+  secret: com.changdao.admin #JWT\u52A0\u89E3\u5BC6\u4F7F\u7528\u7684\u5BC6\u94A5
+  expiration: 604800 #JWT\u7684\u8D85\u671F\u9650\u65F6\u95F4(60*60*24*7)
+  tokenHead: 'Bearer '  #JWT\u8D1F\u8F7D\u4E2D\u62FF\u5230\u5F00\u5934
+
+redis:
+  database: JDP
+  key:
+    admin: 'debug:admin'
+    resourceList: 'admin:resourceList'
+    concurrencyList: 'concurrent:concurrencyList'
+  expire:
+    common: 86400 # 24\u5C0F\u65F6
+
+his:
+  url: #
+
+secure:
+  ignored:
+    urls: #\u5B89\u5168\u8DEF\u5F84\u767D\u540D\u5355
+      - /swagger-ui.html
+      - /swagger-resources/**
+      - /swagger/**
+      - /**/v2/api-docs
+      - /static/**
+      - /pages/**
+      - /webjars/springfox-swagger-ui/**
+      - /actuator/**
+      - /druid/**
+      - /admin/login
+      - /admin/register
+      - /admin/info
+      - /admin/logout
+      - /hisInterface/**
+      - /simulation/**
+      - /wanda/**
+      - /changdao/**
+      - /AiGetBlLocalService/api/verify_exam_info
+      - /http/**
+      - /hetao/**
+
+shenkang:
+  cronTime:
+    #儿童、肺科从朗珈取数(如果是公卫需要在代码中关闭定时器)
+    cron1: '0 38 10 * * ?'
+    cron2: '0 38 10 * * ?'
+    #推送数据给万达
+    cron3: '0 51 10 * * ?'
+    #获取万达数据密钥
+    cron4: '0 27 14 * * ?'
+    #公卫同步数据(如果不是公卫需要在代码中关闭定时器)
+    cron5: '0 10 12 * * ?'
+    dayDelay: 1
+  hospitalCode: '42500373300'
+  hospitalName: '上海市肺科医院'
+  imageUploadPath: #2020/12/29,上传文件相对路径
+    F:/data/test
+  # 调用的接口地址
+  webApiUrl:
+    #  本地测试用地址
+    #  PatientRegisterUrl: http://localhost:9080/LjPData
+    PatientRegisterUrl: http://localhost:12301/simulation/patientSimulationDatas
+    ExamRequestRegisterUrl: http://localhost:12301/simulation/registerSimulationDatas
+    SliceInfo: http://localhost:12301/simulation/aiSimulationDatas
+
+    WandaRegisterUrl: http://localhost:12301/simulation/patientRspSimulationDatas
+    WandaMdeicalUrl: http://localhost:12301/simulation/registerRspSimulationDatas
+    WandaRequestCheckUrl: http://localhost:12301/simulation/filesCheckRspSimulationDatas
+    WandaPushFile: http://localhost:12301/simulation/filesRspSimulationDatas
+    WandaRequestTokenUrl: http://localhost:12301/simulation/tokenSimulationDatas
